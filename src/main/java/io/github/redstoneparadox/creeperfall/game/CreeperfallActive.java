@@ -1,16 +1,25 @@
 package io.github.redstoneparadox.creeperfall.game;
 
 import io.github.redstoneparadox.creeperfall.game.util.Timer;
+import io.github.redstoneparadox.creeperfall.mixin.MobEntityAccessor;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.event.*;
 import xyz.nucleoid.plasmid.game.player.JoinResult;
@@ -91,6 +100,8 @@ public class CreeperfallActive {
 
             game.on(GameTickListener.EVENT, active::tick);
             game.on(ExplosionListener.EVENT, active::onExplosion);
+            game.on(EntityDeathListener.EVENT, active::onEntityDeath);
+            game.on(EntityDropLootListener.EVENT, active::onDropLoot);
 
             game.on(PlayerDamageListener.EVENT, active::onPlayerDamage);
             game.on(PlayerDeathListener.EVENT, active::onPlayerDeath);
@@ -116,6 +127,7 @@ public class CreeperfallActive {
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 100, 1, true, false));
         entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
         entity.setHealth(0.5f);
+        ((MobEntityAccessor) entity).setExperiencePoints(0);
         world.spawnEntity(entity);
     }
 
@@ -189,6 +201,34 @@ public class CreeperfallActive {
 
     private void onExplosion(List<BlockPos> affectedBlocks) {
         affectedBlocks.clear();
+    }
+
+    private ActionResult onEntityDeath(LivingEntity entity, DamageSource source) {
+        if (entity instanceof CreeperEntity && source instanceof EntityDamageSource) {
+            @Nullable Entity sourceEntity = source.getSource();
+
+            if (sourceEntity instanceof ServerPlayerEntity && gameSpace.containsEntity(sourceEntity)) {
+                int emeralds = random.nextInt(3) + 1;
+
+                ((ServerPlayerEntity) sourceEntity).giveItemStack(new ItemStack(Items.EMERALD, emeralds));
+            }
+            else if (sourceEntity instanceof ArrowEntity) {
+                Entity owner = ((ArrowEntity)sourceEntity).getOwner();
+
+                if (owner instanceof ServerPlayerEntity && gameSpace.containsEntity(owner)) {
+                    int emeralds = random.nextInt(3) + 1;
+
+                    ((ServerPlayerEntity) owner).giveItemStack(new ItemStack(Items.EMERALD, emeralds));
+                }
+            }
+        }
+
+        return ActionResult.PASS;
+    }
+
+    private TypedActionResult<List<ItemStack>> onDropLoot(LivingEntity dropper, List<ItemStack> loot) {
+        loot.clear();
+        return TypedActionResult.consume(loot);
     }
 
     private void broadcastWin(WinResult result) {
