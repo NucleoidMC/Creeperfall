@@ -8,6 +8,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.event.*;
 import xyz.nucleoid.plasmid.game.player.JoinResult;
@@ -69,7 +70,12 @@ public class CreeperfallActive {
             ServerWorld world = gameSpace.getWorld();
             Timer spawnTimer = Timer.createRepeating(100, () -> {
                 CreeperEntity entity = EntityType.CREEPER.create(world);
-                Objects.requireNonNull(entity).resetPosition(0, 65, 0);
+                Objects.requireNonNull(entity).setPos(0, 85, 0);
+                entity.updatePosition(0, 85, 0);
+                entity.setVelocity(Vec3d.ZERO);
+                entity.prevX = 0;
+                entity.prevY = 85;
+                entity.prevZ = 0;
                 entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
                 world.spawnEntity(entity);
             });
