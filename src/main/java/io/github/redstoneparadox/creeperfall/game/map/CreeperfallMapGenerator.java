@@ -22,8 +22,9 @@ public class CreeperfallMapGenerator {
     }
 
     private void buildSpawn(MapTemplate builder) {
-        BlockPos min = new BlockPos(-5, 64, -5);
-        BlockPos max = new BlockPos(5, 64, 5);
+        int radius = config.size/2;
+        BlockPos min = new BlockPos(-radius, 64, -radius);
+        BlockPos max = new BlockPos(radius, 64, radius);
 
         for (BlockPos pos : BlockPos.iterate(min, max)) {
             builder.setBlockState(pos, this.config.spawnBlock);

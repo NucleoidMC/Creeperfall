@@ -112,9 +112,11 @@ public class CreeperfallActive {
         ServerWorld world = gameSpace.getWorld();
         CreeperEntity entity = EntityType.CREEPER.create(world);
 
-        int x = random.nextInt(11) - 4;
+        int size = config.mapConfig.size;
+        int radius = size/2;
+        int x = random.nextInt(size) - radius;
         int y = 85;
-        int z = random.nextInt(11) - 4;
+        int z = random.nextInt(size) - radius;
 
         Objects.requireNonNull(entity).setPos(0, 85, 0);
         entity.updatePosition(x, y, z);

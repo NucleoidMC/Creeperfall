@@ -4,7 +4,8 @@
     "spawn_block": {
       "Name": "minecraft:red_terracotta",
       "Properties": {}
-    }
+    },
+    "size": 13
   },
   "players": {
     "min": 1,
