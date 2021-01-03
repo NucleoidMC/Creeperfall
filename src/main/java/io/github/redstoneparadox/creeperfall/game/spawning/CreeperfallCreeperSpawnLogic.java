@@ -2,6 +2,7 @@ package io.github.redstoneparadox.creeperfall.game.spawning;
 
 import io.github.redstoneparadox.creeperfall.game.CreeperfallConfig;
 import io.github.redstoneparadox.creeperfall.game.util.Timer;
+import io.github.redstoneparadox.creeperfall.hooks.CreeperHooks;
 import io.github.redstoneparadox.creeperfall.mixin.MobEntityAccessor;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -53,6 +54,7 @@ public class CreeperfallCreeperSpawnLogic {
 		entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
 		entity.setHealth(0.5f);
 		((MobEntityAccessor) entity).setExperiencePoints(0);
+		((CreeperHooks) entity).setCreeperfallCreeper(true);
 		world.spawnEntity(entity);
 	}
 }
