@@ -1,4 +1,4 @@
-package creeperfall.game;
+package io.github.redstoneparadox.creeperfall.game;
 
 import net.minecraft.util.math.Vec3d;
 import xyz.nucleoid.plasmid.game.GameSpace;
@@ -9,8 +9,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameMode;
-import creeperfall.Creeperfall;
-import creeperfall.game.map.CreeperfallMap;
+import io.github.redstoneparadox.creeperfall.Creeperfall;
+import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 
 public class CreeperfallSpawnLogic {
     private final GameSpace gameSpace;

@@ -1,4 +1,4 @@
-package creeperfall.game;
+package io.github.redstoneparadox.creeperfall.game;
 
 import com.google.common.collect.ImmutableSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
