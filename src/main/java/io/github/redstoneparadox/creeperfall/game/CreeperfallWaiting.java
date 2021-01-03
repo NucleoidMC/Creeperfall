@@ -14,13 +14,13 @@ public class CreeperfallWaiting {
     private final GameSpace gameSpace;
     private final CreeperfallMap map;
     private final CreeperfallConfig config;
-    private final CreeperfallSpawnLogic spawnLogic;
+    private final CreeperfallPlayerSpawnLogic spawnLogic;
 
     private CreeperfallWaiting(GameSpace gameSpace, CreeperfallMap map, CreeperfallConfig config) {
         this.gameSpace = gameSpace;
         this.map = map;
         this.config = config;
-        this.spawnLogic = new CreeperfallSpawnLogic(gameSpace, map);
+        this.spawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map);
     }
 
     public static GameOpenProcedure open(GameOpenContext<CreeperfallConfig> context) {

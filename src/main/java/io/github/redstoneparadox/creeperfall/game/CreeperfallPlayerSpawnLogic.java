@@ -15,11 +15,11 @@ import net.minecraft.world.GameMode;
 import io.github.redstoneparadox.creeperfall.Creeperfall;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 
-public class CreeperfallSpawnLogic {
+public class CreeperfallPlayerSpawnLogic {
     private final GameSpace gameSpace;
     private final CreeperfallMap map;
 
-    public CreeperfallSpawnLogic(GameSpace gameSpace, CreeperfallMap map) {
+    public CreeperfallPlayerSpawnLogic(GameSpace gameSpace, CreeperfallMap map) {
         this.gameSpace = gameSpace;
         this.map = map;
     }

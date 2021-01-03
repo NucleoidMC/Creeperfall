@@ -51,7 +51,7 @@ public class CreeperfallActive {
 
     // TODO replace with ServerPlayerEntity if players are removed upon leaving
     private final Object2ObjectMap<PlayerRef, CreeperfallPlayer> participants;
-    private final CreeperfallSpawnLogic spawnLogic;
+    private final CreeperfallPlayerSpawnLogic playerSpawnLogic;
     private final CreeperfallStageManager stageManager;
     private final boolean ignoreWinState;
     private final CreeperfallTimerBar timerBar;
@@ -60,7 +60,7 @@ public class CreeperfallActive {
         this.gameSpace = gameSpace;
         this.config = config;
         this.gameMap = map;
-        this.spawnLogic = new CreeperfallSpawnLogic(gameSpace, map);
+        this.playerSpawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map);
         this.participants = new Object2ObjectOpenHashMap<>();
 
         for (PlayerRef player : participants) {
@@ -169,13 +169,13 @@ public class CreeperfallActive {
     }
 
     private void spawnParticipant(ServerPlayerEntity player) {
-        this.spawnLogic.resetPlayer(player, GameMode.ADVENTURE);
-        this.spawnLogic.spawnPlayer(player);
+        this.playerSpawnLogic.resetPlayer(player, GameMode.ADVENTURE);
+        this.playerSpawnLogic.spawnPlayer(player);
     }
 
     private void spawnSpectator(ServerPlayerEntity player) {
-        this.spawnLogic.resetPlayer(player, GameMode.SPECTATOR);
-        this.spawnLogic.spawnPlayer(player);
+        this.playerSpawnLogic.resetPlayer(player, GameMode.SPECTATOR);
+        this.playerSpawnLogic.spawnPlayer(player);
     }
 
     private void tick() {
