@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "creeperfall",
+  "version": "${version}",
+  "name": "Creeperfall",
+  "description": "Shoot creepers out of the sky before they reach the ground and explode!",
+  "authors": [
+    "RedstoneParadox"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.redstoneparadox.creeperfall.Creeperfall"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.9.1",
+    "fabric": "*",
+    "minecraft": "1.16.4",
+    "plasmid": "0.4.x"
+  }
+}
