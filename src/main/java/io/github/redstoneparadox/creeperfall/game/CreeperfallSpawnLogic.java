@@ -38,13 +38,15 @@ public class CreeperfallSpawnLogic {
                 false
         ));
 
-        ItemStack bowStack = new ItemStack(Items.BOW);
-        CompoundTag nbt = bowStack.getOrCreateTag();
+        if (gameMode.isSurvivalLike()) {
+            ItemStack bowStack = new ItemStack(Items.BOW);
+            CompoundTag nbt = bowStack.getOrCreateTag();
 
-        nbt.putBoolean("Unbreakable", true);
+            nbt.putBoolean("Unbreakable", true);
 
-        player.giveItemStack(bowStack);
-        player.giveItemStack(new ItemStack(Items.ARROW, 10));
+            player.giveItemStack(bowStack);
+            player.giveItemStack(new ItemStack(Items.ARROW, 10));
+        }
     }
 
     public void spawnPlayer(ServerPlayerEntity player) {
