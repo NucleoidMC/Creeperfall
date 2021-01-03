@@ -35,7 +35,7 @@ public class CreeperfallActive {
 
     public final GameSpace gameSpace;
     private final CreeperfallMap gameMap;
-    private Timer spawnTimer;
+    private Timer spawnTimer = Timer.createRepeating(100, this::spawnCreeper);
 
     // TODO replace with ServerPlayerEntity if players are removed upon leaving
     private final Object2ObjectMap<PlayerRef, CreeperfallPlayer> participants;
@@ -44,11 +44,10 @@ public class CreeperfallActive {
     private final boolean ignoreWinState;
     private final CreeperfallTimerBar timerBar;
 
-    private CreeperfallActive(GameSpace gameSpace, CreeperfallMap map, GlobalWidgets widgets, CreeperfallConfig config, Set<PlayerRef> participants, Timer spawnTimer) {
+    private CreeperfallActive(GameSpace gameSpace, CreeperfallMap map, GlobalWidgets widgets, CreeperfallConfig config, Set<PlayerRef> participants) {
         this.gameSpace = gameSpace;
         this.config = config;
         this.gameMap = map;
-        this.spawnTimer = spawnTimer;
         this.spawnLogic = new CreeperfallSpawnLogic(gameSpace, map);
         this.participants = new Object2ObjectOpenHashMap<>();
 
@@ -67,19 +66,7 @@ public class CreeperfallActive {
                     .map(PlayerRef::of)
                     .collect(Collectors.toSet());
             GlobalWidgets widgets = new GlobalWidgets(game);
-            ServerWorld world = gameSpace.getWorld();
-            Timer spawnTimer = Timer.createRepeating(100, () -> {
-                CreeperEntity entity = EntityType.CREEPER.create(world);
-                Objects.requireNonNull(entity).setPos(0, 85, 0);
-                entity.updatePosition(0, 85, 0);
-                entity.setVelocity(Vec3d.ZERO);
-                entity.prevX = 0;
-                entity.prevY = 85;
-                entity.prevZ = 0;
-                entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
-                world.spawnEntity(entity);
-            });
-            CreeperfallActive active = new CreeperfallActive(gameSpace, map, widgets, config, participants, spawnTimer);
+            CreeperfallActive active = new CreeperfallActive(gameSpace, map, widgets, config, participants);
 
             game.setRule(GameRule.CRAFTING, RuleResult.DENY);
             game.setRule(GameRule.PORTALS, RuleResult.DENY);
@@ -90,6 +77,7 @@ public class CreeperfallActive {
             game.setRule(GameRule.BLOCK_DROPS, RuleResult.DENY);
             game.setRule(GameRule.THROW_ITEMS, RuleResult.DENY);
             game.setRule(GameRule.UNSTABLE_TNT, RuleResult.DENY);
+            game.setRule(GameRule.BREAK_BLOCKS, RuleResult.DENY);
 
             game.on(GameOpenListener.EVENT, active::onOpen);
             game.on(GameCloseListener.EVENT, active::onClose);
@@ -99,10 +87,29 @@ public class CreeperfallActive {
             game.on(PlayerRemoveListener.EVENT, active::removePlayer);
 
             game.on(GameTickListener.EVENT, active::tick);
+            game.on(ExplosionListener.EVENT, active::onExplosion);
 
             game.on(PlayerDamageListener.EVENT, active::onPlayerDamage);
             game.on(PlayerDeathListener.EVENT, active::onPlayerDeath);
         });
+    }
+
+    private void spawnCreeper() {
+        ServerWorld world = gameSpace.getWorld();
+        CreeperEntity entity = EntityType.CREEPER.create(world);
+
+        Objects.requireNonNull(entity).setPos(0, 85, 0);
+        entity.updatePosition(0, 85, 0);
+        entity.setVelocity(Vec3d.ZERO);
+
+        entity.prevX = 0;
+        entity.prevY = 85;
+        entity.prevZ = 0;
+
+
+
+        entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
+        world.spawnEntity(entity);
     }
 
     private void onOpen() {
@@ -171,6 +178,10 @@ public class CreeperfallActive {
 
         this.timerBar.update(this.stageManager.finishTime - time, this.config.timeLimitSecs * 20);
         this.spawnTimer.tick();
+    }
+
+    private void onExplosion(List<BlockPos> affectedBlocks) {
+        affectedBlocks.clear();
     }
 
     private void broadcastWin(WinResult result) {
