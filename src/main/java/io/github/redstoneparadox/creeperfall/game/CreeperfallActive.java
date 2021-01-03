@@ -14,6 +14,7 @@ import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -57,6 +58,7 @@ public class CreeperfallActive {
     private final CreeperfallStageManager stageManager;
     private final boolean ignoreWinState;
     private final CreeperfallTimerBar timerBar;
+    private final Timer arrowReplenishTimer;
 
     private CreeperfallActive(GameSpace gameSpace, CreeperfallMap map, GlobalWidgets widgets, CreeperfallConfig config, Set<PlayerRef> participants) {
         this.gameSpace = gameSpace;
@@ -73,6 +75,7 @@ public class CreeperfallActive {
         this.stageManager = new CreeperfallStageManager();
         this.ignoreWinState = this.participants.size() <= 1;
         this.timerBar = new CreeperfallTimerBar(widgets);
+        this.arrowReplenishTimer = Timer.createRepeating(20 * 20, this::onReplenishArrows);
     }
 
     public static void open(GameSpace gameSpace, CreeperfallMap map, CreeperfallConfig config) {
@@ -109,6 +112,24 @@ public class CreeperfallActive {
             game.on(PlayerDamageListener.EVENT, active::onPlayerDamage);
             game.on(PlayerDeathListener.EVENT, active::onPlayerDeath);
         });
+    }
+
+    private void onReplenishArrows() {
+        for (ServerPlayerEntity player : gameSpace.getPlayers()) {
+            PlayerInventory inventory = player.inventory;
+
+            for (int i = 0; i < inventory.size(); i++) {
+                if (inventory.getStack(i).getItem() == Items.ARROW) {
+                    inventory.setStack(i, ItemStack.EMPTY);
+                }
+            }
+
+            if (inventory.getCursorStack().getItem() == Items.ARROW) {
+                inventory.setCursorStack(ItemStack.EMPTY);
+            }
+
+            player.giveItemStack(new ItemStack(Items.ARROW, 10));
+        }
     }
 
     private void onOpen() {
@@ -177,6 +198,7 @@ public class CreeperfallActive {
 
         this.timerBar.update(this.stageManager.finishTime - time, this.config.timeLimitSecs * 20);
         creeperSpawnLogic.tick();
+        arrowReplenishTimer.tick();
     }
 
     private void onExplosion(List<BlockPos> affectedBlocks) {
