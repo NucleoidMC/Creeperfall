@@ -1,5 +1,6 @@
 package io.github.redstoneparadox.creeperfall.game;
 
+import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallCreeperSpawnLogic;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallPlayerSpawnLogic;
 import io.github.redstoneparadox.creeperfall.game.util.Timer;
 import io.github.redstoneparadox.creeperfall.mixin.MobEntityAccessor;
@@ -47,12 +48,12 @@ public class CreeperfallActive {
 
     public final GameSpace gameSpace;
     private final CreeperfallMap gameMap;
-    private Timer spawnTimer = Timer.createRepeating(100, this::spawnCreeper);
     private final Random random = new Random();
 
     // TODO replace with ServerPlayerEntity if players are removed upon leaving
     private final Object2ObjectMap<PlayerRef, CreeperfallPlayer> participants;
     private final CreeperfallPlayerSpawnLogic playerSpawnLogic;
+    private final CreeperfallCreeperSpawnLogic creeperSpawnLogic;
     private final CreeperfallStageManager stageManager;
     private final boolean ignoreWinState;
     private final CreeperfallTimerBar timerBar;
@@ -62,6 +63,7 @@ public class CreeperfallActive {
         this.config = config;
         this.gameMap = map;
         this.playerSpawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map);
+        this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, config);
         this.participants = new Object2ObjectOpenHashMap<>();
 
         for (PlayerRef player : participants) {
@@ -107,31 +109,6 @@ public class CreeperfallActive {
             game.on(PlayerDamageListener.EVENT, active::onPlayerDamage);
             game.on(PlayerDeathListener.EVENT, active::onPlayerDeath);
         });
-    }
-
-    private void spawnCreeper() {
-        ServerWorld world = gameSpace.getWorld();
-        CreeperEntity entity = EntityType.CREEPER.create(world);
-
-        int size = config.mapConfig.size;
-        int radius = size/2;
-        int x = random.nextInt(size) - radius;
-        int y = 85;
-        int z = random.nextInt(size) - radius;
-
-        Objects.requireNonNull(entity).setPos(0, 85, 0);
-        entity.updatePosition(x, y, z);
-        entity.setVelocity(Vec3d.ZERO);
-
-        entity.prevX = x;
-        entity.prevY = y;
-        entity.prevZ = z;
-
-        entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 100, 1, true, false));
-        entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
-        entity.setHealth(0.5f);
-        ((MobEntityAccessor) entity).setExperiencePoints(0);
-        world.spawnEntity(entity);
     }
 
     private void onOpen() {
@@ -199,7 +176,7 @@ public class CreeperfallActive {
         }
 
         this.timerBar.update(this.stageManager.finishTime - time, this.config.timeLimitSecs * 20);
-        this.spawnTimer.tick();
+        creeperSpawnLogic.tick();
     }
 
     private void onExplosion(List<BlockPos> affectedBlocks) {
