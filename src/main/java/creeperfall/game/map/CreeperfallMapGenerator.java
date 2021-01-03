@@ -1,7 +1,13 @@
-package io.github.redstoneparadox.creeperfall.game.map;
+package creeperfall.game.map;
 
 import xyz.nucleoid.plasmid.map.template.MapTemplate;
+import xyz.nucleoid.plasmid.util.BlockBounds;
+import net.minecraft.block.Blocks;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import creeperfall.game.CreeperfallConfig;
+
+import java.util.concurrent.CompletableFuture;
 
 public class CreeperfallMapGenerator {
 

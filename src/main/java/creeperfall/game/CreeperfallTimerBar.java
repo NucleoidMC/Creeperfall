@@ -1,4 +1,4 @@
-package io.github.redstoneparadox.creeperfall.game;
+package creeperfall.game;
 
 import net.minecraft.entity.boss.BossBar;
 import xyz.nucleoid.plasmid.widget.BossBarWidget;

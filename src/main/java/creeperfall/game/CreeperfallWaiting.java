@@ -1,4 +1,4 @@
-package io.github.redstoneparadox.creeperfall.game;
+package creeperfall.game;
 
 import net.minecraft.util.ActionResult;
 import xyz.nucleoid.plasmid.game.*;
@@ -6,8 +6,8 @@ import xyz.nucleoid.plasmid.game.event.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.GameMode;
-import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
-import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMapGenerator;
+import creeperfall.game.map.CreeperfallMap;
+import creeperfall.game.map.CreeperfallMapGenerator;
 import xyz.nucleoid.fantasy.BubbleWorldConfig;
 
 public class CreeperfallWaiting {

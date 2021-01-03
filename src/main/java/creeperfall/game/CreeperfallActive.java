@@ -1,4 +1,4 @@
-package io.github.redstoneparadox.creeperfall.game;
+package creeperfall.game;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -19,7 +19,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.GameMode;
-import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
+import creeperfall.game.map.CreeperfallMap;
 
 import java.util.*;
 import java.util.stream.Collectors;

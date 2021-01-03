@@ -1,9 +1,9 @@
-package io.github.redstoneparadox.creeperfall.game;
+package creeperfall.game;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import xyz.nucleoid.plasmid.game.config.PlayerConfig;
-import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMapConfig;
+import creeperfall.game.map.CreeperfallMapConfig;
 
 public class CreeperfallConfig {
     public static final Codec<CreeperfallConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
