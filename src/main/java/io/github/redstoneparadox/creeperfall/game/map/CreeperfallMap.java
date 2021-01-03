@@ -1,4 +1,4 @@
-package creeperfall.game.map;
+package io.github.redstoneparadox.creeperfall.game.map;
 
 import net.minecraft.server.MinecraftServer;
 import xyz.nucleoid.plasmid.map.template.MapTemplate;

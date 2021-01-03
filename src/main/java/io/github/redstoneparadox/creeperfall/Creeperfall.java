@@ -1,12 +1,12 @@
-package creeperfall;
+package io.github.redstoneparadox.creeperfall;
 
 import net.fabricmc.api.ModInitializer;
 import xyz.nucleoid.plasmid.game.GameType;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import creeperfall.game.CreeperfallConfig;
-import creeperfall.game.CreeperfallWaiting;
+import io.github.redstoneparadox.creeperfall.game.CreeperfallConfig;
+import io.github.redstoneparadox.creeperfall.game.CreeperfallWaiting;
 
 public class Creeperfall implements ModInitializer {
 
