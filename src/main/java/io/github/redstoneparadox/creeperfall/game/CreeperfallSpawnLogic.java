@@ -38,7 +38,7 @@ public class CreeperfallSpawnLogic {
                 false
         ));
 
-        if (gameMode.isSurvivalLike()) {
+        if (gameMode != GameMode.SPECTATOR) {
             ItemStack bowStack = new ItemStack(Items.BOW);
             CompoundTag nbt = bowStack.getOrCreateTag();
 
