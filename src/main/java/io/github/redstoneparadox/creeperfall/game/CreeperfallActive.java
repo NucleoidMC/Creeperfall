@@ -1,8 +1,13 @@
 package io.github.redstoneparadox.creeperfall.game;
 
+import io.github.redstoneparadox.creeperfall.game.util.Timer;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.event.*;
 import xyz.nucleoid.plasmid.game.player.JoinResult;
@@ -29,6 +34,7 @@ public class CreeperfallActive {
 
     public final GameSpace gameSpace;
     private final CreeperfallMap gameMap;
+    private Timer spawnTimer;
 
     // TODO replace with ServerPlayerEntity if players are removed upon leaving
     private final Object2ObjectMap<PlayerRef, CreeperfallPlayer> participants;
@@ -37,10 +43,11 @@ public class CreeperfallActive {
     private final boolean ignoreWinState;
     private final CreeperfallTimerBar timerBar;
 
-    private CreeperfallActive(GameSpace gameSpace, CreeperfallMap map, GlobalWidgets widgets, CreeperfallConfig config, Set<PlayerRef> participants) {
+    private CreeperfallActive(GameSpace gameSpace, CreeperfallMap map, GlobalWidgets widgets, CreeperfallConfig config, Set<PlayerRef> participants, Timer spawnTimer) {
         this.gameSpace = gameSpace;
         this.config = config;
         this.gameMap = map;
+        this.spawnTimer = spawnTimer;
         this.spawnLogic = new CreeperfallSpawnLogic(gameSpace, map);
         this.participants = new Object2ObjectOpenHashMap<>();
 
@@ -59,7 +66,14 @@ public class CreeperfallActive {
                     .map(PlayerRef::of)
                     .collect(Collectors.toSet());
             GlobalWidgets widgets = new GlobalWidgets(game);
-            CreeperfallActive active = new CreeperfallActive(gameSpace, map, widgets, config, participants);
+            ServerWorld world = gameSpace.getWorld();
+            Timer spawnTimer = Timer.createRepeating(100, () -> {
+                CreeperEntity entity = EntityType.CREEPER.create(world);
+                Objects.requireNonNull(entity).resetPosition(0, 65, 0);
+                entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
+                world.spawnEntity(entity);
+            });
+            CreeperfallActive active = new CreeperfallActive(gameSpace, map, widgets, config, participants, spawnTimer);
 
             game.setRule(GameRule.CRAFTING, RuleResult.DENY);
             game.setRule(GameRule.PORTALS, RuleResult.DENY);
@@ -150,8 +164,7 @@ public class CreeperfallActive {
         }
 
         this.timerBar.update(this.stageManager.finishTime - time, this.config.timeLimitSecs * 20);
-
-        // TODO tick logic
+        this.spawnTimer.tick();
     }
 
     private void broadcastWin(WinResult result) {
