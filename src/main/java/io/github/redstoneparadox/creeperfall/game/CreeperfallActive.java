@@ -38,6 +38,7 @@ public class CreeperfallActive {
     public final GameSpace gameSpace;
     private final CreeperfallMap gameMap;
     private Timer spawnTimer = Timer.createRepeating(100, this::spawnCreeper);
+    private final Random random = new Random();
 
     // TODO replace with ServerPlayerEntity if players are removed upon leaving
     private final Object2ObjectMap<PlayerRef, CreeperfallPlayer> participants;
@@ -100,13 +101,17 @@ public class CreeperfallActive {
         ServerWorld world = gameSpace.getWorld();
         CreeperEntity entity = EntityType.CREEPER.create(world);
 
+        int x = random.nextInt(11) - 4;
+        int y = 85;
+        int z = random.nextInt(11) - 4;
+
         Objects.requireNonNull(entity).setPos(0, 85, 0);
-        entity.updatePosition(0, 85, 0);
+        entity.updatePosition(x, y, z);
         entity.setVelocity(Vec3d.ZERO);
 
-        entity.prevX = 0;
-        entity.prevY = 85;
-        entity.prevZ = 0;
+        entity.prevX = x;
+        entity.prevY = y;
+        entity.prevZ = z;
 
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 100, 1, true, false));
         entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
