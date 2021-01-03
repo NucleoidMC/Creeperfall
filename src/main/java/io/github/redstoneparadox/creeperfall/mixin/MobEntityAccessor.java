@@ -7,5 +7,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(MobEntity.class)
 public interface MobEntityAccessor {
 	@Accessor("experiencePoints")
-	public void setExperiencePoints(int experiencePoints);
+	void setExperiencePoints(int experiencePoints);
 }
