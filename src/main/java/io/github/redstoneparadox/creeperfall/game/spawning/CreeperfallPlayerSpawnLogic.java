@@ -1,4 +1,4 @@
-package io.github.redstoneparadox.creeperfall.game;
+package io.github.redstoneparadox.creeperfall.game.spawning;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;

@@ -1,5 +1,6 @@
 package io.github.redstoneparadox.creeperfall.game;
 
+import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallPlayerSpawnLogic;
 import io.github.redstoneparadox.creeperfall.game.util.Timer;
 import io.github.redstoneparadox.creeperfall.mixin.MobEntityAccessor;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
