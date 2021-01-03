@@ -1,5 +1,8 @@
 package io.github.redstoneparadox.creeperfall.game;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.Vec3d;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -25,6 +28,7 @@ public class CreeperfallSpawnLogic {
         player.setGameMode(gameMode);
         player.setVelocity(Vec3d.ZERO);
         player.fallDistance = 0.0f;
+        player.inventory.clear();
 
         player.addStatusEffect(new StatusEffectInstance(
                 StatusEffects.NIGHT_VISION,
@@ -33,6 +37,14 @@ public class CreeperfallSpawnLogic {
                 true,
                 false
         ));
+
+        ItemStack bowStack = new ItemStack(Items.BOW);
+        CompoundTag nbt = bowStack.getOrCreateTag();
+
+        nbt.putBoolean("Unbreakable", true);
+
+        player.giveItemStack(bowStack);
+        player.giveItemStack(new ItemStack(Items.ARROW, 10));
     }
 
     public void spawnPlayer(ServerPlayerEntity player) {

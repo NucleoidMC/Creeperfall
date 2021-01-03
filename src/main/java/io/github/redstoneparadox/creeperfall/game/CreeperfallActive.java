@@ -115,6 +115,7 @@ public class CreeperfallActive {
 
         entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 100, 1, true, false));
         entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
+        entity.setHealth(0.5f);
         world.spawnEntity(entity);
     }
 
