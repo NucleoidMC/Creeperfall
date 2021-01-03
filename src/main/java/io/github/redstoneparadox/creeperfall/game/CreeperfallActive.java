@@ -128,7 +128,7 @@ public class CreeperfallActive {
                 inventory.setCursorStack(ItemStack.EMPTY);
             }
 
-            player.giveItemStack(new ItemStack(Items.ARROW, 10));
+            player.giveItemStack(new ItemStack(Items.ARROW, 20));
         }
     }
 

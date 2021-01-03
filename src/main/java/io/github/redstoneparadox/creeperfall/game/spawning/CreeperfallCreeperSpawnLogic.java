@@ -20,16 +20,35 @@ import java.util.Random;
 public class CreeperfallCreeperSpawnLogic {
 	private final GameSpace gameSpace;
 	private final CreeperfallConfig config;
-	private final Timer spawnTimer = Timer.createRepeating(100, this::spawnCreeper);
 	private final Random random = new Random();
+	private final int maxCreepers = 4;
+	private final Timer spawnTimer;
+	private final Timer creeperIncreaseTimer;
+	private int currentCreepers = 1;
 
 	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, CreeperfallConfig config) {
 		this.gameSpace = gameSpace;
 		this.config = config;
+		int ticksToIncreaseCreepers = (config.timeLimitSecs * 20)/8;
+		this.spawnTimer = Timer.createRepeating(100, this::spawnCreepers);
+		this.creeperIncreaseTimer = Timer.createRepeating(ticksToIncreaseCreepers, () -> {
+			if (currentCreepers < 4) {
+				currentCreepers += 1;
+			}
+		});
 	}
 
 	public void tick() {
+		creeperIncreaseTimer.tick();
 		spawnTimer.tick();
+	}
+
+	private void spawnCreepers() {
+		int count = random.nextInt(currentCreepers) + 1;
+
+		for (int i = 0; i < count; i++) {
+			spawnCreeper();
+		}
 	}
 
 	private void spawnCreeper() {

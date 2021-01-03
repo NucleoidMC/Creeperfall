@@ -15,6 +15,8 @@ import net.minecraft.world.GameMode;
 import io.github.redstoneparadox.creeperfall.Creeperfall;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 
+import java.util.Random;
+
 public class CreeperfallPlayerSpawnLogic {
     private final GameSpace gameSpace;
     private final CreeperfallMap map;
@@ -46,7 +48,7 @@ public class CreeperfallPlayerSpawnLogic {
             nbt.putBoolean("Unbreakable", true);
 
             player.giveItemStack(bowStack);
-            player.giveItemStack(new ItemStack(Items.ARROW, 10));
+            player.giveItemStack(new ItemStack(Items.ARROW, 20));
         }
     }
 
