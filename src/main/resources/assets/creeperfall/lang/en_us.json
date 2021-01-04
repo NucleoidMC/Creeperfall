@@ -1,3 +1,5 @@
 {
-  "item.creeperfall.guardian_spawn_egg": "Guardian"
+  "item.creeperfall.guardian_spawn_egg": "Guardian",
+
+  "item.creeperfall.guardian_spawn_egg.lore": "Summons a Guardian that will shoot down Creepers for a short time.\nYou won't get emeralds for the creepers it kills."
 }
