@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "io.github.redstoneparadox.creeperfall.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "GuardianEntityAccessor"
+  ],
+  "client": [
+  ],
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
