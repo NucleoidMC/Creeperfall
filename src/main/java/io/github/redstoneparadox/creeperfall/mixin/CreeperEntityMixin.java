@@ -4,6 +4,7 @@ import io.github.redstoneparadox.creeperfall.hooks.CreeperHooks;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.nbt.CompoundTag;
@@ -35,6 +36,7 @@ public abstract class CreeperEntityMixin extends HostileEntity implements Creepe
 		if (isCreeperfallCreeper) {
 			if (isOnGround()) {
 				setInvulnerable(true);
+				removeStatusEffect(StatusEffects.SLOW_FALLING);
 			}
 			if (getY() <= 0) {
 				kill();

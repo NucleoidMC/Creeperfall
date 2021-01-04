@@ -72,7 +72,12 @@ public class CreeperfallCreeperSpawnLogic {
 		entity.prevY = y;
 		entity.prevZ = z;
 
-		entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 100, 1, true, false));
+		entity.addStatusEffect(new StatusEffectInstance(
+				StatusEffects.SLOW_FALLING,
+				4096,
+				1,
+				true,
+				false));
 		entity.setHealth(0.5f);
 		((MobEntityAccessor) entity).setExperiencePoints(0);
 		((CreeperHooks) entity).setCreeperfallCreeper(true);
