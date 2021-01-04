@@ -37,7 +37,7 @@ public class UpgradeableArmor implements Upgradeable {
 
 		currentTier += 1;
 
-		Pair<ArmorType, Consumer<List<ItemStack>>> tier = tiers.get(currentTier + 1);
+		Pair<ArmorType, Consumer<List<ItemStack>>> tier = tiers.get(currentTier);
 		ArmorType type = tier.getLeft();
 		Consumer<List<ItemStack>> consumer = tier.getRight();
 		List<ItemStack> stacks = Arrays.asList(
@@ -47,7 +47,9 @@ public class UpgradeableArmor implements Upgradeable {
 				new ItemStack(type.boots)
 		);
 
-		if (type.isNone()) return true;
+		if (type.isNone()) {
+			return true;
+		};
 
 		consumer.accept(stacks);
 		inventory.armor.clear();
