@@ -11,10 +11,10 @@
     "min": 1,
     "max": 8
   },
-  "time_limit_secs": 480,
+  "time_limit_secs": 360,
   "max_creepers_per_player": 3,
-  "stage_length_secs": 60,
+  "stage_length_secs": 15,
   "creeper_spawn_delay_secs": 5,
-  "max_arrows": 16,
-  "arrow_replenish_time_secs": 20
+  "max_arrows": 64,
+  "arrow_replenish_time_secs": 10
 }
