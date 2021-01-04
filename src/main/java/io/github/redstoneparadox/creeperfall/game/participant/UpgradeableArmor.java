@@ -2,6 +2,7 @@ package io.github.redstoneparadox.creeperfall.game.participant;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -52,11 +53,10 @@ public class UpgradeableArmor implements Upgradeable {
 		};
 
 		consumer.accept(stacks);
-		inventory.armor.clear();
-		inventory.armor.add(stacks.get(0));
-		inventory.armor.add(stacks.get(1));
-		inventory.armor.add(stacks.get(2));
-		inventory.armor.add(stacks.get(3));
+		player.equipStack(EquipmentSlot.HEAD, stacks.get(0));
+		player.equipStack(EquipmentSlot.CHEST, stacks.get(1));
+		player.equipStack(EquipmentSlot.LEGS, stacks.get(2));
+		player.equipStack(EquipmentSlot.FEET, stacks.get(3));
 
 		return true;
 	}
