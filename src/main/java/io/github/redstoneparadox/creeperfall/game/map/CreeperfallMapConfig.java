@@ -2,7 +2,6 @@ package io.github.redstoneparadox.creeperfall.game.map;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.sun.tools.javac.jvm.Code;
 import net.minecraft.block.BlockState;
 
 public class CreeperfallMapConfig {

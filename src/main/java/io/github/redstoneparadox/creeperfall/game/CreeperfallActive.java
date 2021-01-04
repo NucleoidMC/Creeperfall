@@ -234,7 +234,7 @@ public class CreeperfallActive {
         ItemStack stack = player.getStackInHand(hand);
 
         if (stack.getItem() == Items.COMPASS) {
-            player.openHandledScreen(CreeperfallShop.create(player, this));
+            player.openHandledScreen(CreeperfallShop.create(player, this, config.shopConfig));
             return TypedActionResult.success(stack);
         }
 

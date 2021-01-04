@@ -11,6 +11,9 @@
     "min": 1,
     "max": 8
   },
+  "shop": {
+    "guardian_egg_price": 3
+  },
   "time_limit_secs": 360,
   "max_creepers_per_player": 3,
   "stage_length_secs": 15,
