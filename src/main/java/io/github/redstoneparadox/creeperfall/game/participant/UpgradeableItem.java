@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,5 +45,18 @@ public class UpgradeableItem implements Upgradeable {
 	@Override
 	public ItemStack getIcon() {
 		return tiers.get(currentTier);
+	}
+
+	public static class Builder {
+		private final List<ItemStack> tiers = new ArrayList<>();
+
+		public Builder tier(ItemStack stack) {
+			tiers.add(stack);
+			return this;
+		}
+
+		public UpgradeableItem build() {
+			return new UpgradeableItem(tiers);
+		}
 	}
 }

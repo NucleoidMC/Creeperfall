@@ -1,5 +1,7 @@
 package io.github.redstoneparadox.creeperfall.game.participant;
 
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -8,9 +10,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Pair;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class UpgradeableArmor implements Upgradeable {
@@ -97,6 +97,28 @@ public class UpgradeableArmor implements Upgradeable {
 
 		public boolean isNone() {
 			return helmet == Items.AIR;
+		}
+	}
+
+	public static class Builder {
+		private final List<Pair<ArmorType, Consumer<List<ItemStack>>>> tiers = new ArrayList<>();
+
+		public Builder tier(ArmorType type) {
+			tiers.add(new Pair<>(type, itemStacks -> {}));
+			return this;
+		}
+
+		public Builder tier(ArmorType type, Enchantment enchantment, int level) {
+			tiers.add(new Pair<>(type, itemStacks -> {
+				for (ItemStack stack : itemStacks) {
+					EnchantmentHelper.set(Map.of(enchantment, level), stack);
+				}
+			}));
+			return this;
+		}
+
+		public UpgradeableArmor build() {
+			return new UpgradeableArmor(tiers);
 		}
 	}
 }
