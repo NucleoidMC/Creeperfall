@@ -18,6 +18,8 @@ import java.util.EnumSet;
 import java.util.Objects;
 
 public class CreeperfallGuardianEntity extends GuardianEntity {
+	private int timeToDespawn = 30 * 20;
+
 	public CreeperfallGuardianEntity(World world) {
 		super(EntityType.GUARDIAN, world);
 	}
@@ -67,6 +69,12 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 
 		prevX = x;
 		prevZ = z;
+
+		timeToDespawn -= 1;
+
+		if (timeToDespawn <= 0) {
+			remove();
+		}
 	}
 
 	static class FireBeamGoal extends Goal {
