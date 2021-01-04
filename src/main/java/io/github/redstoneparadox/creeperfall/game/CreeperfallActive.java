@@ -3,16 +3,11 @@ package io.github.redstoneparadox.creeperfall.game;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallCreeperSpawnLogic;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallPlayerSpawnLogic;
 import io.github.redstoneparadox.creeperfall.game.util.Timer;
-import io.github.redstoneparadox.creeperfall.mixin.MobEntityAccessor;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.damage.EntityDamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.ArrowEntity;
@@ -21,7 +16,6 @@ import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.event.*;
@@ -64,7 +58,7 @@ public class CreeperfallActive {
         this.gameSpace = gameSpace;
         this.config = config;
         this.gameMap = map;
-        this.playerSpawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map);
+        this.playerSpawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map, config);
         this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, config);
         this.participants = new Object2ObjectOpenHashMap<>();
 
@@ -128,7 +122,7 @@ public class CreeperfallActive {
                 inventory.setCursorStack(ItemStack.EMPTY);
             }
 
-            player.giveItemStack(new ItemStack(Items.ARROW, 20));
+            player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows));
         }
     }
 

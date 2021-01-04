@@ -21,7 +21,7 @@ public class CreeperfallWaiting {
         this.gameSpace = gameSpace;
         this.map = map;
         this.config = config;
-        this.spawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map);
+        this.spawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map, config);
     }
 
     public static GameOpenProcedure open(GameOpenContext<CreeperfallConfig> context) {

@@ -1,5 +1,6 @@
 package io.github.redstoneparadox.creeperfall.game.spawning;
 
+import io.github.redstoneparadox.creeperfall.game.CreeperfallConfig;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
@@ -15,15 +16,15 @@ import net.minecraft.world.GameMode;
 import io.github.redstoneparadox.creeperfall.Creeperfall;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 
-import java.util.Random;
-
 public class CreeperfallPlayerSpawnLogic {
     private final GameSpace gameSpace;
     private final CreeperfallMap map;
+    private final CreeperfallConfig config;
 
-    public CreeperfallPlayerSpawnLogic(GameSpace gameSpace, CreeperfallMap map) {
+    public CreeperfallPlayerSpawnLogic(GameSpace gameSpace, CreeperfallMap map, CreeperfallConfig config) {
         this.gameSpace = gameSpace;
         this.map = map;
+        this.config = config;
     }
 
     public void resetPlayer(ServerPlayerEntity player, GameMode gameMode) {
@@ -48,7 +49,7 @@ public class CreeperfallPlayerSpawnLogic {
             nbt.putBoolean("Unbreakable", true);
 
             player.giveItemStack(bowStack);
-            player.giveItemStack(new ItemStack(Items.ARROW, 20));
+            player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows));
         }
     }
 

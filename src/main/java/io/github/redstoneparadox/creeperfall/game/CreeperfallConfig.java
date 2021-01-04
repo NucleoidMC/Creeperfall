@@ -12,7 +12,8 @@ public class CreeperfallConfig {
             Codec.INT.fieldOf("time_limit_secs").forGetter(config -> config.timeLimitSecs),
             Codec.INT.fieldOf("max_creepers_per_player").forGetter(config -> config.maxCreepersPerPlayer),
             Codec.INT.fieldOf("stage_length_secs").forGetter(config -> config.stageLengthSeconds),
-            Codec.INT.fieldOf("creeper_spawn_delay_secs").forGetter(config -> config.creeperSpawnDelaySecs)
+            Codec.INT.fieldOf("creeper_spawn_delay_secs").forGetter(config -> config.creeperSpawnDelaySecs),
+            Codec.INT.fieldOf("max_arrows").forGetter(config -> config.maxArrows)
     ).apply(instance, CreeperfallConfig::new));
 
     public final PlayerConfig playerConfig;
@@ -21,13 +22,23 @@ public class CreeperfallConfig {
     public final int maxCreepersPerPlayer;
     public final int stageLengthSeconds;
     public final int creeperSpawnDelaySecs;
+    public final int maxArrows;
 
-    public CreeperfallConfig(PlayerConfig players, CreeperfallMapConfig mapConfig, int timeLimitSecs, int maxCreepersPerPlayer, int stageLengthSeconds, int creeperSpawnDelaySecs) {
+    public CreeperfallConfig(
+            PlayerConfig players,
+            CreeperfallMapConfig mapConfig,
+            int timeLimitSecs,
+            int maxCreepersPerPlayer,
+            int stageLengthSeconds,
+            int creeperSpawnDelaySecs,
+            int maxArrows
+    ) {
         this.playerConfig = players;
         this.mapConfig = mapConfig;
         this.timeLimitSecs = timeLimitSecs;
         this.maxCreepersPerPlayer = maxCreepersPerPlayer;
         this.stageLengthSeconds = stageLengthSeconds;
         this.creeperSpawnDelaySecs = creeperSpawnDelaySecs;
+        this.maxArrows = maxArrows;
     }
 }
