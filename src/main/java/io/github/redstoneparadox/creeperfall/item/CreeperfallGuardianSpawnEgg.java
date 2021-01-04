@@ -1,21 +1,15 @@
 package io.github.redstoneparadox.creeperfall.item;
 
-import io.github.redstoneparadox.creeperfall.entity.CreeperfallCreeperEntity;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallGuardianEntity;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import xyz.nucleoid.plasmid.fake.FakeItem;
 
 import java.util.Objects;

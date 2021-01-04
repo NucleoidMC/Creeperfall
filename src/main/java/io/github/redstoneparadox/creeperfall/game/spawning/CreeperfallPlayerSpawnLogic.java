@@ -1,20 +1,20 @@
 package io.github.redstoneparadox.creeperfall.game.spawning;
 
+import io.github.redstoneparadox.creeperfall.Creeperfall;
 import io.github.redstoneparadox.creeperfall.game.CreeperfallConfig;
+import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.math.Vec3d;
-import xyz.nucleoid.plasmid.game.GameSpace;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
-import io.github.redstoneparadox.creeperfall.Creeperfall;
-import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
+import xyz.nucleoid.plasmid.game.GameSpace;
 
 public class CreeperfallPlayerSpawnLogic {
     private final GameSpace gameSpace;

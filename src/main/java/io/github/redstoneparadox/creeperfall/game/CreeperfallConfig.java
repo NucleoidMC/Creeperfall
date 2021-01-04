@@ -2,10 +2,10 @@ package io.github.redstoneparadox.creeperfall.game;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMapConfig;
 import io.github.redstoneparadox.creeperfall.game.shop.CreeperfallShopConfig;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallCreeperSpawnConfig;
 import xyz.nucleoid.plasmid.game.config.PlayerConfig;
-import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMapConfig;
 
 public class CreeperfallConfig {
     public static final Codec<CreeperfallConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(

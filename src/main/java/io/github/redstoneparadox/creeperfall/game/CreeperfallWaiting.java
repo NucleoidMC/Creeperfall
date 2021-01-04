@@ -1,15 +1,17 @@
 package io.github.redstoneparadox.creeperfall.game;
 
-import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallPlayerSpawnLogic;
-import net.minecraft.util.ActionResult;
-import xyz.nucleoid.plasmid.game.*;
-import xyz.nucleoid.plasmid.game.event.*;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.GameMode;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMapGenerator;
+import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallPlayerSpawnLogic;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.world.GameMode;
 import xyz.nucleoid.fantasy.BubbleWorldConfig;
+import xyz.nucleoid.plasmid.game.*;
+import xyz.nucleoid.plasmid.game.event.PlayerAddListener;
+import xyz.nucleoid.plasmid.game.event.PlayerDeathListener;
+import xyz.nucleoid.plasmid.game.event.RequestStartListener;
 
 public class CreeperfallWaiting {
     private final GameSpace gameSpace;

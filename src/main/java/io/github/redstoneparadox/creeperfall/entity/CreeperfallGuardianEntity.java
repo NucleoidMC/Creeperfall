@@ -4,7 +4,6 @@ import io.github.redstoneparadox.creeperfall.entity.ai.goal.AlwaysFollowTargetGo
 import io.github.redstoneparadox.creeperfall.mixin.GuardianEntityAccessor;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.WanderAroundGoal;
