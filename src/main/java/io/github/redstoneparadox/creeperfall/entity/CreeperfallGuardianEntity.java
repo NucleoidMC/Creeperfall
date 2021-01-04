@@ -1,5 +1,6 @@
 package io.github.redstoneparadox.creeperfall.entity;
 
+import io.github.redstoneparadox.creeperfall.entity.ai.goal.AlwaysFollowTargetGoal;
 import io.github.redstoneparadox.creeperfall.mixin.GuardianEntityAccessor;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -23,18 +24,18 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 
 	@Override
 	public int getWarmupTime() {
-		return 1;
+		return 2;
 	}
 
 	@Override
 	protected void initGoals() {
 		this.wanderGoal = new WanderAroundGoal(this, 0.0D, 0);
 		this.goalSelector.add(4, new FireBeamGoal(this));
-		this.goalSelector.add(8, new LookAtEntityGoal(this, CreeperEntity.class, 24.0F));
+		this.goalSelector.add(8, new LookAtEntityGoal(this, CreeperEntity.class, 256.0F));
 		this.wanderGoal.setControls(EnumSet.of(Goal.Control.LOOK));
 		this.targetSelector.add(
 				1,
-				new FollowTargetGoal<>(
+				new AlwaysFollowTargetGoal<>(
 						this,
 						LivingEntity.class,
 						10,
@@ -83,7 +84,7 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 		}
 
 		public boolean shouldContinue() {
-			return super.shouldContinue() && (this.guardian.squaredDistanceTo(Objects.requireNonNull(this.guardian.getTarget())) > 9.0D);
+			return super.shouldContinue() && (this.guardian.getTarget().getY() <= 75);
 		}
 
 		public void start() {
