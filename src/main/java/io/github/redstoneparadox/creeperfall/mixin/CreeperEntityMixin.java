@@ -1,12 +1,18 @@
 package io.github.redstoneparadox.creeperfall.mixin;
 
 import io.github.redstoneparadox.creeperfall.hooks.CreeperHooks;
+import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.GameRules;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -16,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CreeperEntity.class)
 public abstract class CreeperEntityMixin extends HostileEntity implements CreeperHooks {
+	@Shadow private int explosionRadius;
 	@Unique
 	private boolean isCreeperfallCreeper = false;
 
@@ -33,6 +40,12 @@ public abstract class CreeperEntityMixin extends HostileEntity implements Creepe
 				kill();
 			}
 		}
+	}
+
+	@Override
+	public @Nullable EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable CompoundTag entityTag) {
+		if (isCreeperfallCreeper) explosionRadius = 1;
+		return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
 	}
 
 	@Override

@@ -70,10 +70,10 @@ public class CreeperfallCreeperSpawnLogic {
 		entity.prevZ = z;
 
 		entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 100, 1, true, false));
-		entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
 		entity.setHealth(0.5f);
 		((MobEntityAccessor) entity).setExperiencePoints(0);
 		((CreeperHooks) entity).setCreeperfallCreeper(true);
+		entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
 		world.spawnEntity(entity);
 	}
 }
