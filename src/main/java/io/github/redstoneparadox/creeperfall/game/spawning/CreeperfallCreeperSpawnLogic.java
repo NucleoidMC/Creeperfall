@@ -20,8 +20,8 @@ import java.util.Random;
 public class CreeperfallCreeperSpawnLogic {
 	private final GameSpace gameSpace;
 	private final CreeperfallConfig config;
-	private final Random random = new Random();
-	private final int maxCreepers = 4;
+	private final int maxCreepers;
+	private final Random random;
 	private final Timer spawnTimer;
 	private final Timer creeperIncreaseTimer;
 	private int currentCreepers = 1;
@@ -29,9 +29,12 @@ public class CreeperfallCreeperSpawnLogic {
 	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, CreeperfallConfig config) {
 		this.gameSpace = gameSpace;
 		this.config = config;
-		int ticksToIncreaseCreepers = (config.timeLimitSecs * 20)/8;
-		this.spawnTimer = Timer.createRepeating(100, this::spawnCreepers);
-		this.creeperIncreaseTimer = Timer.createRepeating(ticksToIncreaseCreepers, () -> {
+		this.maxCreepers = gameSpace.getPlayerCount() * config.maxCreepersPerPlayer;
+		int stageLength = config.stageLengthSeconds * 20;
+		int spawnDelay = config.creeperSpawnDelaySecs * 20;
+		this.random = new Random();
+		this.spawnTimer = Timer.createRepeating(spawnDelay, this::spawnCreepers);
+		this.creeperIncreaseTimer = Timer.createRepeating(stageLength, () -> {
 			if (currentCreepers < maxCreepers) {
 				currentCreepers += 1;
 			}
@@ -39,8 +42,8 @@ public class CreeperfallCreeperSpawnLogic {
 	}
 
 	public void tick() {
-		creeperIncreaseTimer.tick();
 		spawnTimer.tick();
+		creeperIncreaseTimer.tick();
 	}
 
 	private void spawnCreepers() {
