@@ -64,7 +64,7 @@ public class CreeperfallCreeperSpawnLogic {
 		int y = 85;
 		int z = random.nextInt(size) - radius;
 
-		Objects.requireNonNull(entity).setPos(0, 85, 0);
+		Objects.requireNonNull(entity).setPos(0, 105, 0);
 		entity.updatePosition(x, y, z);
 		entity.setVelocity(Vec3d.ZERO);
 
