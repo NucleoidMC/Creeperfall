@@ -32,7 +32,7 @@ public class CreeperfallCreeperSpawnLogic {
 		int ticksToIncreaseCreepers = (config.timeLimitSecs * 20)/8;
 		this.spawnTimer = Timer.createRepeating(100, this::spawnCreepers);
 		this.creeperIncreaseTimer = Timer.createRepeating(ticksToIncreaseCreepers, () -> {
-			if (currentCreepers < 4) {
+			if (currentCreepers < maxCreepers) {
 				currentCreepers += 1;
 			}
 		});
