@@ -19,6 +19,11 @@ public class UpgradeableItem implements Upgradeable {
 	}
 
 	@Override
+	public boolean canUpgrade() {
+		return currentTier < tiers.size() - 1;
+	}
+
+	@Override
 	public boolean upgrade(CreeperfallParticipant participant) {
 		ServerWorld world = participant.getGameSpace().getWorld();
 		ServerPlayerEntity player = participant.getPlayer().getEntity(world);

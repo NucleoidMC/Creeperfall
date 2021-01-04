@@ -22,6 +22,10 @@ public class UpgradeableArmor implements Upgradeable {
 		this.tiers = tiers;
 	}
 
+	@Override
+	public boolean canUpgrade() {
+		return currentTier < tiers.size() - 1;
+	}
 
 	@Override
 	public boolean upgrade(CreeperfallParticipant participant) {
