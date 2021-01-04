@@ -11,4 +11,12 @@ public class CreeperfallParticipant {
 		this.player = player;
 		this.gameSpace = gameSpace;
 	}
+
+	public PlayerRef getPlayer() {
+		return player;
+	}
+
+	public GameSpace getGameSpace() {
+		return gameSpace;
+	}
 }
