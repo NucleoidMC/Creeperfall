@@ -2,6 +2,7 @@ package io.github.redstoneparadox.creeperfall.game.spawning;
 
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallCreeperEntity;
 import io.github.redstoneparadox.creeperfall.game.CreeperfallConfig;
+import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.util.Timer;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -17,6 +18,7 @@ import java.util.Random;
 
 public class CreeperfallCreeperSpawnLogic {
 	private final GameSpace gameSpace;
+	private final CreeperfallMap map;
 	private final CreeperfallConfig config;
 	private final int maxCreepers;
 	private final Random random;
@@ -24,8 +26,9 @@ public class CreeperfallCreeperSpawnLogic {
 	private final Timer creeperIncreaseTimer;
 	private int currentCreepers = 1;
 
-	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, CreeperfallConfig config) {
+	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, CreeperfallMap map, CreeperfallConfig config) {
 		this.gameSpace = gameSpace;
+		this.map = map;
 		this.config = config;
 		this.maxCreepers = gameSpace.getPlayerCount() * config.creeperSpawnConfig.maxCreepersPerPlayer;
 		int stageLength = config.creeperSpawnConfig.stageLengthSeconds * 20;
@@ -59,10 +62,10 @@ public class CreeperfallCreeperSpawnLogic {
 		int size = config.mapConfig.size;
 		int radius = size/2;
 		int x = random.nextInt(size) - radius;
-		int y = 85;
+		int y = map.spawn.getY() + config.creeperSpawnConfig.creeperSpawnHeight;
 		int z = random.nextInt(size) - radius;
 
-		Objects.requireNonNull(entity).setPos(0, 105, 0);
+		Objects.requireNonNull(entity).setPos(x, y, z);
 		entity.updatePosition(x, y, z);
 		entity.setVelocity(Vec3d.ZERO);
 

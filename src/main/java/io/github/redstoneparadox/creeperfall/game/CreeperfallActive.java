@@ -61,7 +61,7 @@ public class CreeperfallActive {
         this.config = config;
         this.gameMap = map;
         this.playerSpawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map, config);
-        this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, config);
+        this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, map, config);
         this.participants = new Object2ObjectOpenHashMap<>();
 
         for (PlayerRef player : participants) {

@@ -17,7 +17,8 @@
   "creeper_spawning": {
     "max_creepers_per_player": 3,
     "stage_length_secs": 15,
-    "creeper_spawn_delay_secs": 5
+    "creeper_spawn_delay_secs": 5,
+    "creeper_spawn_height": 45
   },
   "time_limit_secs": 360,
   "max_arrows": 64,
