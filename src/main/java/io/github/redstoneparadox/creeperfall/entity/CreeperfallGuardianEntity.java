@@ -52,7 +52,20 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 
 	@Override
 	public void setVelocity(Vec3d velocity) {
-		
+
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		float x = 0.5f;
+		float z = 0.5f;
+
+		setPos(x, getY(), z);
+		updatePosition(x, getY(), z);
+
+		prevX = x;
+		prevZ = z;
 	}
 
 	static class FireBeamGoal extends Goal {

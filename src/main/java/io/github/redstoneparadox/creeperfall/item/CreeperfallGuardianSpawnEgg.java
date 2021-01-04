@@ -31,14 +31,12 @@ public class CreeperfallGuardianSpawnEgg extends Item implements FakeItem {
 			return ActionResult.PASS;
 		}
 
-		BlockPos centerPos = context.getBlockPos().offset(Direction.UP, 1);
-
 		ServerWorld world = (ServerWorld) context.getWorld();
 		CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(world);
 
-		int x = centerPos.getX();
-		int y = centerPos.getY();
-		int z = centerPos.getZ();
+		int x = 0;
+		int y = 66;
+		int z = 0;
 
 		Objects.requireNonNull(entity).setPos(x, y, z);
 		entity.updatePosition(x, y, z);
