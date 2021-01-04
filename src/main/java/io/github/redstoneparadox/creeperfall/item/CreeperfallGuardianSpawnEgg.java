@@ -30,9 +30,8 @@ public class CreeperfallGuardianSpawnEgg extends Item implements FakeItem {
 		if (!Objects.requireNonNull(context.getPlayer()).abilities.allowModifyWorld) {
 			return ActionResult.PASS;
 		}
-
-		Direction facing = context.getPlayerFacing();
-		BlockPos centerPos = context.getBlockPos().offset(facing, 1);
+		
+		BlockPos centerPos = context.getBlockPos().offset(Direction.UP, 1);
 
 		ServerWorld world = (ServerWorld) context.getWorld();
 		CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(world);
@@ -53,7 +52,7 @@ public class CreeperfallGuardianSpawnEgg extends Item implements FakeItem {
 		entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.SPAWN_EGG, null, null);
 		world.spawnEntity(entity);
 
-		return ActionResult.SUCCESS;
+		return ActionResult.CONSUME;
 	}
 
 	@Override

@@ -88,7 +88,6 @@ public class CreeperfallActive {
             game.setRule(GameRule.PVP, RuleResult.DENY);
             game.setRule(GameRule.HUNGER, RuleResult.DENY);
             game.setRule(GameRule.FALL_DAMAGE, RuleResult.DENY);
-            game.setRule(GameRule.INTERACTION, RuleResult.DENY);
             game.setRule(GameRule.BLOCK_DROPS, RuleResult.DENY);
             game.setRule(GameRule.THROW_ITEMS, RuleResult.DENY);
             game.setRule(GameRule.UNSTABLE_TNT, RuleResult.DENY);
@@ -166,7 +165,7 @@ public class CreeperfallActive {
     }
 
     private void spawnParticipant(ServerPlayerEntity player) {
-        this.playerSpawnLogic.resetPlayer(player, GameMode.ADVENTURE);
+        this.playerSpawnLogic.resetPlayer(player, GameMode.SURVIVAL);
         this.playerSpawnLogic.spawnPlayer(player);
     }
 

@@ -1,5 +1,6 @@
 package io.github.redstoneparadox.creeperfall;
 
+import io.github.redstoneparadox.creeperfall.item.CreeperfallItems;
 import net.fabricmc.api.ModInitializer;
 import xyz.nucleoid.plasmid.game.GameType;
 import net.minecraft.util.Identifier;
@@ -20,5 +21,7 @@ public class Creeperfall implements ModInitializer {
     );
 
     @Override
-    public void onInitialize() {}
+    public void onInitialize() {
+        CreeperfallItems.init();
+    }
 }
