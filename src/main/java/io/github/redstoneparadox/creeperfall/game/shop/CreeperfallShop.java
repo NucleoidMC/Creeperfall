@@ -19,7 +19,7 @@ public class CreeperfallShop {
 
 	private static ItemStack guardianSpawnEgg() {
 		ItemStack stack = new ItemStack(CreeperfallItems.GUARDIAN_SPAWN_EGG);
-		CompoundTag nbt = stack.getOrCreateTag();
+		CompoundTag nbt = stack.getOrCreateSubTag("display");
 
 		nbt.putString("Lore", new TranslatableText("item.creeperfall.guardian_spawn_egg.lore").asString());
 
