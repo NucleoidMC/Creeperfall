@@ -27,9 +27,9 @@ public class CreeperfallCreeperSpawnLogic {
 	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, CreeperfallConfig config) {
 		this.gameSpace = gameSpace;
 		this.config = config;
-		this.maxCreepers = gameSpace.getPlayerCount() * config.maxCreepersPerPlayer;
-		int stageLength = config.stageLengthSeconds * 20;
-		int spawnDelay = config.creeperSpawnDelaySeconds * 20;
+		this.maxCreepers = gameSpace.getPlayerCount() * config.creeperSpawnConfig.maxCreepersPerPlayer;
+		int stageLength = config.creeperSpawnConfig.stageLengthSeconds * 20;
+		int spawnDelay = config.creeperSpawnConfig.creeperSpawnDelaySeconds * 20;
 		this.random = new Random();
 		this.spawnTimer = Timer.createRepeating(spawnDelay, this::spawnCreepers);
 		this.creeperIncreaseTimer = Timer.createRepeating(stageLength, () -> {
