@@ -43,6 +43,8 @@ public class CreeperfallPlayerSpawnLogic {
         ));
 
         if (gameMode != GameMode.SPECTATOR) {
+            player.giveItemStack(new ItemStack(Items.COMPASS));
+
             ItemStack bowStack = new ItemStack(Items.BOW);
             CompoundTag nbt = bowStack.getOrCreateTag();
 

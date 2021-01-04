@@ -1,5 +1,6 @@
 package io.github.redstoneparadox.creeperfall.game;
 
+import io.github.redstoneparadox.creeperfall.game.shop.CreeperfallShop;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallCreeperSpawnLogic;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallPlayerSpawnLogic;
 import io.github.redstoneparadox.creeperfall.game.util.Timer;
@@ -14,6 +15,7 @@ import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
@@ -103,6 +105,7 @@ public class CreeperfallActive {
             game.on(ExplosionListener.EVENT, active::onExplosion);
             game.on(EntityDeathListener.EVENT, active::onEntityDeath);
             game.on(EntityDropLootListener.EVENT, active::onDropLoot);
+            game.on(UseItemListener.EVENT, active::onUseItem);
 
             game.on(PlayerDamageListener.EVENT, active::onPlayerDamage);
             game.on(PlayerDeathListener.EVENT, active::onPlayerDeath);
@@ -226,6 +229,17 @@ public class CreeperfallActive {
     private TypedActionResult<List<ItemStack>> onDropLoot(LivingEntity dropper, List<ItemStack> loot) {
         loot.clear();
         return TypedActionResult.consume(loot);
+    }
+
+    private TypedActionResult<ItemStack> onUseItem(ServerPlayerEntity player, Hand hand) {
+        ItemStack stack = player.getStackInHand(hand);
+
+        if (stack.getItem() == Items.COMPASS) {
+            player.openHandledScreen(CreeperfallShop.create(player, this));
+            return TypedActionResult.success(stack);
+        }
+
+        return TypedActionResult.pass(stack);
     }
 
     private void broadcastWin(WinResult result) {
