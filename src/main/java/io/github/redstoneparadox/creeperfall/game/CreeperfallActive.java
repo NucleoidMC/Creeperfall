@@ -1,6 +1,7 @@
 package io.github.redstoneparadox.creeperfall.game;
 
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
+import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallParticipant;
 import io.github.redstoneparadox.creeperfall.game.shop.CreeperfallShop;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallCreeperSpawnLogic;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallPlayerSpawnLogic;
@@ -50,7 +51,7 @@ public class CreeperfallActive {
     private final Random random = new Random();
 
     // TODO replace with ServerPlayerEntity if players are removed upon leaving
-    private final Object2ObjectMap<PlayerRef, CreeperfallPlayer> participants;
+    private final Object2ObjectMap<PlayerRef, CreeperfallParticipant> participants;
     private final CreeperfallPlayerSpawnLogic playerSpawnLogic;
     private final CreeperfallCreeperSpawnLogic creeperSpawnLogic;
     private final CreeperfallStageManager stageManager;
@@ -67,7 +68,7 @@ public class CreeperfallActive {
         this.participants = new Object2ObjectOpenHashMap<>();
 
         for (PlayerRef player : participants) {
-            this.participants.put(player, new CreeperfallPlayer());
+            this.participants.put(player, new CreeperfallParticipant(player, gameSpace));
         }
 
         this.stageManager = new CreeperfallStageManager();
