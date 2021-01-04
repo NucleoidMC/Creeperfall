@@ -45,12 +45,6 @@ public abstract class CreeperEntityMixin extends HostileEntity implements Creepe
 	}
 
 	@Override
-	public @Nullable EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable CompoundTag entityTag) {
-		if (isCreeperfallCreeper) explosionRadius = 1;
-		return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
-	}
-
-	@Override
 	public void setCreeperfallCreeper(boolean isCreeperfallCreeper) {
 		this.isCreeperfallCreeper = isCreeperfallCreeper;
 	}
