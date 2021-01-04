@@ -10,6 +10,7 @@ import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.GuardianEntity;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;
@@ -30,7 +31,7 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 		this.wanderGoal = new WanderAroundGoal(this, 0.0D, 0);
 		this.goalSelector.add(4, new FireBeamGoal(this));
 		this.goalSelector.add(8, new LookAtEntityGoal(this, CreeperEntity.class, 24.0F));
-		this.wanderGoal.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
+		this.wanderGoal.setControls(EnumSet.of(Goal.Control.LOOK));
 		this.targetSelector.add(
 				1,
 				new FollowTargetGoal<>(
@@ -42,6 +43,16 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 						livingEntity -> livingEntity instanceof CreeperEntity
 				)
 		);
+	}
+
+	@Override
+	public void setMovementSpeed(float movementSpeed) {
+
+	}
+
+	@Override
+	public void setVelocity(Vec3d velocity) {
+		
 	}
 
 	static class FireBeamGoal extends Goal {
