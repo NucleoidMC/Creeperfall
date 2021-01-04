@@ -34,9 +34,9 @@ public class CreeperfallGuardianSpawnEgg extends Item implements FakeItem {
 		ServerWorld world = (ServerWorld) context.getWorld();
 		CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(world);
 
-		int x = 0;
-		int y = 66;
-		int z = 0;
+		double x = 0.5;
+		double y = 66;
+		double z = 0.5;
 
 		Objects.requireNonNull(entity).setPos(x, y, z);
 		entity.updatePosition(x, y, z);
