@@ -15,5 +15,6 @@
   "max_creepers_per_player": 3,
   "stage_length_secs": 60,
   "creeper_spawn_delay_secs": 5,
-  "max_arrows": 20
+  "max_arrows": 16,
+  "arrow_replenish_time_secs": 20
 }

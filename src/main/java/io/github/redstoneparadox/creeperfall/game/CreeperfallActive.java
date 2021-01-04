@@ -69,7 +69,8 @@ public class CreeperfallActive {
         this.stageManager = new CreeperfallStageManager();
         this.ignoreWinState = this.participants.size() <= 1;
         this.timerBar = new CreeperfallTimerBar(widgets);
-        this.arrowReplenishTimer = Timer.createRepeating(20 * 20, this::onReplenishArrows);
+        int arrowReplenishTime = config.arrowReplenishTimeSeconds * 20;
+        this.arrowReplenishTimer = Timer.createRepeating(arrowReplenishTime, this::onReplenishArrows);
     }
 
     public static void open(GameSpace gameSpace, CreeperfallMap map, CreeperfallConfig config) {

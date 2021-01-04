@@ -12,8 +12,9 @@ public class CreeperfallConfig {
             Codec.INT.fieldOf("time_limit_secs").forGetter(config -> config.timeLimitSecs),
             Codec.INT.fieldOf("max_creepers_per_player").forGetter(config -> config.maxCreepersPerPlayer),
             Codec.INT.fieldOf("stage_length_secs").forGetter(config -> config.stageLengthSeconds),
-            Codec.INT.fieldOf("creeper_spawn_delay_secs").forGetter(config -> config.creeperSpawnDelaySecs),
-            Codec.INT.fieldOf("max_arrows").forGetter(config -> config.maxArrows)
+            Codec.INT.fieldOf("creeper_spawn_delay_secs").forGetter(config -> config.creeperSpawnDelaySeconds),
+            Codec.INT.fieldOf("max_arrows").forGetter(config -> config.maxArrows),
+            Codec.INT.fieldOf("arrow_replenish_time_secs").forGetter(config -> config.arrowReplenishTimeSeconds)
     ).apply(instance, CreeperfallConfig::new));
 
     public final PlayerConfig playerConfig;
@@ -21,8 +22,9 @@ public class CreeperfallConfig {
     public final int timeLimitSecs;
     public final int maxCreepersPerPlayer;
     public final int stageLengthSeconds;
-    public final int creeperSpawnDelaySecs;
+    public final int creeperSpawnDelaySeconds;
     public final int maxArrows;
+    public final int arrowReplenishTimeSeconds;
 
     public CreeperfallConfig(
             PlayerConfig players,
@@ -30,15 +32,17 @@ public class CreeperfallConfig {
             int timeLimitSecs,
             int maxCreepersPerPlayer,
             int stageLengthSeconds,
-            int creeperSpawnDelaySecs,
-            int maxArrows
+            int creeperSpawnDelaySeconds,
+            int maxArrows,
+            int arrowReplenishTimeSeconds
     ) {
         this.playerConfig = players;
         this.mapConfig = mapConfig;
         this.timeLimitSecs = timeLimitSecs;
         this.maxCreepersPerPlayer = maxCreepersPerPlayer;
         this.stageLengthSeconds = stageLengthSeconds;
-        this.creeperSpawnDelaySecs = creeperSpawnDelaySecs;
+        this.creeperSpawnDelaySeconds = creeperSpawnDelaySeconds;
         this.maxArrows = maxArrows;
+        this.arrowReplenishTimeSeconds = arrowReplenishTimeSeconds;
     }
 }
