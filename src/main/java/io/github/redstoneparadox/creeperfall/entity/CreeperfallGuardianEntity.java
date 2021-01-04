@@ -88,7 +88,7 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 		}
 
 		public void start() {
-			this.beamTicks = 0;
+			this.beamTicks = -1;
 			this.guardian.getNavigation().stop();
 			this.guardian.getLookControl().lookAt(Objects.requireNonNull(this.guardian.getTarget()), 90.0F, 90.0F);
 			this.guardian.velocityDirty = true;
