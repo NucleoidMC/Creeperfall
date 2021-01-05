@@ -43,6 +43,7 @@ public class CreeperfallCreeperSpawnLogic {
 				currentCreepers += 1;
 			}
 		});
+		this.currentCreepers = gameSpace.getPlayerCount();
 	}
 
 	public void tick() {
