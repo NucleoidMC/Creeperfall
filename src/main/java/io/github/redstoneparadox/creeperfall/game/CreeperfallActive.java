@@ -28,6 +28,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameMode;
+import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.event.*;
@@ -85,6 +86,8 @@ public class CreeperfallActive {
                     .collect(Collectors.toSet());
             GlobalWidgets widgets = new GlobalWidgets(game);
             CreeperfallActive active = new CreeperfallActive(gameSpace, map, widgets, config, participants);
+
+            gameSpace.getWorld().getGameRules().get(GameRules.NATURAL_REGENERATION).set(false, gameSpace.getServer());
 
             game.setRule(GameRule.CRAFTING, RuleResult.DENY);
             game.setRule(GameRule.PORTALS, RuleResult.DENY);
@@ -157,8 +160,8 @@ public class CreeperfallActive {
 
     private ActionResult onPlayerDamage(ServerPlayerEntity player, DamageSource source, float amount) {
         // TODO handle damage
-        this.spawnParticipant(player);
-        return ActionResult.FAIL;
+        //this.spawnParticipant(player);
+        return ActionResult.PASS;
     }
 
     private ActionResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
