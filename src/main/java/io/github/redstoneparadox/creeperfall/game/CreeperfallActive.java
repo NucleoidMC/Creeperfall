@@ -30,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.plasmid.game.GameCloseReason;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.event.*;
 import xyz.nucleoid.plasmid.game.player.JoinResult;
@@ -165,8 +166,8 @@ public class CreeperfallActive {
     }
 
     private ActionResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
-        // TODO handle death
-        this.spawnParticipant(player);
+        this.participants.remove(PlayerRef.of(player));
+        this.spawnSpectator(player);
         return ActionResult.FAIL;
     }
 
@@ -183,6 +184,12 @@ public class CreeperfallActive {
     private void tick() {
         ServerWorld world = this.gameSpace.getWorld();
         long time = world.getTime();
+
+        if (participants.isEmpty()) {
+            this.broadcastWin(WinResult.no());
+            this.gameSpace.close(GameCloseReason.FINISHED);
+            return;
+        }
 
         CreeperfallStageManager.IdleTickResult result = this.stageManager.tick(time, gameSpace);
 
