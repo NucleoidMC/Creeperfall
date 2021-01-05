@@ -20,7 +20,7 @@ public class CreeperfallShop {
 
 	public static ShopUi create(CreeperfallParticipant participant, CreeperfallActive game, CreeperfallShopConfig shopConfig) {
 		return ShopUi.create(new LiteralText("Shop"), shop -> {
-			shop.add(upgrade(participant, participant.armorUpgrade));
+			shop.add(upgrade(participant, shopConfig, participant.armorUpgrade));
 			shop.add(summonGuardian(game, shopConfig));
 			shop.add(summonOcelot(game, shopConfig));
 		});
@@ -62,14 +62,23 @@ public class CreeperfallShop {
 		return entry;
 	}
 
-	private static ShopEntry upgrade(CreeperfallParticipant participant, Upgrade upgrade) {
+	private static ShopEntry upgrade(CreeperfallParticipant participant, CreeperfallShopConfig shopConfig, Upgrade upgrade) {
 		ItemStack icon = upgrade.getIcon();
+		int tier = upgrade.getTier();
 
-		return ShopEntry
-				.ofIcon(icon)
-				.withName(new LiteralText("Upgrade Armor"))
-				.withCost(Cost.ofEmeralds(1))
-				.onBuy(playerEntity -> upgrade.upgrade(participant));
+		if (upgrade.canUpgrade()) {
+			return ShopEntry
+					.ofIcon(icon)
+					.withName(new LiteralText("Upgrade Armor"))
+					.withCost(Cost.ofEmeralds(shopConfig.armorUpgradePrices.get(tier)))
+					.onBuy(playerEntity -> upgrade.upgrade(participant));
+		}
+		else {
+			return ShopEntry
+					.ofIcon(icon)
+					.withName(new LiteralText("Armor Fully Upgraded"))
+					.withCost(Cost.no());
+		}
 	}
 
 	private static List<OrderedText> wrapText(StringVisitable text) {

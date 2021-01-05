@@ -13,7 +13,8 @@
   },
   "shop": {
     "guardian_price": 3,
-    "ocelot_price": 5
+    "ocelot_price": 5,
+    "armor_upgrade_prices": [1, 2, 4]
   },
   "creeper_spawning": {
     "max_creepers_per_player": 3,
