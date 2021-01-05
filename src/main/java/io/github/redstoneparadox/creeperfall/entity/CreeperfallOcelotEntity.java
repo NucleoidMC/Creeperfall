@@ -25,10 +25,12 @@ public class CreeperfallOcelotEntity extends OcelotEntity {
 
 	@Override
 	public void setMovementSpeed(float movementSpeed) {
+
 	}
 
 	@Override
 	public void setVelocity(Vec3d velocity) {
+
 	}
 
 	@Override
