@@ -3,6 +3,7 @@ package io.github.redstoneparadox.creeperfall.game.spawning;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallCreeperEntity;
 import io.github.redstoneparadox.creeperfall.game.CreeperfallConfig;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
+import io.github.redstoneparadox.creeperfall.game.util.EntityTracker;
 import io.github.redstoneparadox.creeperfall.game.util.Timer;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -20,16 +21,18 @@ public class CreeperfallCreeperSpawnLogic {
 	private final GameSpace gameSpace;
 	private final CreeperfallMap map;
 	private final CreeperfallConfig config;
+	private final EntityTracker tracker;
 	private final int maxCreepers;
 	private final Random random;
 	private final Timer spawnTimer;
 	private final Timer creeperIncreaseTimer;
 	private int currentCreepers = 1;
 
-	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, CreeperfallMap map, CreeperfallConfig config) {
+	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, CreeperfallMap map, CreeperfallConfig config, EntityTracker tracker) {
 		this.gameSpace = gameSpace;
 		this.map = map;
 		this.config = config;
+		this.tracker = tracker;
 		this.maxCreepers = gameSpace.getPlayerCount() * config.creeperSpawnConfig.maxCreepersPerPlayer;
 		int stageLength = config.creeperSpawnConfig.stageLengthSeconds * 20;
 		int spawnDelay = config.creeperSpawnConfig.creeperSpawnDelaySeconds * 20;
@@ -82,5 +85,6 @@ public class CreeperfallCreeperSpawnLogic {
 		entity.setHealth(0.5f);
 		entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
 		world.spawnEntity(entity);
+		tracker.add(entity);
 	}
 }

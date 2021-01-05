@@ -6,6 +6,7 @@ import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallPartici
 import io.github.redstoneparadox.creeperfall.game.shop.CreeperfallShop;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallCreeperSpawnLogic;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallPlayerSpawnLogic;
+import io.github.redstoneparadox.creeperfall.game.util.EntityTracker;
 import io.github.redstoneparadox.creeperfall.game.util.Timer;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -57,6 +58,7 @@ public class CreeperfallActive {
     private final Random random = new Random();
 
     // TODO replace with ServerPlayerEntity if players are removed upon leaving
+    private final EntityTracker tracker;
     private final Object2ObjectMap<PlayerRef, CreeperfallParticipant> participants;
     private final CreeperfallPlayerSpawnLogic playerSpawnLogic;
     private final CreeperfallCreeperSpawnLogic creeperSpawnLogic;
@@ -69,8 +71,9 @@ public class CreeperfallActive {
         this.gameSpace = gameSpace;
         this.config = config;
         this.gameMap = map;
+        this.tracker = new EntityTracker();
         this.playerSpawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map, config);
-        this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, map, config);
+        this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, map, config, tracker);
         this.participants = new Object2ObjectOpenHashMap<>();
 
         for (PlayerRef player : participants) {
@@ -141,6 +144,7 @@ public class CreeperfallActive {
         entity.setInvulnerable(true);
         entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.SPAWN_EGG, null, null);
         world.spawnEntity(entity);
+        tracker.add(entity);
     }
 
     private void onReplenishArrows() {
@@ -207,6 +211,8 @@ public class CreeperfallActive {
     }
 
     private void tick() {
+        tracker.clean();
+
         ServerWorld world = this.gameSpace.getWorld();
         long time = world.getTime();
 

@@ -3,6 +3,7 @@ package io.github.redstoneparadox.creeperfall.game.util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,6 +22,16 @@ public class EntityTracker {
 		EntityType<?> type = entity.getType();
 		Set<Entity> set = entityMap.computeIfAbsent(type, entityType -> new HashSet<>());
 		set.remove(entity);
+	}
+
+	public void clean() {
+		Collection<Set<Entity>> setCollection = entityMap.values();
+
+		for (Set<Entity> set : setCollection) {
+			set.iterator().forEachRemaining(entity -> {
+				if (entity.removed) set.remove(entity);
+			});
+		}
 	}
 
 	@SuppressWarnings("unchecked")
