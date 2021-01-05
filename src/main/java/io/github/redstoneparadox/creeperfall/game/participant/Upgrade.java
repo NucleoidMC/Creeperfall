@@ -5,6 +5,8 @@ import net.minecraft.item.ItemStack;
 public interface Upgrade {
 	boolean canUpgrade();
 
+	int getTier();
+
 	boolean upgrade(CreeperfallParticipant participant);
 
 	ItemStack getIcon();

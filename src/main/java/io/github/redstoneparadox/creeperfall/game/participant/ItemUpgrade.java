@@ -24,6 +24,11 @@ public class ItemUpgrade implements Upgrade {
 	}
 
 	@Override
+	public int getTier() {
+		return currentTier;
+	}
+
+	@Override
 	public boolean upgrade(CreeperfallParticipant participant) {
 		ServerWorld world = participant.getGameSpace().getWorld();
 		ServerPlayerEntity player = participant.getPlayer().getEntity(world);
