@@ -22,6 +22,7 @@ public class CreeperfallShop {
 		return ShopUi.create(new LiteralText("Shop"), shop -> {
 			shop.add(upgrade(participant, participant.armorUpgrade));
 			shop.add(summonGuardian(game, shopConfig));
+			shop.add(summonOcelot(game, shopConfig));
 		});
 	}
 
@@ -39,6 +40,24 @@ public class CreeperfallShop {
 		entry
 				.withCost(Cost.ofEmeralds(shopConfig.guardianEggPrice))
 				.onBuy(playerEntity -> game.spawnGuardian());
+
+		return entry;
+	}
+
+	private static ShopEntry summonOcelot(CreeperfallActive game, CreeperfallShopConfig shopConfig) {
+		ShopEntry entry = ShopEntry.
+				ofIcon(Items.OCELOT_SPAWN_EGG)
+				.withName(new LiteralText("Spawn Cat"));
+
+		List<OrderedText> wrapped = wrapText(new LiteralText("Summons a Cat to scare Creepers to death. Despawns after 3 seconds."));
+		for (OrderedText orderedText : wrapped) {
+			Text text = READER.read(orderedText);
+			entry.addLore(text);
+		}
+
+		entry
+				.withCost(Cost.ofEmeralds(1))
+				.onBuy(playerEntity -> game.spawnOcelot());
 
 		return entry;
 	}

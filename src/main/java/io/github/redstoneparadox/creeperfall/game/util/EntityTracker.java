@@ -3,6 +3,7 @@ package io.github.redstoneparadox.creeperfall.game.util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,9 +29,7 @@ public class EntityTracker {
 		Collection<Set<Entity>> setCollection = entityMap.values();
 
 		for (Set<Entity> set : setCollection) {
-			set.iterator().forEachRemaining(entity -> {
-				if (entity.removed) set.remove(entity);
-			});
+			set.removeIf(entity -> entity.removed);
 		}
 	}
 

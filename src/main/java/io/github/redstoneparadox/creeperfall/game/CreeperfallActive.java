@@ -1,6 +1,7 @@
 package io.github.redstoneparadox.creeperfall.game;
 
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallGuardianEntity;
+import io.github.redstoneparadox.creeperfall.entity.CreeperfallOcelotEntity;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallParticipant;
 import io.github.redstoneparadox.creeperfall.game.shop.CreeperfallShop;
@@ -128,6 +129,28 @@ public class CreeperfallActive {
     public void spawnGuardian() {
         ServerWorld world = gameSpace.getWorld();
         CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(world);
+
+        double x = 0.5;
+        double y = 66;
+        double z = 0.5;
+
+        Objects.requireNonNull(entity).setPos(x, y, z);
+        entity.updatePosition(x, y, z);
+        entity.setVelocity(Vec3d.ZERO);
+
+        entity.prevX = x;
+        entity.prevY = y;
+        entity.prevZ = z;
+
+        entity.setInvulnerable(true);
+        entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.SPAWN_EGG, null, null);
+        world.spawnEntity(entity);
+        tracker.add(entity);
+    }
+
+    public void spawnOcelot() {
+        ServerWorld world = gameSpace.getWorld();
+        CreeperfallOcelotEntity entity = new CreeperfallOcelotEntity(tracker, world);
 
         double x = 0.5;
         double y = 66;
