@@ -2,28 +2,28 @@
   "type": "creeperfall:creeperfall",
   "map": {
     "spawn_block": {
-      "Name": "minecraft:red_terracotta",
+      "Name": "minecraft:blue_stained_glass",
       "Properties": {}
     },
-    "size": 13
+    "size": 15
   },
   "players": {
     "min": 1,
     "max": 8
   },
   "shop": {
-    "guardian_price": 3,
-    "ocelot_price": 5,
-    "armor_upgrade_prices": [1, 2, 4]
+    "guardian_price": 12,
+    "ocelot_price": 20,
+    "armor_upgrade_prices": [8, 16, 24]
   },
   "creeper_spawning": {
     "max_creepers_per_player": 3,
-    "stage_length_secs": 15,
+    "stage_length_secs": 60,
     "creeper_spawn_delay_secs": 5,
-    "creeper_spawn_height": 45
+    "creeper_spawn_height": 60
   },
   "time_limit_secs": 360,
-  "max_arrows": 64,
+  "max_arrows": 32,
   "arrow_replenish_time_secs": 10,
   "emerald_reward_count": [1, 3]
 }
