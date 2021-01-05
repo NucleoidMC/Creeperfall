@@ -1,7 +1,5 @@
 package io.github.redstoneparadox.creeperfall.entity;
 
-import io.github.redstoneparadox.creeperfall.Creeperfall;
-import io.github.redstoneparadox.creeperfall.game.CreeperfallActive;
 import io.github.redstoneparadox.creeperfall.game.util.EntityTracker;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.CreeperEntity;
@@ -37,15 +35,15 @@ public class CreeperfallOcelotEntity extends OcelotEntity {
 
 	@Override
 	public void tick() {
-		Set<CreeperEntity> creepers = tracker.getAll(EntityType.CREEPER);
-
-		for (CreeperEntity creeperEntity: creepers) {
-			creeperEntity.kill();
-		}
-
 		timeToDespawn -= 1;
 
-		if (timeToDespawn <= 0) {
+		if (timeToDespawn <= 0 && !removed) {
+			Set<CreeperEntity> creepers = tracker.getAll(EntityType.CREEPER);
+
+			for (CreeperEntity creeperEntity: creepers) {
+				creeperEntity.kill();
+			}
+
 			remove();
 		}
 
