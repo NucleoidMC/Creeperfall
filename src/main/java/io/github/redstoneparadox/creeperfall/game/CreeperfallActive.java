@@ -235,14 +235,14 @@ public class CreeperfallActive {
 
     private void tick() {
         tracker.clean();
+        boolean finishedEarly = participants.isEmpty();
 
         ServerWorld world = this.gameSpace.getWorld();
         long time = world.getTime();
 
-        if (participants.isEmpty()) {
-            this.broadcastWin(WinResult.no());
-            this.gameSpace.close(GameCloseReason.FINISHED);
-            return;
+        if (finishedEarly) {
+            long remainingTime = this.stageManager.finishTime - world.getTime();
+            if (remainingTime >= 0) this.stageManager.finishEarly(remainingTime);
         }
 
         CreeperfallStageManager.IdleTickResult result = this.stageManager.tick(time, gameSpace);
@@ -260,9 +260,14 @@ public class CreeperfallActive {
                 return;
         }
 
-        this.timerBar.update(this.stageManager.finishTime - time, this.config.timeLimitSecs * 20);
-        creeperSpawnLogic.tick();
-        arrowReplenishTimer.tick();
+        if (finishedEarly) {
+            this.timerBar.update(0, this.config.timeLimitSecs * 20);
+        }
+        else {
+            this.timerBar.update(this.stageManager.finishTime - time, this.config.timeLimitSecs * 20);
+            creeperSpawnLogic.tick();
+            arrowReplenishTimer.tick();
+        }
     }
 
     private void onExplosion(List<BlockPos> affectedBlocks) {

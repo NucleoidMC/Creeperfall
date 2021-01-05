@@ -22,6 +22,8 @@ public class CreeperfallStageManager {
     private long startTime = -1;
     private final Object2ObjectMap<ServerPlayerEntity, FrozenPlayer> frozen;
     private boolean setSpectator = false;
+    private boolean finishEarly = false;
+    private long addedTime = 0;
 
     public CreeperfallStageManager() {
         this.frozen = new Object2ObjectOpenHashMap<>();
@@ -32,7 +34,16 @@ public class CreeperfallStageManager {
         this.finishTime = this.startTime + (config.timeLimitSecs * 20);
     }
 
+    public void finishEarly(long remainingTime) {
+        if (!finishEarly) {
+            addedTime += remainingTime;
+            finishEarly = true;
+        }
+    }
+
     public IdleTickResult tick(long time, GameSpace space) {
+        time += addedTime;
+
         // Game has finished. Wait a few seconds before finally closing the game.
         if (this.closeTime > 0) {
             if (time >= this.closeTime) {
