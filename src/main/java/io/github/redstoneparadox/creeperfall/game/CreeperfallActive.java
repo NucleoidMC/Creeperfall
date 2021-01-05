@@ -277,20 +277,24 @@ public class CreeperfallActive {
     private ActionResult onEntityDeath(LivingEntity entity, DamageSource source) {
         if (entity instanceof CreeperEntity && source instanceof EntityDamageSource) {
             @Nullable Entity sourceEntity = source.getSource();
+            @Nullable ServerPlayerEntity player = null;
 
             if (sourceEntity instanceof ServerPlayerEntity && gameSpace.containsEntity(sourceEntity)) {
-                int emeralds = random.nextInt(3) + 1;
-
-                ((ServerPlayerEntity) sourceEntity).giveItemStack(new ItemStack(Items.EMERALD, emeralds));
+                player = (ServerPlayerEntity) sourceEntity;
             }
             else if (sourceEntity instanceof ArrowEntity) {
                 Entity owner = ((ArrowEntity)sourceEntity).getOwner();
 
                 if (owner instanceof ServerPlayerEntity && gameSpace.containsEntity(owner)) {
-                    int emeralds = random.nextInt(3) + 1;
-
-                    ((ServerPlayerEntity) owner).giveItemStack(new ItemStack(Items.EMERALD, emeralds));
+                    player = (ServerPlayerEntity) owner;
                 }
+            }
+
+            if (player != null) {
+                int maxEmeralds = config.emeraldRewardCount.getMax();
+                int minEmeralds = config.emeraldRewardCount.getMin();
+                int emeralds = (random.nextInt(maxEmeralds - minEmeralds) + 1) + minEmeralds;
+                ((ServerPlayerEntity) player).giveItemStack(new ItemStack(Items.EMERALD, emeralds));
             }
         }
 
