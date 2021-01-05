@@ -25,6 +25,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -35,7 +36,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.plasmid.game.GameCloseReason;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.event.*;
 import xyz.nucleoid.plasmid.game.player.JoinResult;
@@ -45,6 +45,7 @@ import xyz.nucleoid.plasmid.game.rule.RuleResult;
 import xyz.nucleoid.plasmid.util.PlayerRef;
 import xyz.nucleoid.plasmid.widget.GlobalWidgets;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -218,7 +219,7 @@ public class CreeperfallActive {
     }
 
     private ActionResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
-        this.participants.remove(PlayerRef.of(player));
+        this.removePlayer(player);
         this.spawnSpectator(player);
         return ActionResult.FAIL;
     }
@@ -253,7 +254,7 @@ public class CreeperfallActive {
             case TICK_FINISHED:
                 return;
             case GAME_FINISHED:
-                this.broadcastWin(this.checkWinResult());
+                this.broadcastResult(this.checkWinResult());
                 return;
             case GAME_CLOSED:
                 this.gameSpace.close();
@@ -317,14 +318,37 @@ public class CreeperfallActive {
         return TypedActionResult.pass(stack);
     }
 
-    private void broadcastWin(WinResult result) {
-        ServerPlayerEntity winningPlayer = result.getWinningPlayer();
+    private void broadcastResult(GameResult result) {
+        boolean survivors = result.survivors;
 
         Text message;
-        if (winningPlayer != null) {
-            message = winningPlayer.getDisplayName().shallowCopy().append(" has won the game!").formatted(Formatting.GOLD);
+        if (survivors) {
+            ServerWorld world = gameSpace.getWorld();
+            MutableText mutableText = new LiteralText("Game completed! ");
+            List<CreeperfallParticipant> survivorsList = new ArrayList<>(participants.values());
+
+            if (survivorsList.size() > 1) {
+                for (int i = 0; i < survivorsList.size(); i++) {
+                    @Nullable ServerPlayerEntity playerEntity = survivorsList.get(i).getPlayer().getEntity(world);
+
+                    if (i + 1 == survivorsList.size()) {
+                        mutableText.append("and ");
+                        mutableText.append(playerEntity.getDisplayName().shallowCopy());
+                    }
+                    else {
+                        mutableText.append(playerEntity.getDisplayName().shallowCopy());
+                        mutableText.append(", ");
+                    }
+                }
+
+                message = mutableText.append(" have survived!").formatted(Formatting.GOLD);
+            }
+            else {
+                @Nullable ServerPlayerEntity playerEntity = survivorsList.get(0).getPlayer().getEntity(world);
+                message = mutableText.append(playerEntity.getDisplayName().shallowCopy()).append(" survived!");
+            }
         } else {
-            message = new LiteralText("The game ended, but nobody won!").formatted(Formatting.GOLD);
+            message = new LiteralText("Game Over! No one survived the Creepers...").formatted(Formatting.RED);
         }
 
         PlayerSet players = this.gameSpace.getPlayers();
@@ -332,42 +356,31 @@ public class CreeperfallActive {
         players.sendSound(SoundEvents.ENTITY_VILLAGER_YES);
     }
 
-    private WinResult checkWinResult() {
-        // for testing purposes: don't end the game if we only ever had one participant
-        if (this.ignoreWinState) {
-            return WinResult.no();
+    private GameResult checkWinResult() {
+        if (participants.isEmpty()) {
+            return GameResult.no();
         }
 
-        ServerWorld world = this.gameSpace.getWorld();
-        ServerPlayerEntity winningPlayer = null;
-
-        // TODO win result logic
-        return WinResult.no();
+        return GameResult.survived();
     }
 
-    static class WinResult {
-        final ServerPlayerEntity winningPlayer;
-        final boolean win;
+    static class GameResult {
+        private final boolean survivors;
 
-        private WinResult(ServerPlayerEntity winningPlayer, boolean win) {
-            this.winningPlayer = winningPlayer;
-            this.win = win;
+        private GameResult(boolean survivors) {
+            this.survivors = survivors;
         }
 
-        static WinResult no() {
-            return new WinResult(null, false);
+        static GameResult no() {
+            return new GameResult(false);
         }
 
-        static WinResult win(ServerPlayerEntity player) {
-            return new WinResult(player, true);
+        static GameResult survived() {
+            return new GameResult(true);
         }
 
-        public boolean isWin() {
-            return this.win;
-        }
-
-        public ServerPlayerEntity getWinningPlayer() {
-            return this.winningPlayer;
+        public boolean isSurvivors() {
+            return this.survivors;
         }
     }
 }
