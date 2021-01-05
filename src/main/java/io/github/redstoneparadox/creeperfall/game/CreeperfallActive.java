@@ -153,7 +153,7 @@ public class CreeperfallActive {
         CreeperfallOcelotEntity entity = new CreeperfallOcelotEntity(tracker, world);
 
         double x = 0.5;
-        double y = 66;
+        double y = 65;
         double z = 0.5;
 
         Objects.requireNonNull(entity).setPos(x, y, z);
