@@ -1,5 +1,6 @@
 package io.github.redstoneparadox.creeperfall.game;
 
+import io.github.redstoneparadox.creeperfall.entity.CreeperfallGuardianEntity;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallParticipant;
 import io.github.redstoneparadox.creeperfall.game.shop.CreeperfallShop;
@@ -10,6 +11,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.mob.CreeperEntity;
@@ -27,6 +29,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +44,7 @@ import xyz.nucleoid.plasmid.util.PlayerRef;
 import xyz.nucleoid.plasmid.widget.GlobalWidgets;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -116,6 +120,27 @@ public class CreeperfallActive {
             game.on(PlayerDamageListener.EVENT, active::onPlayerDamage);
             game.on(PlayerDeathListener.EVENT, active::onPlayerDeath);
         });
+    }
+
+    public void spawnGuardian() {
+        ServerWorld world = gameSpace.getWorld();
+        CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(world);
+
+        double x = 0.5;
+        double y = 66;
+        double z = 0.5;
+
+        Objects.requireNonNull(entity).setPos(x, y, z);
+        entity.updatePosition(x, y, z);
+        entity.setVelocity(Vec3d.ZERO);
+
+        entity.prevX = x;
+        entity.prevY = y;
+        entity.prevZ = z;
+
+        entity.setInvulnerable(true);
+        entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.SPAWN_EGG, null, null);
+        world.spawnEntity(entity);
     }
 
     private void onReplenishArrows() {
