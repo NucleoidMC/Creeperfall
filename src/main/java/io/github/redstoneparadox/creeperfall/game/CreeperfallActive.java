@@ -132,7 +132,7 @@ public class CreeperfallActive {
         CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(world);
 
         double x = 0.5;
-        double y = 66;
+        double y = 68;
         double z = 0.5;
 
         Objects.requireNonNull(entity).setPos(x, y, z);
