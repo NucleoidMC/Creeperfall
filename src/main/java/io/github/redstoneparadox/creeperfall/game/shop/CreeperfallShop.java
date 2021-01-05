@@ -6,8 +6,12 @@ import io.github.redstoneparadox.creeperfall.game.participant.Upgrade;
 import io.github.redstoneparadox.creeperfall.game.util.OrderedTextReader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import net.minecraft.text.*;
 import xyz.nucleoid.plasmid.shop.Cost;
 import xyz.nucleoid.plasmid.shop.ShopEntry;
@@ -23,6 +27,7 @@ public class CreeperfallShop {
 			shop.add(upgrade(participant, shopConfig, participant.armorUpgrade));
 			shop.add(summonGuardian(game, shopConfig));
 			shop.add(summonOcelot(game, shopConfig));
+			shop.add(jumpBoost(shopConfig));
 		});
 	}
 
@@ -79,6 +84,23 @@ public class CreeperfallShop {
 					.withName(new LiteralText("Armor Fully Upgraded"))
 					.withCost(Cost.no());
 		}
+	}
+
+	private static ShopEntry jumpBoost(CreeperfallShopConfig shopConfig) {
+		ItemStack icon = PotionUtil.setPotion(new ItemStack(Items.POTION), Potions.LEAPING);
+
+		ShopEntry entry = ShopEntry
+				.ofIcon(icon);
+
+		List<OrderedText> wrapped = wrapText(new LiteralText("Gives you 30 seconds of jump boost."));
+		for (OrderedText orderedText : wrapped) {
+			Text text = READER.read(orderedText);
+			entry.addLore(text);
+		}
+
+		return entry
+				.withCost(Cost.ofEmeralds(1))
+				.onBuy(player -> player.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 30 * 20 + 5)));
 	}
 
 	private static List<OrderedText> wrapText(StringVisitable text) {
