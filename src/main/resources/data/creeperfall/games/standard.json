@@ -12,7 +12,8 @@
     "max": 8
   },
   "shop": {
-    "guardian_egg_price": 3
+    "guardian_price": 3,
+    "ocelot_price": 5
   },
   "creeper_spawning": {
     "max_creepers_per_player": 3,

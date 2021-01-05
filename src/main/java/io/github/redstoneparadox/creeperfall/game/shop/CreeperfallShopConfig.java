@@ -5,12 +5,15 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public class CreeperfallShopConfig {
 	public static final Codec<CreeperfallShopConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Codec.INT.fieldOf("guardian_egg_price").forGetter(config -> config.guardianEggPrice)
+			Codec.INT.fieldOf("guardian_price").forGetter(config -> config.guardianPrice),
+			Codec.INT.fieldOf("ocelot_price").forGetter(config -> config.ocelotPrice)
 	).apply(instance, CreeperfallShopConfig::new));
 
-	public final int guardianEggPrice;
+	public final int guardianPrice;
+	public final int ocelotPrice;
 
-	public CreeperfallShopConfig(int guardianEggPrice) {
-		this.guardianEggPrice = guardianEggPrice;
+	public CreeperfallShopConfig(int guardianPrice, int ocelotPrice) {
+		this.guardianPrice = guardianPrice;
+		this.ocelotPrice = ocelotPrice;
 	}
 }

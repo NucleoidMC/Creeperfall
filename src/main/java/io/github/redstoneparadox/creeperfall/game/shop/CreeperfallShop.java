@@ -38,7 +38,7 @@ public class CreeperfallShop {
 		}
 
 		entry
-				.withCost(Cost.ofEmeralds(shopConfig.guardianEggPrice))
+				.withCost(Cost.ofEmeralds(shopConfig.guardianPrice))
 				.onBuy(playerEntity -> game.spawnGuardian());
 
 		return entry;
@@ -56,7 +56,7 @@ public class CreeperfallShop {
 		}
 
 		entry
-				.withCost(Cost.ofEmeralds(1))
+				.withCost(Cost.ofEmeralds(shopConfig.ocelotPrice))
 				.onBuy(playerEntity -> game.spawnOcelot());
 
 		return entry;
