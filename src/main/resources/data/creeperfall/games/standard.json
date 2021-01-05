@@ -12,18 +12,18 @@
     "max": 8
   },
   "shop": {
-    "guardian_price": 12,
-    "ocelot_price": 20,
-    "armor_upgrade_prices": [8, 16, 24]
+    "guardian_price": 10,
+    "ocelot_price": 16,
+    "armor_upgrade_prices": [10, 16, 28]
   },
   "creeper_spawning": {
     "max_creepers_per_player": 3,
     "stage_length_secs": 60,
     "creeper_spawn_delay_secs": 5,
-    "creeper_spawn_height": 60
+    "creeper_spawn_height": 70
   },
   "time_limit_secs": 360,
-  "max_arrows": 32,
+  "max_arrows": 20,
   "arrow_replenish_time_secs": 10,
   "emerald_reward_count": [1, 3]
 }
