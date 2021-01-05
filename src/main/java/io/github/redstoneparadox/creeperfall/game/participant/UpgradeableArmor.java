@@ -117,10 +117,16 @@ public class UpgradeableArmor implements Upgradeable {
 		public Builder tier(ArmorType type, Enchantment enchantment, int level) {
 			tiers.add(new Pair<>(type, itemStacks -> {
 				for (ItemStack stack : itemStacks) {
-					EnchantmentHelper.set(Map.of(enchantment, level), stack);
+					EnchantmentHelper.set(map(enchantment, level), stack);
 				}
 			}));
 			return this;
+		}
+
+		private <K, V> Map<K, V> map(K k, V v) {
+			Map<K, V> map = new HashMap<>();
+			map.put(k, v);
+			return map;
 		}
 
 		public UpgradeableArmor build() {
