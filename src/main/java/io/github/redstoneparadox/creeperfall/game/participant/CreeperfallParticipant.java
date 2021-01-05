@@ -10,9 +10,9 @@ public class CreeperfallParticipant {
 
     public final UpgradeableArmor armor = new UpgradeableArmor.Builder()
 			.tier(UpgradeableArmor.ArmorType.NONE)
-			.tier(UpgradeableArmor.ArmorType.CHAIN)
 			.tier(UpgradeableArmor.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 1)
 			.tier(UpgradeableArmor.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 2)
+			.tier(UpgradeableArmor.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 3)
 			.build();
 
 	public CreeperfallParticipant(PlayerRef player, GameSpace gameSpace) {
