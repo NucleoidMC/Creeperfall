@@ -14,12 +14,12 @@ import net.minecraft.util.Pair;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class UpgradeableArmor implements Upgradeable {
+public class ArmorUpgrade implements Upgrade {
 	private final List<Pair<ArmorType, Consumer<List<ItemStack>>>> tiers;
 
 	private int currentTier = -1;
 
-	public UpgradeableArmor(List<Pair<ArmorType, Consumer<List<ItemStack>>>> tiers) {
+	public ArmorUpgrade(List<Pair<ArmorType, Consumer<List<ItemStack>>>> tiers) {
 		this.tiers = tiers;
 	}
 
@@ -129,8 +129,8 @@ public class UpgradeableArmor implements Upgradeable {
 			return map;
 		}
 
-		public UpgradeableArmor build() {
-			return new UpgradeableArmor(tiers);
+		public ArmorUpgrade build() {
+			return new ArmorUpgrade(tiers);
 		}
 	}
 }

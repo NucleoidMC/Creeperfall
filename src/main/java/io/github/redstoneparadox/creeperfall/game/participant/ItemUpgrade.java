@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class UpgradeableItem implements Upgradeable {
+public class ItemUpgrade implements Upgrade {
 	private final List<ItemStack> tiers;
 
 	private int currentTier = -1;
 
-	public UpgradeableItem(List<ItemStack> tiers) {
+	public ItemUpgrade(List<ItemStack> tiers) {
 		this.tiers = tiers;
 	}
 
@@ -60,8 +60,8 @@ public class UpgradeableItem implements Upgradeable {
 			return this;
 		}
 
-		public UpgradeableItem build() {
-			return new UpgradeableItem(tiers);
+		public ItemUpgrade build() {
+			return new ItemUpgrade(tiers);
 		}
 	}
 }

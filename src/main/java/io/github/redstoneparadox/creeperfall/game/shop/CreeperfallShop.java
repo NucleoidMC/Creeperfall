@@ -2,14 +2,12 @@ package io.github.redstoneparadox.creeperfall.game.shop;
 
 import io.github.redstoneparadox.creeperfall.game.CreeperfallActive;
 import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallParticipant;
-import io.github.redstoneparadox.creeperfall.game.participant.Upgradeable;
+import io.github.redstoneparadox.creeperfall.game.participant.Upgrade;
 import io.github.redstoneparadox.creeperfall.game.util.OrderedTextReader;
-import io.github.redstoneparadox.creeperfall.item.CreeperfallItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.*;
 import xyz.nucleoid.plasmid.shop.Cost;
 import xyz.nucleoid.plasmid.shop.ShopEntry;
@@ -22,7 +20,7 @@ public class CreeperfallShop {
 
 	public static ShopUi create(CreeperfallParticipant participant, CreeperfallActive game, CreeperfallShopConfig shopConfig) {
 		return ShopUi.create(new LiteralText("Shop"), shop -> {
-			shop.add(upgrade(participant, participant.armor));
+			shop.add(upgrade(participant, participant.armorUpgrade));
 			shop.add(summonGuardian(game, shopConfig));
 		});
 	}
@@ -45,14 +43,14 @@ public class CreeperfallShop {
 		return entry;
 	}
 
-	private static ShopEntry upgrade(CreeperfallParticipant participant, Upgradeable upgradeable) {
-		ItemStack icon = upgradeable.getIcon();
+	private static ShopEntry upgrade(CreeperfallParticipant participant, Upgrade upgrade) {
+		ItemStack icon = upgrade.getIcon();
 
 		return ShopEntry
 				.ofIcon(icon)
 				.withName(new LiteralText("Upgrade Armor"))
 				.withCost(Cost.ofEmeralds(1))
-				.onBuy(playerEntity -> upgradeable.upgrade(participant));
+				.onBuy(playerEntity -> upgrade.upgrade(participant));
 	}
 
 	private static List<OrderedText> wrapText(StringVisitable text) {

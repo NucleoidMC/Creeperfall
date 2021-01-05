@@ -8,18 +8,18 @@ public class CreeperfallParticipant {
     private final PlayerRef player;
     private final GameSpace gameSpace;
 
-    public final UpgradeableArmor armor = new UpgradeableArmor.Builder()
-			.tier(UpgradeableArmor.ArmorType.NONE)
-			.tier(UpgradeableArmor.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 1)
-			.tier(UpgradeableArmor.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 2)
-			.tier(UpgradeableArmor.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 3)
+    public final ArmorUpgrade armorUpgrade = new ArmorUpgrade.Builder()
+			.tier(ArmorUpgrade.ArmorType.NONE)
+			.tier(ArmorUpgrade.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 1)
+			.tier(ArmorUpgrade.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 2)
+			.tier(ArmorUpgrade.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 3)
 			.build();
 
 	public CreeperfallParticipant(PlayerRef player, GameSpace gameSpace) {
 		this.player = player;
 		this.gameSpace = gameSpace;
 
-		armor.upgrade(this);
+		armorUpgrade.upgrade(this);
 	}
 
 	public PlayerRef getPlayer() {
