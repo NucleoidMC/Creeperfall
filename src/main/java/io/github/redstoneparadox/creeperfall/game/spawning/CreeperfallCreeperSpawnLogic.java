@@ -77,12 +77,6 @@ public class CreeperfallCreeperSpawnLogic {
 		entity.prevY = y;
 		entity.prevZ = z;
 
-		entity.addStatusEffect(new StatusEffectInstance(
-				StatusEffects.SLOW_FALLING,
-				4096,
-				1,
-				true,
-				false));
 		entity.setHealth(0.5f);
 		entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
 		world.spawnEntity(entity);
