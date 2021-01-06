@@ -7,8 +7,15 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class CreeperfallCreeperEntity extends CreeperEntity {
+	private double fallSpeedMultiplier;
+
 	public CreeperfallCreeperEntity(World world) {
 		super(EntityType.CREEPER, world);
+	}
+
+	public CreeperfallCreeperEntity(World world, double fallSpeedMultiplier) {
+		this(world);
+		this.fallSpeedMultiplier = fallSpeedMultiplier;
 		this.experiencePoints = 0;
 	}
 
@@ -20,7 +27,7 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 
 		if (!isInvulnerable()) {
 			Vec3d velocity = getVelocity();
-			setVelocity(velocity.multiply(1.0, 0.75, 1.0));
+			setVelocity(velocity.multiply(1.0, fallSpeedMultiplier, 1.0));
 		}
 
 		if (getY() <= 0) {

@@ -70,7 +70,7 @@ public class CreeperfallCreeperSpawnLogic {
 
 	private void spawnCreeper() {
 		ServerWorld world = gameSpace.getWorld();
-		CreeperEntity entity = new CreeperfallCreeperEntity(world);
+		CreeperEntity entity = new CreeperfallCreeperEntity(world, config.creeperSpawnConfig.creeperFallSpeedMultiplier);
 
 		int size = config.mapConfig.size;
 		int radius = size/2;
