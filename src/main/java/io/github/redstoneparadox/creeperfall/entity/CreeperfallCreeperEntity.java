@@ -1,7 +1,6 @@
 package io.github.redstoneparadox.creeperfall.entity;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;

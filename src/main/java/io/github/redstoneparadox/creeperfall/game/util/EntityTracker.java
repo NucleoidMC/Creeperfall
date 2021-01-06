@@ -3,7 +3,6 @@ package io.github.redstoneparadox.creeperfall.game.util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;

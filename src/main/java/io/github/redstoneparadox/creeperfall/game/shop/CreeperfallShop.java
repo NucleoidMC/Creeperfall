@@ -6,13 +6,12 @@ import io.github.redstoneparadox.creeperfall.game.participant.Upgrade;
 import io.github.redstoneparadox.creeperfall.game.util.TextHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.*;
-import org.apache.commons.lang3.text.WordUtils;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import xyz.nucleoid.plasmid.shop.Cost;
 import xyz.nucleoid.plasmid.shop.ShopEntry;
 import xyz.nucleoid.plasmid.shop.ShopUi;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CreeperfallShop {
@@ -28,7 +27,7 @@ public class CreeperfallShop {
 		ShopEntry entry = ShopEntry.
 				ofIcon(Items.GUARDIAN_SPAWN_EGG)
 				.withName(new LiteralText("Spawn Guardian"));
-		
+
 		List<Text> wrapped = TextHelper.wrapText(
 				new LiteralText("Summons a Guardian to shoot down creepers that get too close. Despawns after 30 seconds."),
 				25
@@ -81,18 +80,5 @@ public class CreeperfallShop {
 					.withName(new LiteralText("Armor Fully Upgraded"))
 					.withCost(Cost.no());
 		}
-	}
-
-	private static List<Text> wrapText(StringVisitable text) {
-		String s = text.getString();
-
-		String[] strings = WordUtils.wrap(s, 25).split("\n");
-		List<Text> texts = new ArrayList<>();
-
-		for (String string: strings) {
-			texts.add(new LiteralText(string.substring(0, string.length() - 1)));
-		}
-
-		return texts;
 	}
 }
