@@ -5,7 +5,7 @@
       "Name": "minecraft:blue_stained_glass",
       "Properties": {}
     },
-    "size": 15
+    "size": 25
   },
   "players": {
     "min": 1,
@@ -20,8 +20,8 @@
     "max_creepers_per_player": 4,
     "stage_length_secs": 30,
     "creeper_spawn_delay_secs": 5,
-    "creeper_spawn_height": 30,
-    "creeper_fall_speed_multiplier": 0.8
+    "creeper_spawn_height": 40,
+    "creeper_fall_speed_multiplier": 0.7
   },
   "time_limit_secs": 240,
   "max_arrows": 20,
