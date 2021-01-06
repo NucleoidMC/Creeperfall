@@ -35,4 +35,8 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 		}
 		super.tick();
 	}
+
+	public boolean handleFallDamage(float f, float g) {
+		return false;
+	}
 }
