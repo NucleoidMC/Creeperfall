@@ -79,11 +79,11 @@ public class CreeperfallShop {
 	private static List<Text> wrapText(StringVisitable text) {
 		String s = text.getString();
 
-		String[] strings = WordUtils.wrap(s, 20).split("\n");
+		String[] strings = WordUtils.wrap(s, 25).split("\n");
 		List<Text> texts = new ArrayList<>();
 
 		for (String string: strings) {
-			texts.add(new LiteralText(string));
+			texts.add(new LiteralText(string.substring(0, string.length() - 1)));
 		}
 
 		return texts;
