@@ -6,9 +6,8 @@ import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.util.EntityTracker;
 import io.github.redstoneparadox.creeperfall.game.util.Timer;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -22,28 +21,28 @@ public class CreeperfallCreeperSpawnLogic {
 	private final CreeperfallMap map;
 	private final CreeperfallConfig config;
 	private final EntityTracker tracker;
-	private final int maxCreepers;
+	private final int maxCreeperMultiplier;
 	private final Random random;
 	private final Timer spawnTimer;
 	private final Timer creeperIncreaseTimer;
-	private int currentCreepers = 1;
+	private int currentCreeperMultiplier = 1;
 
 	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, CreeperfallMap map, CreeperfallConfig config, EntityTracker tracker) {
 		this.gameSpace = gameSpace;
 		this.map = map;
 		this.config = config;
 		this.tracker = tracker;
-		this.maxCreepers = gameSpace.getPlayerCount() * config.creeperSpawnConfig.maxCreepersPerPlayer;
+		this.maxCreeperMultiplier = gameSpace.getPlayerCount() * config.creeperSpawnConfig.maxCreepersPerPlayer;
 		int stageLength = config.creeperSpawnConfig.stageLengthSeconds * 20;
 		int spawnDelay = config.creeperSpawnConfig.creeperSpawnDelaySeconds * 20;
 		this.random = new Random();
 		this.spawnTimer = Timer.createRepeating(spawnDelay, this::spawnCreepers);
 		this.creeperIncreaseTimer = Timer.createRepeating(stageLength, () -> {
-			if (currentCreepers < maxCreepers) {
-				currentCreepers += 1;
+			if (currentCreeperMultiplier < maxCreeperMultiplier) {
+				currentCreeperMultiplier += 1;
 			}
 		});
-		this.currentCreepers = gameSpace.getPlayerCount();
+		this.currentCreeperMultiplier = gameSpace.getPlayerCount();
 	}
 
 	public void tick() {
@@ -52,7 +51,17 @@ public class CreeperfallCreeperSpawnLogic {
 	}
 
 	private void spawnCreepers() {
-		int count = random.nextInt(currentCreepers) + 1;
+		int playerCount = 0;
+
+		for (ServerPlayerEntity playerEntity : gameSpace.getPlayers()) {
+			if (!playerEntity.isSpectator()) {
+				playerCount += 1;
+			}
+		}
+
+		int minCreepers = playerCount;
+
+		int count = (random.nextInt((currentCreeperMultiplier * playerCount) - minCreepers) + 1) + minCreepers;
 
 		for (int i = 0; i < count; i++) {
 			spawnCreeper();
