@@ -43,7 +43,6 @@ public class CreeperfallCreeperSpawnLogic {
 				currentCreeperMultiplier += 1;
 			}
 		});
-		this.currentCreeperMultiplier = gameSpace.getPlayerCount();
 	}
 
 	public void tick() {
@@ -52,16 +51,15 @@ public class CreeperfallCreeperSpawnLogic {
 	}
 
 	private void spawnCreepers() {
-		int playerCount = 0;
+		int minCreepers = 0;
 
 		for (ServerPlayerEntity playerEntity : gameSpace.getPlayers()) {
 			if (!playerEntity.isSpectator()) {
-				playerCount += 1;
+				minCreepers += 1;
 			}
 		}
 
-		int minCreepers = playerCount;
-		int count = MathHelper.nextInt(random, minCreepers, currentCreeperMultiplier * playerCount);
+		int count = MathHelper.nextInt(random, minCreepers, currentCreeperMultiplier * minCreepers);
 
 		for (int i = 0; i < count; i++) {
 			spawnCreeper();
