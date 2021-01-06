@@ -21,7 +21,7 @@
     "stage_length_secs": 30,
     "creeper_spawn_delay_secs": 5,
     "creeper_spawn_height": 30,
-    "creeper_fall_speed_multiplier": 0.7
+    "creeper_fall_speed_multiplier": 0.8
   },
   "time_limit_secs": 240,
   "max_arrows": 20,
