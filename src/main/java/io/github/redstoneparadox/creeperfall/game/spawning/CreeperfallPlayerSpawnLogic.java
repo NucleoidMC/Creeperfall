@@ -8,8 +8,12 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -52,6 +56,40 @@ public class CreeperfallPlayerSpawnLogic {
 
             player.giveItemStack(bowStack);
             player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows));
+        }
+
+        if (lobby) {
+            ItemStack bookStack = new ItemStack(Items.WRITTEN_BOOK);
+            CompoundTag nbt = bookStack.getOrCreateTag();
+            ListTag pages = new ListTag();
+
+            pages.add(
+                    StringTag.of(
+                            Text.Serializer.toJson(
+                                    new LiteralText(
+                                            "Gameplay takes place on a platform in the sky." +
+                                                    " Creepers with slow falling with peroidically spawn above the platform with slow falling which you can shoot down with your bow and arrow." +
+                                                    " Be careful, as any Creepers that land on the platform gain inviciblity, so there's no way to prevent them from exploding."
+                                    )
+                            )
+                    )
+            );
+            pages.add(
+                    StringTag.of(
+                            Text.Serializer.toJson(
+                                    new LiteralText(
+                                            "The shop, which can be accessed with the compass, contains armor upgrades and can spawn a guardian or a cat." +
+                                                    " The guardian will fire a laser at any creepers that get to close to the platform, save for those that have already landed." +
+                                                    " The cat will kill all Creepers three seconds after spawning and despawn."
+                                    )
+                            )
+                    )
+            );
+            nbt.put("pages", pages);
+            nbt.putString("title", "How to Play");
+            nbt.putString("author", "RedstoneParadox");
+
+            player.giveItemStack(bookStack);
         }
     }
 
