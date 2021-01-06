@@ -62,7 +62,7 @@ public class CreeperfallWaiting {
     }
 
     private void spawnPlayer(ServerPlayerEntity player) {
-        this.spawnLogic.resetPlayer(player, GameMode.ADVENTURE);
+        this.spawnLogic.resetPlayer(player, GameMode.ADVENTURE, true);
         this.spawnLogic.spawnPlayer(player);
     }
 }

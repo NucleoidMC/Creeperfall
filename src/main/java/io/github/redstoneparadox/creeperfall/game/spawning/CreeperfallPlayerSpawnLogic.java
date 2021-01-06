@@ -27,7 +27,7 @@ public class CreeperfallPlayerSpawnLogic {
         this.config = config;
     }
 
-    public void resetPlayer(ServerPlayerEntity player, GameMode gameMode) {
+    public void resetPlayer(ServerPlayerEntity player, GameMode gameMode, boolean lobby) {
         player.setGameMode(gameMode);
         player.setVelocity(Vec3d.ZERO);
         player.fallDistance = 0.0f;
@@ -42,7 +42,7 @@ public class CreeperfallPlayerSpawnLogic {
                 false
         ));
 
-        if (gameMode != GameMode.SPECTATOR) {
+        if (gameMode != GameMode.SPECTATOR && !lobby) {
             player.giveItemStack(new ItemStack(Items.COMPASS));
 
             ItemStack bowStack = new ItemStack(Items.BOW);

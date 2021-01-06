@@ -225,12 +225,12 @@ public class CreeperfallActive {
     }
 
     private void spawnParticipant(ServerPlayerEntity player) {
-        this.playerSpawnLogic.resetPlayer(player, GameMode.SURVIVAL);
+        this.playerSpawnLogic.resetPlayer(player, GameMode.SURVIVAL, false);
         this.playerSpawnLogic.spawnPlayer(player);
     }
 
     private void spawnSpectator(ServerPlayerEntity player) {
-        this.playerSpawnLogic.resetPlayer(player, GameMode.SPECTATOR);
+        this.playerSpawnLogic.resetPlayer(player, GameMode.SPECTATOR, false);
         this.playerSpawnLogic.spawnPlayer(player);
     }
 
