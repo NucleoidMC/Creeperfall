@@ -10,6 +10,7 @@ import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import xyz.nucleoid.plasmid.game.GameSpace;
 
@@ -60,8 +61,7 @@ public class CreeperfallCreeperSpawnLogic {
 		}
 
 		int minCreepers = playerCount;
-
-		int count = (random.nextInt((currentCreeperMultiplier * playerCount) - minCreepers) + 1) + minCreepers;
+		int count = MathHelper.nextInt(random, minCreepers, currentCreeperMultiplier * playerCount);
 
 		for (int i = 0; i < count; i++) {
 			spawnCreeper();
