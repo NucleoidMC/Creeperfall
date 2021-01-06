@@ -6,6 +6,7 @@ import io.github.redstoneparadox.creeperfall.game.participant.Upgrade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.*;
+import org.apache.commons.lang3.text.WordUtils;
 import xyz.nucleoid.plasmid.shop.Cost;
 import xyz.nucleoid.plasmid.shop.ShopEntry;
 import xyz.nucleoid.plasmid.shop.ShopUi;
@@ -77,14 +78,8 @@ public class CreeperfallShop {
 
 	private static List<Text> wrapText(StringVisitable text) {
 		String s = text.getString();
-		StringBuilder sb = new StringBuilder(s);
 
-		int i = 0;
-		while ((i = sb.indexOf(" ", i + 20)) != -1) {
-			sb.replace(i, i + 1, "\n");
-		}
-
-		String[] strings = sb.toString().split("\n");
+		String[] strings = WordUtils.wrap(s, 20).split("\n");
 		List<Text> texts = new ArrayList<>();
 
 		for (String string: strings) {
