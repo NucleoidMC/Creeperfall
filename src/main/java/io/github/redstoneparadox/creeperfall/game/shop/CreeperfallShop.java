@@ -3,9 +3,6 @@ package io.github.redstoneparadox.creeperfall.game.shop;
 import io.github.redstoneparadox.creeperfall.game.CreeperfallActive;
 import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallParticipant;
 import io.github.redstoneparadox.creeperfall.game.participant.Upgrade;
-import io.github.redstoneparadox.creeperfall.game.util.OrderedTextReader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.*;
@@ -13,11 +10,10 @@ import xyz.nucleoid.plasmid.shop.Cost;
 import xyz.nucleoid.plasmid.shop.ShopEntry;
 import xyz.nucleoid.plasmid.shop.ShopUi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreeperfallShop {
-	private static final OrderedTextReader READER = new OrderedTextReader();
-
 	public static ShopUi create(CreeperfallParticipant participant, CreeperfallActive game, CreeperfallShopConfig shopConfig) {
 		return ShopUi.create(new LiteralText("Shop"), shop -> {
 			shop.add(upgrade(participant, shopConfig, participant.armorUpgrade));
@@ -31,9 +27,8 @@ public class CreeperfallShop {
 				ofIcon(Items.GUARDIAN_SPAWN_EGG)
 				.withName(new LiteralText("Spawn Guardian"));
 
-		List<OrderedText> wrapped = wrapText(new LiteralText("Summons a Guardian to shoot down creepers that get too close. Despawns after 30 seconds."));
-		for (OrderedText orderedText : wrapped) {
-			Text text = READER.read(orderedText);
+		List<Text> wrapped = wrapText(new LiteralText("Summons a Guardian to shoot down creepers that get too close. Despawns after 30 seconds."));
+		for (Text text : wrapped) {
 			entry.addLore(text);
 		}
 
@@ -49,9 +44,8 @@ public class CreeperfallShop {
 				ofIcon(Items.OCELOT_SPAWN_EGG)
 				.withName(new LiteralText("Spawn Cat"));
 
-		List<OrderedText> wrapped = wrapText(new LiteralText("Summons a Cat to scare Creepers to death. Despawns after 3 seconds."));
-		for (OrderedText orderedText : wrapped) {
-			Text text = READER.read(orderedText);
+		List<Text> wrapped = wrapText(new LiteralText("Summons a Cat to scare Creepers to death. Despawns after 3 seconds."));
+		for (Text text : wrapped) {
 			entry.addLore(text);
 		}
 
@@ -81,9 +75,22 @@ public class CreeperfallShop {
 		}
 	}
 
-	private static List<OrderedText> wrapText(StringVisitable text) {
-		TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+	private static List<Text> wrapText(StringVisitable text) {
+		String s = text.getString();
+		StringBuilder sb = new StringBuilder(s);
 
-		return textRenderer.wrapLines(text, 24 * 8);
+		int i = 0;
+		while ((i = sb.indexOf(" ", i + 20)) != -1) {
+			sb.replace(i, i + 1, "\n");
+		}
+
+		String[] strings = sb.toString().split("\n");
+		List<Text> texts = new ArrayList<>();
+
+		for (String string: strings) {
+			texts.add(new LiteralText(string));
+		}
+
+		return texts;
 	}
 }
