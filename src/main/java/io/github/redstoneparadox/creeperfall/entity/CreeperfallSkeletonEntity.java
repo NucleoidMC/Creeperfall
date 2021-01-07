@@ -1,19 +1,23 @@
 package io.github.redstoneparadox.creeperfall.entity;
 
 import io.github.redstoneparadox.creeperfall.entity.ai.goal.AlwaysFollowTargetGoal;
+import io.github.redstoneparadox.creeperfall.mixin.AbstractSkeletonEntityAccessor;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.BowAttackGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.SkeletonEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
 public class CreeperfallSkeletonEntity extends SkeletonEntity {
 	public CreeperfallSkeletonEntity(World world) {
 		super(EntityType.SKELETON, world);
+		((AbstractSkeletonEntityAccessor)this).setBowAttackGoal(
+				new BowAttackGoal<>(this, 0.75D, 16, 90.0F)
+		);
 	}
 
 	@Override
@@ -29,7 +33,7 @@ public class CreeperfallSkeletonEntity extends SkeletonEntity {
 						10,
 						true,
 						false,
-						livingEntity -> livingEntity instanceof CreeperEntity
+						livingEntity -> livingEntity instanceof CreeperEntity && !livingEntity.isOnGround()
 				)
 		);
 	}
