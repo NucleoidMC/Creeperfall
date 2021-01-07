@@ -18,7 +18,7 @@ public class CreeperfallShop {
 	public static ShopUi create(CreeperfallParticipant participant, CreeperfallActive game, CreeperfallShopConfig shopConfig) {
 		return ShopUi.create(new LiteralText("Shop"), shop -> {
 			shop.add(upgrade(participant, shopConfig, participant.armorUpgrade));
-			shop.add(summonGuardian(game, shopConfig));
+			shop.add(summonSkeleton(game, shopConfig));
 			shop.add(summonOcelot(game, shopConfig));
 		});
 	}
@@ -37,8 +37,28 @@ public class CreeperfallShop {
 		}
 
 		entry
-				.withCost(Cost.ofEmeralds(shopConfig.guardianPrice))
+				.withCost(Cost.ofEmeralds(shopConfig.skeletonPrice))
 				.onBuy(playerEntity -> game.spawnGuardian());
+
+		return entry;
+	}
+
+	private static ShopEntry summonSkeleton(CreeperfallActive game, CreeperfallShopConfig shopConfig) {
+		ShopEntry entry = ShopEntry.
+				ofIcon(Items.SKELETON_SPAWN_EGG)
+				.withName(new LiteralText("Spawn Skeleton"));
+
+		List<Text> wrapped = TextHelper.wrapText(
+				new LiteralText("Summons a Skeleton to shoot at Creepers. Despawns after 30 seconds."),
+				25
+		);
+		for (Text text : wrapped) {
+			entry.addLore(text);
+		}
+
+		entry
+				.withCost(Cost.ofEmeralds(shopConfig.skeletonPrice))
+				.onBuy(playerEntity -> game.spawnSkeleton());
 
 		return entry;
 	}

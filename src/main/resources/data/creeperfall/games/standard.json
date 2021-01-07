@@ -12,7 +12,7 @@
     "max": 8
   },
   "shop": {
-    "guardian_price": 12,
+    "skeleton_price": 12,
     "ocelot_price": 20,
     "armor_upgrade_prices": [20, 25, 30]
   },
