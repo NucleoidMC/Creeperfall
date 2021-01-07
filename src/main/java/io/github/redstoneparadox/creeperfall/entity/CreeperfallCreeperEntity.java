@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 
 public class CreeperfallCreeperEntity extends CreeperEntity {
 	private double fallSpeedMultiplier;
+	private int ticksUntilAutoIgnite = 3 * 20;
 
 	public CreeperfallCreeperEntity(World world) {
 		super(EntityType.CREEPER, world);
@@ -22,6 +23,13 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 	public void tick() {
 		if (isOnGround()) {
 			setInvulnerable(true);
+
+			if (ticksUntilAutoIgnite > 0 && !getIgnited()) {
+				ticksUntilAutoIgnite -= 1;
+			}
+			else {
+				ignite();
+			}
 		}
 
 		if (!isInvulnerable()) {
