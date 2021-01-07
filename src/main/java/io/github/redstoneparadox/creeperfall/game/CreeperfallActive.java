@@ -18,6 +18,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
@@ -87,7 +88,7 @@ public class CreeperfallActive {
         this.gameMap = map;
         this.tracker = new EntityTracker();
         this.playerSpawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map, config);
-        this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, map, config, tracker);
+        this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, this, map, config, tracker);
         this.participants = new Object2ObjectOpenHashMap<>();
 
         for (PlayerRef player : participants) {
@@ -143,53 +144,32 @@ public class CreeperfallActive {
         ServerWorld world = gameSpace.getWorld();
         CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(world);
 
-        double x = 0.5;
-        double y = 68;
-        double z = 0.5;
-
-        Objects.requireNonNull(entity).setPos(x, y, z);
-        entity.updatePosition(x, y, z);
-        entity.setVelocity(Vec3d.ZERO);
-
-        entity.prevX = x;
-        entity.prevY = y;
-        entity.prevZ = z;
-
         entity.setInvulnerable(true);
-        entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.SPAWN_EGG, null, null);
-        world.spawnEntity(entity);
-        tracker.add(entity);
+        spawnEntity(entity, 0.5, 68, 0.5, SpawnReason.SPAWN_EGG);
     }
 
     public void spawnOcelot() {
         ServerWorld world = gameSpace.getWorld();
         CreeperfallOcelotEntity entity = new CreeperfallOcelotEntity(tracker, world);
 
-        double x = 0.5;
-        double y = 65;
-        double z = 0.5;
-
-        Objects.requireNonNull(entity).setPos(x, y, z);
-        entity.updatePosition(x, y, z);
-        entity.setVelocity(Vec3d.ZERO);
-
-        entity.prevX = x;
-        entity.prevY = y;
-        entity.prevZ = z;
-
         entity.setInvulnerable(true);
-        entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.SPAWN_EGG, null, null);
-        world.spawnEntity(entity);
-        tracker.add(entity);
+        spawnEntity(entity, 0.5, 65, 0.5, SpawnReason.SPAWN_EGG);
     }
 
     public void spawnSkeleton() {
         ServerWorld world = gameSpace.getWorld();
         CreeperfallSkeletonEntity entity = new CreeperfallSkeletonEntity(world);
 
-        double x = 0.5;
-        double y = 65;
-        double z = 0.5;
+        entity.setInvulnerable(true);
+        spawnEntity(entity, 0.5, 65, 0.5, SpawnReason.SPAWN_EGG);
+    }
+
+    public void spawnEntity(Entity entity, double x, double y, double z, SpawnReason spawnReason) {
+        ServerWorld world = gameSpace.getWorld();
+
+        if (gameSpace.getWorld() != entity.world) {
+            throw new IllegalArgumentException("Attempted to add an entity to Creeperfall's gamespace that was not in the correct ServerWorld.");
+        }
 
         Objects.requireNonNull(entity).setPos(x, y, z);
         entity.updatePosition(x, y, z);
@@ -199,8 +179,10 @@ public class CreeperfallActive {
         entity.prevY = y;
         entity.prevZ = z;
 
-        entity.setInvulnerable(true);
-        entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.SPAWN_EGG, null, null);
+        if (entity instanceof MobEntity) {
+            ((MobEntity) entity).initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), spawnReason, null, null);
+        }
+
         world.spawnEntity(entity);
         tracker.add(entity);
     }

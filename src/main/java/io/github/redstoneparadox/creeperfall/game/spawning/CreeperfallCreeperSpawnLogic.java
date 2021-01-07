@@ -1,6 +1,7 @@
 package io.github.redstoneparadox.creeperfall.game.spawning;
 
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallCreeperEntity;
+import io.github.redstoneparadox.creeperfall.game.CreeperfallActive;
 import io.github.redstoneparadox.creeperfall.game.CreeperfallConfig;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.util.EntityTracker;
@@ -19,6 +20,7 @@ import java.util.Random;
 
 public class CreeperfallCreeperSpawnLogic {
 	private final GameSpace gameSpace;
+	private final CreeperfallActive game;
 	private final CreeperfallMap map;
 	private final CreeperfallConfig config;
 	private final EntityTracker tracker;
@@ -28,8 +30,9 @@ public class CreeperfallCreeperSpawnLogic {
 	private final Timer creeperIncreaseTimer;
 	private int currentCreeperMultiplier = 1;
 
-	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, CreeperfallMap map, CreeperfallConfig config, EntityTracker tracker) {
+	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, CreeperfallActive game, CreeperfallMap map, CreeperfallConfig config, EntityTracker tracker) {
 		this.gameSpace = gameSpace;
+		this.game = game;
 		this.map = map;
 		this.config = config;
 		this.tracker = tracker;
@@ -76,17 +79,7 @@ public class CreeperfallCreeperSpawnLogic {
 		int y = map.spawn.getY() + config.creeperSpawnConfig.creeperSpawnHeight;
 		int z = random.nextInt(size) - radius;
 
-		Objects.requireNonNull(entity).setPos(x, y, z);
-		entity.updatePosition(x, y, z);
-		entity.setVelocity(Vec3d.ZERO);
-
-		entity.prevX = x;
-		entity.prevY = y;
-		entity.prevZ = z;
-
 		entity.setHealth(0.5f);
-		entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.NATURAL, null, null);
-		world.spawnEntity(entity);
-		tracker.add(entity);
+		game.spawnEntity(entity, x, y, z, SpawnReason.NATURAL);
 	}
 }
