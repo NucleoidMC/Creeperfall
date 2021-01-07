@@ -168,7 +168,8 @@ public class CreeperfallActive {
         ServerWorld world = gameSpace.getWorld();
 
         if (gameSpace.getWorld() != entity.world) {
-            throw new IllegalArgumentException("Attempted to add an entity to Creeperfall's gamespace that was not in the correct ServerWorld.");
+            new IllegalArgumentException("Attempted to add an entity to Creeperfall's gamespace that was not in the correct ServerWorld.").printStackTrace();
+            return;
         }
 
         Objects.requireNonNull(entity).setPos(x, y, z);
