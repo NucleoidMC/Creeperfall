@@ -29,6 +29,7 @@ public class CreeperfallCreeperSpawnLogic {
 	private final Timer spawnTimer;
 	private final Timer creeperIncreaseTimer;
 	private int currentCreeperMultiplier = 1;
+	private boolean spawnedFirstWave = false;
 
 	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, CreeperfallActive game, CreeperfallMap map, CreeperfallConfig config, EntityTracker tracker) {
 		this.gameSpace = gameSpace;
@@ -49,6 +50,11 @@ public class CreeperfallCreeperSpawnLogic {
 	}
 
 	public void tick() {
+		if (!spawnedFirstWave) {
+			spawnCreepers();
+			spawnedFirstWave = true;
+		}
+
 		spawnTimer.tick();
 		creeperIncreaseTimer.tick();
 	}
