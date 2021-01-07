@@ -5,7 +5,6 @@ import net.minecraft.block.WallBlock;
 import net.minecraft.block.enums.WallShape;
 import net.minecraft.util.math.BlockPos;
 import xyz.nucleoid.plasmid.map.template.MapTemplate;
-import xyz.nucleoid.plasmid.util.BlockBounds;
 
 public class CreeperfallMapGenerator {
 
