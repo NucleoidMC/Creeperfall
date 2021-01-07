@@ -16,15 +16,14 @@ public class CreeperfallSkeletonEntity extends SkeletonEntity {
 	public CreeperfallSkeletonEntity(World world) {
 		super(EntityType.SKELETON, world);
 		((AbstractSkeletonEntityAccessor)this).setBowAttackGoal(
-				new BowAttackGoal<>(this, 0.75D, 16, 90.0F)
+				new BowAttackGoal<>(this, 2.0D, 1, 360.0F)
 		);
 	}
 
 	@Override
 	protected void initGoals() {
 		this.goalSelector.add(5, new WanderAroundFarGoal(this, 1.0D));
-		this.goalSelector.add(6, new LookAtEntityGoal(this, CreeperEntity.class, 8.0F));
-		this.goalSelector.add(6, new LookAroundGoal(this));
+		this.goalSelector.add(6, new LookAtEntityGoal(this, CreeperEntity.class, 360.0F));
 		this.targetSelector.add(
 				1,
 				new AlwaysFollowTargetGoal<>(
