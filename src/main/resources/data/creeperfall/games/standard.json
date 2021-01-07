@@ -17,8 +17,9 @@
     "armor_upgrade_prices": [20, 25, 30]
   },
   "creeper_spawning": {
-    "max_creepers_per_player": 4,
+    "stages": 4,
     "stage_length_secs": 30,
+    "spawn_count_increment": 1.0,
     "creeper_spawn_delay_secs": 5,
     "creeper_spawn_height": 40,
     "creeper_fall_speed_multiplier": 0.7
