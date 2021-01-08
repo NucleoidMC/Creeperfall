@@ -8,8 +8,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public class AlwaysFollowTargetGoal<T extends LivingEntity> extends FollowTargetGoal<T> {
-	public AlwaysFollowTargetGoal(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable Predicate<LivingEntity> targetPredicate) {
+public class CreeperfallFollowTargetGoal<T extends LivingEntity> extends FollowTargetGoal<T> {
+	public CreeperfallFollowTargetGoal(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable Predicate<LivingEntity> targetPredicate) {
 		super(mob, targetClass, reciprocalChance, checkVisibility, checkCanNavigate, targetPredicate);
 	}
 
@@ -26,6 +26,6 @@ public class AlwaysFollowTargetGoal<T extends LivingEntity> extends FollowTarget
 	@Override
 	public boolean canStart() {
 		this.findClosestTarget();
-		return this.targetEntity != null;
+		return this.targetEntity != null && targetEntity.isOnGround();
 	}
 }

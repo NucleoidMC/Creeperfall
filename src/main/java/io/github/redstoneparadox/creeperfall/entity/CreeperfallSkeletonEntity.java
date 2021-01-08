@@ -1,6 +1,6 @@
 package io.github.redstoneparadox.creeperfall.entity;
 
-import io.github.redstoneparadox.creeperfall.entity.ai.goal.AlwaysFollowTargetGoal;
+import io.github.redstoneparadox.creeperfall.entity.ai.goal.CreeperfallFollowTargetGoal;
 import io.github.redstoneparadox.creeperfall.entity.ai.goal.LookUpAtEntityGoal;
 import io.github.redstoneparadox.creeperfall.mixin.AbstractSkeletonEntityAccessor;
 import net.minecraft.entity.EntityType;
@@ -29,7 +29,7 @@ public class CreeperfallSkeletonEntity extends SkeletonEntity {
 		this.goalSelector.add(6, new LookUpAtEntityGoal(this, CreeperEntity.class, 64.0F));
 		this.targetSelector.add(
 				1,
-				new AlwaysFollowTargetGoal<>(
+				new CreeperfallFollowTargetGoal<>(
 						this,
 						LivingEntity.class,
 						10,

@@ -1,6 +1,6 @@
 package io.github.redstoneparadox.creeperfall.entity;
 
-import io.github.redstoneparadox.creeperfall.entity.ai.goal.AlwaysFollowTargetGoal;
+import io.github.redstoneparadox.creeperfall.entity.ai.goal.CreeperfallFollowTargetGoal;
 import io.github.redstoneparadox.creeperfall.mixin.GuardianEntityAccessor;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -36,7 +36,7 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 		this.wanderGoal.setControls(EnumSet.of(Goal.Control.LOOK));
 		this.targetSelector.add(
 				1,
-				new AlwaysFollowTargetGoal<>(
+				new CreeperfallFollowTargetGoal<>(
 						this,
 						LivingEntity.class,
 						10,
