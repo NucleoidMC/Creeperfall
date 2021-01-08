@@ -28,4 +28,9 @@ public class CreeperfallFollowTargetGoal<T extends LivingEntity> extends FollowT
 		this.findClosestTarget();
 		return this.targetEntity != null && !targetEntity.isOnGround();
 	}
+
+	@Override
+	public boolean shouldContinue() {
+		return super.shouldContinue() && !targetEntity.isOnGround();
+	}
 }
