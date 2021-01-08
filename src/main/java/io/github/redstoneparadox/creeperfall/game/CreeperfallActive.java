@@ -160,7 +160,6 @@ public class CreeperfallActive {
         ServerWorld world = gameSpace.getWorld();
         CreeperfallSkeletonEntity entity = new CreeperfallSkeletonEntity(world);
 
-        entity.setInvulnerable(true);
         spawnEntity(entity, 0.5, 65, 0.5, SpawnReason.SPAWN_EGG);
     }
 
