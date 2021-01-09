@@ -23,6 +23,8 @@ public class CreeperfallSkeletonEntity extends SkeletonEntity {
 
 	@Override
 	public void tick() {
+		super.tick();
+
 		if (timeToDespawn <= 0) {
 			remove();
 		} else {
