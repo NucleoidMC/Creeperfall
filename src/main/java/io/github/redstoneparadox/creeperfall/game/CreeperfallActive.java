@@ -113,8 +113,6 @@ public class CreeperfallActive {
             GlobalWidgets widgets = new GlobalWidgets(game);
             CreeperfallActive active = new CreeperfallActive(gameSpace, map, widgets, config, participants);
 
-            gameSpace.getWorld().getGameRules().get(GameRules.NATURAL_REGENERATION).set(false, gameSpace.getServer());
-
             game.setRule(GameRule.CRAFTING, RuleResult.DENY);
             game.setRule(GameRule.PORTALS, RuleResult.DENY);
             game.setRule(GameRule.PVP, RuleResult.DENY);
