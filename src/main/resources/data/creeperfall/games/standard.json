@@ -1,5 +1,6 @@
 {
   "type": "creeperfall:creeperfall",
+  "name": "Creeperfall",
   "map": {
     "spawn_block": {
       "Name": "minecraft:gray_stained_glass",
