@@ -31,10 +31,11 @@ public class CreeperfallMapGenerator {
         BlockPos max = new BlockPos(radius, 64, radius);
 
         for (BlockPos pos : BlockPos.iterate(min, max)) {
-            if (pos.getX() == 0 || pos.getZ() == 0) {
-                builder.setBlockState(pos, Blocks.RED_STAINED_GLASS.getDefaultState());
-            }
-            else {
+            if (pos.getX() == 0 && pos.getZ() == 0) {
+                builder.setBlockState(pos, Blocks.GRAY_CONCRETE.getDefaultState());
+            } else if (pos.getX() == 0 || pos.getZ() == 0) {
+                builder.setBlockState(pos, Blocks.LIGHT_GRAY_STAINED_GLASS.getDefaultState());
+            } else {
                 builder.setBlockState(pos, this.config.spawnBlock);
             }
         }
@@ -48,10 +49,10 @@ public class CreeperfallMapGenerator {
 
         for (BlockPos pos : BlockPos.iterate(min, max)) {
             if (builder.getBlockState(pos).isAir()) {
-                builder.setBlockState(pos, Blocks.BLACK_TERRACOTTA.getDefaultState());
+                builder.setBlockState(pos, Blocks.GRAY_CONCRETE.getDefaultState());
 
                 if (Math.abs(pos.getX()) == Math.abs(pos.getZ())) {
-                    builder.setBlockState(pos.up(), Blocks.BRICKS.getDefaultState());
+                    builder.setBlockState(pos.up(), Blocks.RED_TERRACOTTA.getDefaultState());
                     builder.setBlockState(pos.up(2), Blocks.BRICK_SLAB.getDefaultState());
                 } else if (pos.getX() == radius || pos.getX() == -radius) {
                     builder.setBlockState(
