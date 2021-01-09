@@ -14,6 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -47,13 +48,15 @@ public class CreeperfallPlayerSpawnLogic {
         ));
 
         if (gameMode != GameMode.SPECTATOR && !lobby) {
-            player.giveItemStack(new ItemStack(Items.COMPASS));
+            ItemStack compassStack = new ItemStack(Items.COMPASS);
+
+            compassStack.setCustomName(new LiteralText("Shop").formatted(Formatting.AQUA, Formatting.ITALIC));
+            player.giveItemStack(compassStack);
 
             ItemStack bowStack = new ItemStack(Items.BOW);
             CompoundTag nbt = bowStack.getOrCreateTag();
 
             nbt.putBoolean("Unbreakable", true);
-
             player.giveItemStack(bowStack);
             player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows));
         }
@@ -67,7 +70,7 @@ public class CreeperfallPlayerSpawnLogic {
 
             pages.add(
                     StringTag.of(
-                            "[\"\",{\"text\":\"Creepers:\",\"bold\":true,\"italic\":true,\"color\":\"green\"},{\"text\":\"\\nCreepers periodically fall from the sky, shoot them down before they land or they will become invincible.\\n\\n\",\"color\":\"reset\"},{\"text\":\"Store:\",\"bold\":true,\"italic\":true,\"color\":\"aqua\"},{\"text\":\"\\nKilling Creepers gives you emeralds to spend in the shop (compass), so you can upgrade armor or summon allies.\",\"color\":\"reset\"}]"
+                            "[\"\",{\"text\":\"Creepers:\",\"bold\":true,\"italic\":true,\"color\":\"green\"},{\"text\":\"\\nCreepers periodically fall from the sky, shoot them down before they land or they will become invincible.\\n\\n\",\"color\":\"reset\"},{\"text\":\"Shop:\",\"bold\":true,\"italic\":true,\"color\":\"aqua\"},{\"text\":\"\\nKilling Creepers gives you emeralds to spend in the shop.\",\"color\":\"reset\"}]"
                     )
             );
             pages.add(
