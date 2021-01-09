@@ -12,6 +12,8 @@ import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.world.World;
 
 public class CreeperfallSkeletonEntity extends SkeletonEntity {
+	private int timeToDespawn = 30 * 20;
+
 	public CreeperfallSkeletonEntity(World world) {
 		super(EntityType.SKELETON, world);
 		((AbstractSkeletonEntityAccessor)this).setBowAttackGoal(
@@ -21,7 +23,11 @@ public class CreeperfallSkeletonEntity extends SkeletonEntity {
 
 	@Override
 	public void tick() {
-		super.tick();
+		if (timeToDespawn <= 0) {
+			remove();
+		} else {
+			timeToDespawn -= 1;
+		}
 	}
 
 	@Override
