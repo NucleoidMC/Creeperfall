@@ -25,6 +25,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
@@ -311,7 +313,8 @@ public class CreeperfallActive {
                 int maxEmeralds = config.emeraldRewardCount.getMax();
                 int minEmeralds = config.emeraldRewardCount.getMin();
                 int emeralds = (random.nextInt(maxEmeralds - minEmeralds) + 1) + minEmeralds;
-                ((ServerPlayerEntity) player).giveItemStack(new ItemStack(Items.EMERALD, emeralds));
+                player.giveItemStack(new ItemStack(Items.EMERALD, emeralds));
+                player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f);
             }
         }
 
@@ -338,6 +341,7 @@ public class CreeperfallActive {
         boolean survivors = result.survivors;
 
         Text message;
+        SoundEvent sound;
         if (survivors) {
             ServerWorld world = gameSpace.getWorld();
             MutableText mutableText = new LiteralText("Game completed! ");
@@ -363,13 +367,17 @@ public class CreeperfallActive {
                 @Nullable ServerPlayerEntity playerEntity = survivorsList.get(0).getPlayer().getEntity(world);
                 message = mutableText.append(playerEntity.getDisplayName().shallowCopy()).append(" survived!");
             }
+
+            sound = SoundEvents.ENTITY_VILLAGER_CELEBRATE;
+
         } else {
             message = new LiteralText("Game Over! No one survived the Creepers...").formatted(Formatting.RED);
+            sound = SoundEvents.ENTITY_VILLAGER_NO;
         }
 
         PlayerSet players = this.gameSpace.getPlayers();
         players.sendMessage(message);
-        players.sendSound(SoundEvents.ENTITY_VILLAGER_YES);
+        players.sendSound(sound);
     }
 
     private GameResult checkWinResult() {
