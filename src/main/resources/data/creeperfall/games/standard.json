@@ -10,7 +10,7 @@
   },
   "players": {
     "min": 1,
-    "max": 8
+    "max": 6
   },
   "shop": {
     "skeleton_price": 12,
