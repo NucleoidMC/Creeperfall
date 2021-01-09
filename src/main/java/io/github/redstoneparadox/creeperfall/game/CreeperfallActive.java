@@ -1,5 +1,6 @@
 package io.github.redstoneparadox.creeperfall.game;
 
+import io.github.redstoneparadox.creeperfall.Creeperfall;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallGuardianEntity;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallOcelotEntity;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallSkeletonEntity;
@@ -168,7 +169,7 @@ public class CreeperfallActive {
         ServerWorld world = gameSpace.getWorld();
 
         if (gameSpace.getWorld() != entity.world) {
-            new IllegalArgumentException("Attempted to add an entity to Creeperfall's gamespace that was not in the correct ServerWorld.").printStackTrace();
+            Creeperfall.LOGGER.error("Attempted to add an entity to Creeperfall's gamespace that was not in the correct ServerWorld.");
             return;
         }
 
