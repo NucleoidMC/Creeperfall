@@ -52,8 +52,8 @@ public class CreeperfallCreeperSpawnLogic {
 			spawnedFirstWave = true;
 		}
 
-		spawnTimer.tick();
 		creeperIncreaseTimer.tick();
+		spawnTimer.tick();
 	}
 
 	private void spawnCreepers() {
