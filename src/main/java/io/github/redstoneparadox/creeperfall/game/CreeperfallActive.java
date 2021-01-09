@@ -19,6 +19,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
@@ -231,6 +232,16 @@ public class CreeperfallActive {
     }
 
     private ActionResult onPlayerDamage(ServerPlayerEntity player, DamageSource source, float amount) {
+        Entity sourceEntity = source.getSource();
+
+        if (sourceEntity instanceof ArrowEntity) {
+            Entity owner = ((ArrowEntity) sourceEntity).getOwner();
+
+            if (owner instanceof SkeletonEntity) {
+                return ActionResult.FAIL;
+            }
+        }
+
         // TODO handle damage
         //this.spawnParticipant(player);
         return ActionResult.PASS;
