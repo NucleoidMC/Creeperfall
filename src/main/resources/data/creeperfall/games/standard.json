@@ -13,16 +13,16 @@
     "max": 6
   },
   "shop": {
-    "skeleton_price": 12,
-    "ocelot_price": 30,
-    "armor_upgrade_prices": [24, 28, 36]
+    "skeleton_price": 20,
+    "ocelot_price": 32,
+    "armor_upgrade_prices": [24, 30, 36]
   },
   "creeper_spawning": {
     "stages": 6,
     "stage_length_secs": 45,
     "spawn_count_increment": 0.7,
     "spawn_delay_secs": 5,
-    "spawn_height": 40,
+    "spawn_height": 50,
     "fall_speed_multiplier": 0.7
   },
   "time_limit_secs": 360,
