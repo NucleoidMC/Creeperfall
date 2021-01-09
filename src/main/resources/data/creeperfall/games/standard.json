@@ -1,30 +1,32 @@
 {
   "type": "creeperfall:creeperfall",
+  "name": "Creeperfall",
   "map": {
     "spawn_block": {
-      "Name": "minecraft:blue_stained_glass",
+      "Name": "minecraft:gray_stained_glass",
       "Properties": {}
     },
-    "size": 15
+    "size": 19
   },
   "players": {
     "min": 1,
-    "max": 8
+    "max": 6
   },
   "shop": {
-    "guardian_price": 12,
-    "ocelot_price": 20,
-    "armor_upgrade_prices": [20, 25, 30]
+    "skeleton_price": 20,
+    "ocelot_price": 32,
+    "armor_upgrade_prices": [24, 30, 36]
   },
   "creeper_spawning": {
-    "max_creepers_per_player": 4,
-    "stage_length_secs": 30,
-    "creeper_spawn_delay_secs": 5,
-    "creeper_spawn_height": 30,
-    "creeper_fall_speed_multiplier": 0.8
+    "stages": 6,
+    "stage_length_secs": 45,
+    "spawn_count_increment": 0.7,
+    "spawn_delay_secs": 5,
+    "spawn_height": 50,
+    "fall_speed_multiplier": 0.7
   },
-  "time_limit_secs": 240,
+  "time_limit_secs": 360,
   "max_arrows": 20,
-  "arrow_replenish_time_secs": 10,
+  "arrow_replenish_time_secs": 12,
   "emerald_reward_count": [1, 3]
 }

@@ -14,6 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -47,13 +48,15 @@ public class CreeperfallPlayerSpawnLogic {
         ));
 
         if (gameMode != GameMode.SPECTATOR && !lobby) {
-            player.giveItemStack(new ItemStack(Items.COMPASS));
+            ItemStack compassStack = new ItemStack(Items.COMPASS);
+
+            compassStack.setCustomName(new LiteralText("Shop").formatted(Formatting.AQUA, Formatting.ITALIC));
+            player.giveItemStack(compassStack);
 
             ItemStack bowStack = new ItemStack(Items.BOW);
             CompoundTag nbt = bowStack.getOrCreateTag();
 
             nbt.putBoolean("Unbreakable", true);
-
             player.giveItemStack(bowStack);
             player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows));
         }
@@ -62,29 +65,21 @@ public class CreeperfallPlayerSpawnLogic {
             ItemStack bookStack = new ItemStack(Items.WRITTEN_BOOK);
             CompoundTag nbt = bookStack.getOrCreateTag();
             ListTag pages = new ListTag();
+            CompoundTag display = new CompoundTag();
+            ListTag lore = new ListTag();
 
             pages.add(
                     StringTag.of(
-                            Text.Serializer.toJson(
-                                    new LiteralText(
-                                            "Gameplay takes place on a platform in the sky." +
-                                                    " Creepers with slow falling with peroidically spawn above the platform with slow falling which you can shoot down with your bow and arrow." +
-                                                    " Be careful, as any Creepers that land on the platform gain inviciblity, so there's no way to prevent them from exploding."
-                                    )
-                            )
+                            "[\"\",{\"text\":\"Creepers:\",\"bold\":true,\"italic\":true,\"color\":\"green\"},{\"text\":\"\\nCreepers periodically fall from the sky, shoot them down before they land or they will become invincible.\\n\\n\",\"color\":\"reset\"},{\"text\":\"Shop:\",\"bold\":true,\"italic\":true,\"color\":\"aqua\"},{\"text\":\"\\nKilling Creepers gives you emeralds to spend in the shop.\",\"color\":\"reset\"}]"
                     )
             );
             pages.add(
                     StringTag.of(
-                            Text.Serializer.toJson(
-                                    new LiteralText(
-                                            "The shop, which can be accessed with the compass, contains armor upgrades and can spawn a guardian or a cat." +
-                                                    " The guardian will fire a laser at any creepers that get to close to the platform, save for those that have already landed." +
-                                                    " The cat will kill all Creepers three seconds after spawning and despawn."
-                                    )
-                            )
+                            "[\"\",{\"text\":\"Survive:\",\"bold\":true,\"italic\":true,\"color\":\"gold\"},{\"text\":\"\\nThe goal is to survive to the end of the game; your health does not regen so be careful!\",\"color\":\"reset\"}]"
                     )
             );
+            lore.add(StringTag.of("How to play Creeperfall"));
+            display.put("Lore", lore);
             nbt.put("pages", pages);
             nbt.putString("title", "How to Play");
             nbt.putString("author", "RedstoneParadox");

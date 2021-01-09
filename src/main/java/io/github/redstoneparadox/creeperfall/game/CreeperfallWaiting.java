@@ -7,8 +7,13 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.world.GameMode;
+import net.minecraft.world.GameRules;
 import xyz.nucleoid.fantasy.BubbleWorldConfig;
-import xyz.nucleoid.plasmid.game.*;
+import xyz.nucleoid.plasmid.game.GameOpenContext;
+import xyz.nucleoid.plasmid.game.GameOpenProcedure;
+import xyz.nucleoid.plasmid.game.GameSpace;
+import xyz.nucleoid.plasmid.game.GameWaitingLobby;
+import xyz.nucleoid.plasmid.game.StartResult;
 import xyz.nucleoid.plasmid.game.event.PlayerAddListener;
 import xyz.nucleoid.plasmid.game.event.PlayerDeathListener;
 import xyz.nucleoid.plasmid.game.event.RequestStartListener;
@@ -33,7 +38,8 @@ public class CreeperfallWaiting {
 
         BubbleWorldConfig worldConfig = new BubbleWorldConfig()
                 .setGenerator(map.asGenerator(context.getServer()))
-                .setDefaultGameMode(GameMode.SPECTATOR);
+                .setDefaultGameMode(GameMode.SPECTATOR)
+                .setGameRule(GameRules.NATURAL_REGENERATION, false);
 
         return context.createOpenProcedure(worldConfig, game -> {
             CreeperfallWaiting waiting = new CreeperfallWaiting(game.getSpace(), map, context.getConfig());

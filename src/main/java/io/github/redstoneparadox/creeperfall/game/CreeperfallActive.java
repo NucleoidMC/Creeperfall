@@ -1,7 +1,9 @@
 package io.github.redstoneparadox.creeperfall.game;
 
+import io.github.redstoneparadox.creeperfall.Creeperfall;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallGuardianEntity;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallOcelotEntity;
+import io.github.redstoneparadox.creeperfall.entity.CreeperfallSkeletonEntity;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallParticipant;
 import io.github.redstoneparadox.creeperfall.game.shop.CreeperfallShop;
@@ -17,12 +19,16 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
@@ -37,7 +43,18 @@ import net.minecraft.world.GameMode;
 import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.event.*;
+import xyz.nucleoid.plasmid.game.event.EntityDeathListener;
+import xyz.nucleoid.plasmid.game.event.EntityDropLootListener;
+import xyz.nucleoid.plasmid.game.event.ExplosionListener;
+import xyz.nucleoid.plasmid.game.event.GameCloseListener;
+import xyz.nucleoid.plasmid.game.event.GameOpenListener;
+import xyz.nucleoid.plasmid.game.event.GameTickListener;
+import xyz.nucleoid.plasmid.game.event.OfferPlayerListener;
+import xyz.nucleoid.plasmid.game.event.PlayerAddListener;
+import xyz.nucleoid.plasmid.game.event.PlayerDamageListener;
+import xyz.nucleoid.plasmid.game.event.PlayerDeathListener;
+import xyz.nucleoid.plasmid.game.event.PlayerRemoveListener;
+import xyz.nucleoid.plasmid.game.event.UseItemListener;
 import xyz.nucleoid.plasmid.game.player.JoinResult;
 import xyz.nucleoid.plasmid.game.player.PlayerSet;
 import xyz.nucleoid.plasmid.game.rule.GameRule;
@@ -75,7 +92,7 @@ public class CreeperfallActive {
         this.gameMap = map;
         this.tracker = new EntityTracker();
         this.playerSpawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map, config);
-        this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, map, config, tracker);
+        this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, this, map, config, tracker);
         this.participants = new Object2ObjectOpenHashMap<>();
 
         for (PlayerRef player : participants) {
@@ -96,8 +113,6 @@ public class CreeperfallActive {
                     .collect(Collectors.toSet());
             GlobalWidgets widgets = new GlobalWidgets(game);
             CreeperfallActive active = new CreeperfallActive(gameSpace, map, widgets, config, participants);
-
-            gameSpace.getWorld().getGameRules().get(GameRules.NATURAL_REGENERATION).set(false, gameSpace.getServer());
 
             game.setRule(GameRule.CRAFTING, RuleResult.DENY);
             game.setRule(GameRule.PORTALS, RuleResult.DENY);
@@ -131,31 +146,32 @@ public class CreeperfallActive {
         ServerWorld world = gameSpace.getWorld();
         CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(world);
 
-        double x = 0.5;
-        double y = 68;
-        double z = 0.5;
-
-        Objects.requireNonNull(entity).setPos(x, y, z);
-        entity.updatePosition(x, y, z);
-        entity.setVelocity(Vec3d.ZERO);
-
-        entity.prevX = x;
-        entity.prevY = y;
-        entity.prevZ = z;
-
         entity.setInvulnerable(true);
-        entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.SPAWN_EGG, null, null);
-        world.spawnEntity(entity);
-        tracker.add(entity);
+        spawnEntity(entity, 0.5, 68, 0.5, SpawnReason.SPAWN_EGG);
     }
 
     public void spawnOcelot() {
         ServerWorld world = gameSpace.getWorld();
         CreeperfallOcelotEntity entity = new CreeperfallOcelotEntity(tracker, world);
 
-        double x = 0.5;
-        double y = 65;
-        double z = 0.5;
+        entity.setInvulnerable(true);
+        spawnEntity(entity, 0.5, 65, 0.5, SpawnReason.SPAWN_EGG);
+    }
+
+    public void spawnSkeleton() {
+        ServerWorld world = gameSpace.getWorld();
+        CreeperfallSkeletonEntity entity = new CreeperfallSkeletonEntity(world);
+
+        spawnEntity(entity, 0.5, 65, 0.5, SpawnReason.SPAWN_EGG);
+    }
+
+    public void spawnEntity(Entity entity, double x, double y, double z, SpawnReason spawnReason) {
+        ServerWorld world = gameSpace.getWorld();
+
+        if (gameSpace.getWorld() != entity.world) {
+            Creeperfall.LOGGER.error("Attempted to add an entity to Creeperfall's gamespace that was not in the correct ServerWorld.");
+            return;
+        }
 
         Objects.requireNonNull(entity).setPos(x, y, z);
         entity.updatePosition(x, y, z);
@@ -165,8 +181,10 @@ public class CreeperfallActive {
         entity.prevY = y;
         entity.prevZ = z;
 
-        entity.setInvulnerable(true);
-        entity.initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), SpawnReason.SPAWN_EGG, null, null);
+        if (entity instanceof MobEntity) {
+            ((MobEntity) entity).initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), spawnReason, null, null);
+        }
+
         world.spawnEntity(entity);
         tracker.add(entity);
     }
@@ -213,6 +231,16 @@ public class CreeperfallActive {
     }
 
     private ActionResult onPlayerDamage(ServerPlayerEntity player, DamageSource source, float amount) {
+        Entity sourceEntity = source.getSource();
+
+        if (sourceEntity instanceof ArrowEntity) {
+            Entity owner = ((ArrowEntity) sourceEntity).getOwner();
+
+            if (owner instanceof SkeletonEntity) {
+                return ActionResult.FAIL;
+            }
+        }
+
         // TODO handle damage
         //this.spawnParticipant(player);
         return ActionResult.PASS;
@@ -295,7 +323,8 @@ public class CreeperfallActive {
                 int maxEmeralds = config.emeraldRewardCount.getMax();
                 int minEmeralds = config.emeraldRewardCount.getMin();
                 int emeralds = (random.nextInt(maxEmeralds - minEmeralds) + 1) + minEmeralds;
-                ((ServerPlayerEntity) player).giveItemStack(new ItemStack(Items.EMERALD, emeralds));
+                player.giveItemStack(new ItemStack(Items.EMERALD, emeralds));
+                player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f);
             }
         }
 
@@ -322,6 +351,7 @@ public class CreeperfallActive {
         boolean survivors = result.survivors;
 
         Text message;
+        SoundEvent sound;
         if (survivors) {
             ServerWorld world = gameSpace.getWorld();
             MutableText mutableText = new LiteralText("Game completed! ");
@@ -347,13 +377,17 @@ public class CreeperfallActive {
                 @Nullable ServerPlayerEntity playerEntity = survivorsList.get(0).getPlayer().getEntity(world);
                 message = mutableText.append(playerEntity.getDisplayName().shallowCopy()).append(" survived!");
             }
+
+            sound = SoundEvents.ENTITY_VILLAGER_CELEBRATE;
+
         } else {
             message = new LiteralText("Game Over! No one survived the Creepers...").formatted(Formatting.RED);
+            sound = SoundEvents.ENTITY_VILLAGER_NO;
         }
 
         PlayerSet players = this.gameSpace.getPlayers();
         players.sendMessage(message);
-        players.sendSound(SoundEvents.ENTITY_VILLAGER_YES);
+        players.sendSound(sound);
     }
 
     private GameResult checkWinResult() {
