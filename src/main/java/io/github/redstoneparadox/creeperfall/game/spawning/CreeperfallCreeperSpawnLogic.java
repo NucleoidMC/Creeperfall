@@ -2,7 +2,7 @@ package io.github.redstoneparadox.creeperfall.game.spawning;
 
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallCreeperEntity;
 import io.github.redstoneparadox.creeperfall.game.CreeperfallActive;
-import io.github.redstoneparadox.creeperfall.game.CreeperfallConfig;
+import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.util.EntityTracker;
 import io.github.redstoneparadox.creeperfall.game.util.Timer;

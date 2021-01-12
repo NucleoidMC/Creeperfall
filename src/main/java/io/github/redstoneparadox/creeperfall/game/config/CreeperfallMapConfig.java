@@ -1,4 +1,4 @@
-package io.github.redstoneparadox.creeperfall.game.map;
+package io.github.redstoneparadox.creeperfall.game.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

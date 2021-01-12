@@ -1,5 +1,6 @@
 package io.github.redstoneparadox.creeperfall.game.map;
 
+import io.github.redstoneparadox.creeperfall.game.config.CreeperfallMapConfig;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.chunk.ChunkGenerator;

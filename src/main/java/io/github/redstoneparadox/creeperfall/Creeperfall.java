@@ -1,6 +1,6 @@
 package io.github.redstoneparadox.creeperfall;
 
-import io.github.redstoneparadox.creeperfall.game.CreeperfallConfig;
+import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
 import io.github.redstoneparadox.creeperfall.game.CreeperfallWaiting;
 import io.github.redstoneparadox.creeperfall.item.CreeperfallItems;
 import net.fabricmc.api.ModInitializer;

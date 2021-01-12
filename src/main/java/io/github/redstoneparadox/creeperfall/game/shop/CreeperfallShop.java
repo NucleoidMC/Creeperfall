@@ -1,6 +1,7 @@
 package io.github.redstoneparadox.creeperfall.game.shop;
 
 import io.github.redstoneparadox.creeperfall.game.CreeperfallActive;
+import io.github.redstoneparadox.creeperfall.game.config.CreeperfallShopConfig;
 import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallParticipant;
 import io.github.redstoneparadox.creeperfall.game.participant.Upgrade;
 import io.github.redstoneparadox.creeperfall.game.util.TextHelper;

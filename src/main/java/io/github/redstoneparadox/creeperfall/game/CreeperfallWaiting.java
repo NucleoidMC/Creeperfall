@@ -1,5 +1,6 @@
 package io.github.redstoneparadox.creeperfall.game;
 
+import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMapGenerator;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallPlayerSpawnLogic;

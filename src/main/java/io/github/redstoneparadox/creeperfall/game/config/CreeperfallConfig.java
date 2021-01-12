@@ -1,10 +1,7 @@
-package io.github.redstoneparadox.creeperfall.game;
+package io.github.redstoneparadox.creeperfall.game.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMapConfig;
-import io.github.redstoneparadox.creeperfall.game.shop.CreeperfallShopConfig;
-import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallCreeperSpawnConfig;
 import io.github.redstoneparadox.creeperfall.game.util.Codecs;
 import net.minecraft.util.math.IntRange;
 import xyz.nucleoid.plasmid.game.config.PlayerConfig;
