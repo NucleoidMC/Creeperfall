@@ -17,7 +17,7 @@
     "ocelot_price": 32,
     "armor_upgrade_prices": [24, 30, 36]
   },
-  "creeper_spawning": {
+  "creepers": {
     "stages": 6,
     "stage_length_secs": 45,
     "spawn_count_increment": 0.7,
