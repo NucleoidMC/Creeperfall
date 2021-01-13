@@ -26,6 +26,10 @@ public class StatUpgrade implements Upgrade {
 		return currentTier;
 	}
 
+	public int getValue() {
+		return tiers[currentTier];
+	}
+
 	@Override
 	public boolean upgrade(CreeperfallParticipant participant) {
 		if (currentTier + 1 >= tiers.length) return false;
