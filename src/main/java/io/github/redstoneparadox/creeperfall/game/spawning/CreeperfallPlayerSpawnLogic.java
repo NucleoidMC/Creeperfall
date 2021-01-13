@@ -57,7 +57,7 @@ public class CreeperfallPlayerSpawnLogic {
 
             nbt.putBoolean("Unbreakable", true);
             player.giveItemStack(bowStack);
-            player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows.get(0)));
+            player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows));
         }
 
         if (lobby) {

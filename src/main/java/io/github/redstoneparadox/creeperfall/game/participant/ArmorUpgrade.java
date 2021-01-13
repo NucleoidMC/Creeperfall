@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class ArmorUpgrade implements Upgrade<List<ItemStack>> {
+public class ArmorUpgrade implements Upgrade {
 	private final List<Pair<ArmorType, Consumer<List<ItemStack>>>> tiers;
 
 	private int currentTier = -1;
@@ -36,26 +36,6 @@ public class ArmorUpgrade implements Upgrade<List<ItemStack>> {
 	@Override
 	public int getTier() {
 		return currentTier;
-	}
-
-	@Override
-	public List<ItemStack> getValue(int tier) {
-		Pair<ArmorType, Consumer<List<ItemStack>>> pair = tiers.get(tier);
-		ArmorType type = pair.getLeft();
-		Consumer<List<ItemStack>> consumer = pair.getRight();
-		List<ItemStack> stacks = Arrays.asList(
-				new ItemStack(type.helmet),
-				new ItemStack(type.chestplate),
-				new ItemStack(type.leggings),
-				new ItemStack(type.boots)
-		);
-
-		if (type.isNone()) {
-			return stacks;
-		}
-
-		consumer.accept(stacks);
-		return stacks;
 	}
 
 	@Override

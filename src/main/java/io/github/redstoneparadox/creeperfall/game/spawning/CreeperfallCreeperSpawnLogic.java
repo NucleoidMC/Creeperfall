@@ -34,9 +34,9 @@ public class CreeperfallCreeperSpawnLogic {
 		this.map = map;
 		this.config = config;
 		this.tracker = tracker;
-		this.stages = config.creeperConfig.stages;
-		int stageLength = config.creeperConfig.stageLengthSeconds * 20;
-		int spawnDelay = config.creeperConfig.spawnDelaySeconds * 20;
+		this.stages = config.creeperSpawnConfig.stages;
+		int stageLength = config.creeperSpawnConfig.stageLengthSeconds * 20;
+		int spawnDelay = config.creeperSpawnConfig.spawnDelaySeconds * 20;
 		this.random = new Random();
 		this.spawnTimer = Timer.createRepeating(spawnDelay, this::spawnCreepers);
 		this.creeperIncreaseTimer = Timer.createRepeating(stageLength, () -> {
@@ -66,7 +66,7 @@ public class CreeperfallCreeperSpawnLogic {
 		}
 
 		int minCreepers = playersRemaining;
-		int maxCreepers = MathHelper.floor(currentStage * config.creeperConfig.spawnCountIncrement * playersRemaining);
+		int maxCreepers = MathHelper.floor(currentStage * config.creeperSpawnConfig.spawnCountIncrement * playersRemaining);
 
 		int count = MathHelper.nextInt(random, minCreepers, maxCreepers);
 
@@ -77,12 +77,12 @@ public class CreeperfallCreeperSpawnLogic {
 
 	private void spawnCreeper() {
 		ServerWorld world = gameSpace.getWorld();
-		CreeperEntity entity = new CreeperfallCreeperEntity(world, config.creeperConfig.fallSpeedMultiplier);
+		CreeperEntity entity = new CreeperfallCreeperEntity(world, config.creeperSpawnConfig.fallSpeedMultiplier);
 
 		int size = config.mapConfig.size;
 		int radius = size/2;
 		int x = random.nextInt(size) - radius;
-		int y = map.spawn.getY() + config.creeperConfig.spawnHeight;
+		int y = map.spawn.getY() + config.creeperSpawnConfig.spawnHeight;
 		int z = random.nextInt(size) - radius;
 
 		entity.setHealth(0.5f);

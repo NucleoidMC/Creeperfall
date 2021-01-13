@@ -2,12 +2,10 @@ package io.github.redstoneparadox.creeperfall.game.participant;
 
 import net.minecraft.item.ItemStack;
 
-public interface Upgrade<T> {
+public interface Upgrade {
 	boolean canUpgrade();
 
 	int getTier();
-
-	T getValue(int tier);
 
 	boolean upgrade(CreeperfallParticipant participant);
 
