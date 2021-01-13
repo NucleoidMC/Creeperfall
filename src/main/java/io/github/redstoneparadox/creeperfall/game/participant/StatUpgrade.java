@@ -7,18 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StatUpgrade implements Upgrade<Integer> {
-	private final int[] tiers;
+	private final List<Integer> tiers;
 	private final ItemStack icon;
 	private int currentTier = -1;
 
-	public StatUpgrade(int[] tiers, ItemStack icon) {
+	public StatUpgrade(List<Integer> tiers, ItemStack icon) {
 		this.tiers = tiers;
 		this.icon = icon;
 	}
 
 	@Override
 	public boolean canUpgrade() {
-		return currentTier < tiers.length - 1;
+		return currentTier < tiers.size() - 1;
 	}
 
 	@Override
@@ -27,12 +27,12 @@ public class StatUpgrade implements Upgrade<Integer> {
 	}
 
 	public Integer getValue(int tier) {
-		return tiers[tier];
+		return tiers.get(tier);
 	}
 
 	@Override
 	public boolean upgrade(CreeperfallParticipant participant) {
-		if (currentTier + 1 >= tiers.length) return false;
+		if (currentTier + 1 >= tiers.size()) return false;
 
 		currentTier += 1;
 
@@ -45,11 +45,11 @@ public class StatUpgrade implements Upgrade<Integer> {
 	}
 
 	public static class Builder {
-		private final int[] tiers = new int[]{};
+		private final List<Integer> tiers = new ArrayList<>();
 		private ItemStack icon = new ItemStack(Items.BARRIER);
 
 		public Builder tier(int i) {
-			tiers[tiers.length - 1] = i;
+			tiers.add(i);
 			return this;
 		}
 
