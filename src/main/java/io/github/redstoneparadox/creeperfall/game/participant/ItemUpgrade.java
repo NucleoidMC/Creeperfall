@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ItemUpgrade implements Upgrade {
+public class ItemUpgrade implements Upgrade<ItemStack> {
 	private final List<ItemStack> tiers;
 
 	private int currentTier = -1;
@@ -26,6 +26,11 @@ public class ItemUpgrade implements Upgrade {
 	@Override
 	public int getTier() {
 		return currentTier;
+	}
+
+	@Override
+	public ItemStack getValue(int tier) {
+		return tiers.get(tier);
 	}
 
 	@Override

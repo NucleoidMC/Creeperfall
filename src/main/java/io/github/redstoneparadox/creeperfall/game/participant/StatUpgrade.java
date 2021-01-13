@@ -6,7 +6,7 @@ import net.minecraft.item.Items;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatUpgrade implements Upgrade {
+public class StatUpgrade implements Upgrade<Integer> {
 	private final int[] tiers;
 	private final ItemStack icon;
 	private int currentTier = -1;
@@ -26,8 +26,8 @@ public class StatUpgrade implements Upgrade {
 		return currentTier;
 	}
 
-	public int getValue() {
-		return tiers[currentTier];
+	public Integer getValue(int tier) {
+		return tiers[tier];
 	}
 
 	@Override
