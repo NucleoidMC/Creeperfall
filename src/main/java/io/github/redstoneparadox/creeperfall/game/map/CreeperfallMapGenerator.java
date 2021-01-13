@@ -1,5 +1,6 @@
 package io.github.redstoneparadox.creeperfall.game.map;
 
+import io.github.redstoneparadox.creeperfall.game.config.CreeperfallMapConfig;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.WallBlock;
 import net.minecraft.block.enums.WallShape;

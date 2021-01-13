@@ -1,6 +1,7 @@
 package io.github.redstoneparadox.creeperfall.game;
 
 import com.google.common.collect.ImmutableSet;
+import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket.Flag;

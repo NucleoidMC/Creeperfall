@@ -4,6 +4,7 @@ import io.github.redstoneparadox.creeperfall.Creeperfall;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallGuardianEntity;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallOcelotEntity;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallSkeletonEntity;
+import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallParticipant;
 import io.github.redstoneparadox.creeperfall.game.shop.CreeperfallShop;
@@ -40,7 +41,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
-import net.minecraft.world.GameRules;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.event.EntityDeathListener;
@@ -96,7 +96,7 @@ public class CreeperfallActive {
         this.participants = new Object2ObjectOpenHashMap<>();
 
         for (PlayerRef player : participants) {
-            this.participants.put(player, new CreeperfallParticipant(player, gameSpace));
+            this.participants.put(player, new CreeperfallParticipant(player, gameSpace, config));
         }
 
         this.stageManager = new CreeperfallStageManager();
@@ -192,6 +192,8 @@ public class CreeperfallActive {
     private void onReplenishArrows() {
         for (ServerPlayerEntity player : gameSpace.getPlayers()) {
             PlayerInventory inventory = player.inventory;
+            CreeperfallParticipant participant = participants.get(PlayerRef.of(player));
+            int maxArrowsTier = participant.maxArrowsUpgrade.getTier();
 
             for (int i = 0; i < inventory.size(); i++) {
                 if (inventory.getStack(i).getItem() == Items.ARROW) {
@@ -203,7 +205,7 @@ public class CreeperfallActive {
                 inventory.setCursorStack(ItemStack.EMPTY);
             }
 
-            player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows));
+            player.giveItemStack(new ItemStack(Items.ARROW, participant.maxArrowsUpgrade.getValue(maxArrowsTier)));
         }
     }
 

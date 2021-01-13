@@ -1,7 +1,7 @@
 package io.github.redstoneparadox.creeperfall.game.spawning;
 
 import io.github.redstoneparadox.creeperfall.Creeperfall;
-import io.github.redstoneparadox.creeperfall.game.CreeperfallConfig;
+import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -13,7 +13,6 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -58,7 +57,7 @@ public class CreeperfallPlayerSpawnLogic {
 
             nbt.putBoolean("Unbreakable", true);
             player.giveItemStack(bowStack);
-            player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows));
+            player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows.get(0)));
         }
 
         if (lobby) {
