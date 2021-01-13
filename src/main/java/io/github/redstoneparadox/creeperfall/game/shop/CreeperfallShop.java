@@ -20,7 +20,7 @@ public class CreeperfallShop {
 	public static ShopUi create(CreeperfallParticipant participant, CreeperfallActive game, CreeperfallShopConfig shopConfig) {
 		return ShopUi.create(new LiteralText("Shop"), shop -> {
 			shop.add(upgrade(participant, shopConfig.armorUpgradePrices, participant.armorUpgrade, new LiteralText("Upgrade Armor"), new LiteralText("Armor fully upgraded")));
-			shop.add(upgrade(participant, new ArrayList<>(), participant.maxArrowsUpgrade, new LiteralText("Increase Max Arrows"), new LiteralText("Max arrows fully increased.")));
+			shop.add(upgrade(participant, shopConfig.maxArrowUpgradePrices, participant.maxArrowsUpgrade, new LiteralText("Increase Max Arrows"), new LiteralText("Max arrows fully increased.")));
 			shop.add(summonSkeleton(game, shopConfig));
 			shop.add(summonOcelot(game, shopConfig));
 		});

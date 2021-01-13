@@ -1,5 +1,6 @@
 package io.github.redstoneparadox.creeperfall.game.participant;
 
+import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -19,15 +20,21 @@ public class CreeperfallParticipant {
 
     public final StatUpgrade maxArrowsUpgrade;
 
-	public CreeperfallParticipant(PlayerRef player, GameSpace gameSpace) {
+	public CreeperfallParticipant(PlayerRef player, GameSpace gameSpace, CreeperfallConfig config) {
 		this.player = player;
 		this.gameSpace = gameSpace;
 
 		armorUpgrade.upgrade(this);
 
-		maxArrowsUpgrade = new StatUpgrade.Builder()
-				.icon(new ItemStack(Items.ARROW))
-				.build();
+		StatUpgrade.Builder maxArrowsUpgradeBuilder = new StatUpgrade.Builder()
+				.icon(new ItemStack(Items.ARROW));
+
+		for (Integer maxArrows: config.maxArrows) {
+			maxArrowsUpgradeBuilder.tier(maxArrows);
+		}
+
+		this.maxArrowsUpgrade = maxArrowsUpgradeBuilder.build();
+		maxArrowsUpgrade.upgrade(this);
 	}
 
 	public PlayerRef getPlayer() {
