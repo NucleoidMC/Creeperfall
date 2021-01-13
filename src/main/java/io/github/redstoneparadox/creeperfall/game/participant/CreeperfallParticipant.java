@@ -1,6 +1,8 @@
 package io.github.redstoneparadox.creeperfall.game.participant;
 
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.util.PlayerRef;
 
@@ -15,11 +17,17 @@ public class CreeperfallParticipant {
 			.tier(ArmorUpgrade.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 3)
 			.build();
 
+    public final StatUpgrade maxArrowsUpgrade;
+
 	public CreeperfallParticipant(PlayerRef player, GameSpace gameSpace) {
 		this.player = player;
 		this.gameSpace = gameSpace;
 
 		armorUpgrade.upgrade(this);
+
+		maxArrowsUpgrade = new StatUpgrade.Builder()
+				.icon(new ItemStack(Items.ARROW))
+				.build();
 	}
 
 	public PlayerRef getPlayer() {
