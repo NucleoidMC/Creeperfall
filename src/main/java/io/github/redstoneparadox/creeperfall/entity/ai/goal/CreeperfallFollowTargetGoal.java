@@ -9,8 +9,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 public class CreeperfallFollowTargetGoal<T extends LivingEntity> extends FollowTargetGoal<T> {
+	private final boolean airborneTargetsOnly;
+
 	public CreeperfallFollowTargetGoal(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable Predicate<LivingEntity> targetPredicate) {
 		super(mob, targetClass, reciprocalChance, checkVisibility, checkCanNavigate, targetPredicate);
+		this.airborneTargetsOnly = true;
+	}
+
+	public CreeperfallFollowTargetGoal(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable Predicate<LivingEntity> targetPredicate, boolean airborneTargetsOnly) {
+		super(mob, targetClass, reciprocalChance, checkVisibility, checkCanNavigate, targetPredicate);
+		this.airborneTargetsOnly = airborneTargetsOnly;
 	}
 
 	@Override
@@ -26,11 +34,15 @@ public class CreeperfallFollowTargetGoal<T extends LivingEntity> extends FollowT
 	@Override
 	public boolean canStart() {
 		this.findClosestTarget();
-		return this.targetEntity != null && !targetEntity.isOnGround();
+		return this.targetEntity != null && canTarget();
 	}
 
 	@Override
 	public boolean shouldContinue() {
-		return super.shouldContinue() && !targetEntity.isOnGround();
+		return super.shouldContinue() && canTarget();
+	}
+
+	private boolean canTarget() {
+		return !targetEntity.isOnGround() || !airborneTargetsOnly;
 	}
 }
