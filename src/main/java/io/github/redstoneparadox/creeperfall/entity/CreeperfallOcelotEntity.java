@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class CreeperfallOcelotEntity extends OcelotEntity {
 	private EntityTracker tracker;
-	private int timeToDespawn = 15 * 20;
+	private int timeToDespawn = 30 * 20;
 
 	@Deprecated
 	public CreeperfallOcelotEntity(World world) {
@@ -31,8 +31,13 @@ public class CreeperfallOcelotEntity extends OcelotEntity {
 	@Override
 	protected void initGoals() {
 		super.initGoals();
-		this.targetSelector.add(1, new CreeperfallFollowTargetGoal<>(this, CreeperEntity.class, 10, false, false, Entity::isOnGround));
+		this.targetSelector.add(1, new CreeperfallFollowTargetGoal<>(this, CreeperEntity.class, 10, false, false, Entity::isOnGround, false));
 		this.goalSelector.add(1, new LookAtEntityGoal(this, CreeperEntity.class, 128.0F));
+	}
+
+	@Override
+	public void setMovementSpeed(float movementSpeed) {
+		super.setMovementSpeed(movementSpeed * 3);
 	}
 
 	@Override
