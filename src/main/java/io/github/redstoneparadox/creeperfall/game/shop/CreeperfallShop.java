@@ -5,86 +5,84 @@ import io.github.redstoneparadox.creeperfall.game.config.CreeperfallShopConfig;
 import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallParticipant;
 import io.github.redstoneparadox.creeperfall.game.participant.Upgrade;
 import io.github.redstoneparadox.creeperfall.game.util.TextHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import xyz.nucleoid.plasmid.shop.Cost;
 import xyz.nucleoid.plasmid.shop.ShopEntry;
 import xyz.nucleoid.plasmid.shop.ShopUi;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class CreeperfallShop {
+	private static final String TRANSLATION_ROOT = "shop.creeperfall.";
+
 	public static ShopUi create(CreeperfallParticipant participant, CreeperfallActive game, CreeperfallShopConfig shopConfig) {
 		return ShopUi.create(new LiteralText("Shop"), shop -> {
-			shop.add(upgrade(participant, shopConfig, participant.armorUpgrade));
+			shop.add(upgrade(
+					participant,
+					shopConfig.armorUpgradePrices,
+					participant.armorUpgrade,
+					new TranslatableText(TRANSLATION_ROOT + "upgrade_armor"),
+					new TranslatableText(TRANSLATION_ROOT + "upgrade_armor_complete")
+			));
+			shop.add(upgrade(
+					participant,
+					shopConfig.maxArrowUpgradePrices,
+					participant.maxArrowsUpgrade,
+					CreeperfallShop::getMaxArrowsText,
+					new TranslatableText(TRANSLATION_ROOT + "upgrade_arrows_complete")
+			));
 			shop.add(summonSkeleton(game, shopConfig));
 			shop.add(summonOcelot(game, shopConfig));
 		});
 	}
 
 	private static ShopEntry summonGuardian(CreeperfallActive game, CreeperfallShopConfig shopConfig) {
-		ShopEntry entry = ShopEntry.
-				ofIcon(Items.GUARDIAN_SPAWN_EGG)
-				.withName(new LiteralText("Spawn Guardian"));
-
-		List<Text> wrapped = TextHelper.wrapText(
-				new LiteralText("Summons a Guardian to shoot down creepers that get too close. Despawns after 30 seconds."),
-				25
-		);
-		for (Text text : wrapped) {
-			entry.addLore(text);
-		}
-
-		entry
-				.withCost(Cost.ofEmeralds(shopConfig.skeletonPrice))
-				.onBuy(playerEntity -> game.spawnGuardian());
-
-		return entry;
+		return ally(Items.GUARDIAN_SPAWN_EGG, "guardian", 60, shopConfig.skeletonPrice, playerEntity -> game.spawnGuardian());
 	}
 
 	private static ShopEntry summonSkeleton(CreeperfallActive game, CreeperfallShopConfig shopConfig) {
-		ShopEntry entry = ShopEntry.
-				ofIcon(Items.SKELETON_SPAWN_EGG)
-				.withName(new LiteralText("Spawn Skeleton"));
-
-		List<Text> wrapped = TextHelper.wrapText(
-				new LiteralText("Summons a Skeleton to shoot at Creepers. Despawns after 30 seconds."),
-				25
-		);
-		for (Text text : wrapped) {
-			entry.addLore(text);
-		}
-
-		entry
-				.withCost(Cost.ofEmeralds(shopConfig.skeletonPrice))
-				.onBuy(playerEntity -> game.spawnSkeleton());
-
-		return entry;
+		return ally(Items.SKELETON_SPAWN_EGG, "skeleton", 30, shopConfig.skeletonPrice, playerEntity -> game.spawnSkeleton());
 	}
 
 	private static ShopEntry summonOcelot(CreeperfallActive game, CreeperfallShopConfig shopConfig) {
-		ShopEntry entry = ShopEntry.
-				ofIcon(Items.OCELOT_SPAWN_EGG)
-				.withName(new LiteralText("Spawn Cat"));
-
-		List<Text> wrapped = TextHelper.wrapText(
-				new LiteralText("Summons a Cat to scare Creepers to death. Despawns after 3 seconds."),
-				25
-		);
-		for (Text text : wrapped) {
-			entry.addLore(text);
-		}
-
-		entry
-				.withCost(Cost.ofEmeralds(shopConfig.ocelotPrice))
-				.onBuy(playerEntity -> game.spawnOcelot());
-
-		return entry;
+		return ally(Items.OCELOT_SPAWN_EGG, "ocelot", 30, shopConfig.ocelotPrice, playerEntity -> game.spawnOcelot());
 	}
 
-	private static ShopEntry upgrade(CreeperfallParticipant participant, CreeperfallShopConfig shopConfig, Upgrade upgrade) {
+	private static ShopEntry ally(Item icon, String allyName, int despawnTime, int price, Consumer<ServerPlayerEntity> summon) {
+		return ShopEntry.ofIcon(icon)
+				.withName(new TranslatableText(TRANSLATION_ROOT + allyName + "_ally"))
+				.addLore(new TranslatableText(TRANSLATION_ROOT + allyName + "_ally.desc"))
+				.addLore(new TranslatableText(TRANSLATION_ROOT + "despawn", despawnTime))
+				.withCost(Cost.ofEmeralds(price))
+				.onBuy(summon);
+
+	}
+
+	private static <T> Text getMaxArrowsText(Upgrade<T> upgrade) {
+		if (upgrade instanceof StatUpgrade) {
+			int currentTier = upgrade.getTier();
+			int currentArrows = ((StatUpgrade) upgrade).getValue(currentTier);
+			int nextArrows = ((StatUpgrade) upgrade).getValue(currentTier + 1);
+
+			return new TranslatableText(TRANSLATION_ROOT + "upgrade_arrows", currentArrows, nextArrows);
+		}
+
+		return new LiteralText(TRANSLATION_ROOT + "error");
+	}
+
+	private static <T> ShopEntry upgrade(CreeperfallParticipant participant, List<Integer> prices, Upgrade<T> upgrade, Text message, Text fullyUpgradedMessage) {
+		return upgrade(participant, prices, upgrade, (upgrade1 -> message), fullyUpgradedMessage);
+	}
+
+	private static <T> ShopEntry upgrade(CreeperfallParticipant participant, List<Integer> prices, Upgrade<T> upgrade, Function<Upgrade<T>, Text> messageSupplier, Text fullyUpgradedMessage) {
 		ItemStack icon = upgrade.getIcon();
 		int tier = upgrade.getTier();
 
