@@ -3,6 +3,7 @@ package io.github.redstoneparadox.creeperfall.game.shop;
 import io.github.redstoneparadox.creeperfall.game.CreeperfallActive;
 import io.github.redstoneparadox.creeperfall.game.config.CreeperfallShopConfig;
 import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallParticipant;
+import io.github.redstoneparadox.creeperfall.game.participant.StatUpgrade;
 import io.github.redstoneparadox.creeperfall.game.participant.Upgrade;
 import io.github.redstoneparadox.creeperfall.game.util.TextHelper;
 import net.minecraft.item.Item;
@@ -16,6 +17,7 @@ import xyz.nucleoid.plasmid.shop.Cost;
 import xyz.nucleoid.plasmid.shop.ShopEntry;
 import xyz.nucleoid.plasmid.shop.ShopUi;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -89,14 +91,14 @@ public class CreeperfallShop {
 		if (upgrade.canUpgrade()) {
 			return ShopEntry
 					.ofIcon(icon)
-					.withName(new LiteralText("Upgrade Armor"))
-					.withCost(Cost.ofEmeralds(shopConfig.armorUpgradePrices.get(tier)))
+					.withName(messageSupplier.apply(upgrade))
+					.withCost(Cost.ofEmeralds(prices.get(tier)))
 					.onBuy(playerEntity -> upgrade.upgrade(participant));
 		}
 		else {
 			return ShopEntry
 					.ofIcon(icon)
-					.withName(new LiteralText("Armor Fully Upgraded"))
+					.withName(fullyUpgradedMessage)
 					.withCost(Cost.no());
 		}
 	}

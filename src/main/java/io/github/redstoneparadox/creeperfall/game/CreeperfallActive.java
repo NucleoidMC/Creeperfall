@@ -96,7 +96,7 @@ public class CreeperfallActive {
         this.participants = new Object2ObjectOpenHashMap<>();
 
         for (PlayerRef player : participants) {
-            this.participants.put(player, new CreeperfallParticipant(player, gameSpace));
+            this.participants.put(player, new CreeperfallParticipant(player, gameSpace, config));
         }
 
         this.stageManager = new CreeperfallStageManager();
@@ -192,6 +192,8 @@ public class CreeperfallActive {
     private void onReplenishArrows() {
         for (ServerPlayerEntity player : gameSpace.getPlayers()) {
             PlayerInventory inventory = player.inventory;
+            CreeperfallParticipant participant = participants.get(PlayerRef.of(player));
+            int maxArrowsTier = participant.maxArrowsUpgrade.getTier();
 
             for (int i = 0; i < inventory.size(); i++) {
                 if (inventory.getStack(i).getItem() == Items.ARROW) {
@@ -203,7 +205,7 @@ public class CreeperfallActive {
                 inventory.setCursorStack(ItemStack.EMPTY);
             }
 
-            player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows));
+            player.giveItemStack(new ItemStack(Items.ARROW, participant.maxArrowsUpgrade.getValue(maxArrowsTier)));
         }
     }
 
