@@ -1,0 +1,14 @@
+{
+  "shop.creeperfall.upgrade_armor": "Upgrade Armor",
+  "shop.creeperfall.upgrade_armor_complete": "Armor Fully Upgraded",
+  "shop.creeperfall.upgrade_arrows": "%d -> %d Max Arrows",
+  "shop.creeperfall.upgrade_arrows_complete": "Max Arrows Reached",
+  "shop.creeperfall.guardian_ally": "Guardian Ally",
+  "shop.creeperfall.guardian_ally.desc": "Summons a Guardian to shoot Creepers.",
+  "shop.creeperfall.skeleton_ally": "Skeleton Ally",
+  "shop.creeperfall.skeleton_ally.desc": "Summons a Skeleton to shoot Creepers.",
+  "shop.creeperfall.ocelot_ally": "Ocelot Ally",
+  "shop.creeperfall.ocelot_ally.desc": "Summons an Ocelot to scare Creepers that land.",
+  "shop.creeperfall.despawn": "Despawns after %d seconds",
+  "shop.creeeperfall.error": "An Error Has Occurred."
+}
