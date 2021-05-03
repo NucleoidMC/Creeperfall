@@ -190,25 +190,8 @@ public class CreeperfallActive {
     }
 
     private void onReplenishArrows() {
-        for (ServerPlayerEntity player : gameSpace.getPlayers()) {
-            PlayerInventory inventory = player.inventory;
-            CreeperfallParticipant participant = participants.get(PlayerRef.of(player));
-
-            if (participant != null) {
-                int maxArrowsTier = participant.maxArrowsUpgrade.getTier();
-
-                for (int i = 0; i < inventory.size(); i++) {
-                    if (inventory.getStack(i).getItem() == Items.ARROW) {
-                        inventory.setStack(i, ItemStack.EMPTY);
-                    }
-                }
-
-                if (inventory.getCursorStack().getItem() == Items.ARROW) {
-                    inventory.setCursorStack(ItemStack.EMPTY);
-                }
-
-                player.giveItemStack(new ItemStack(Items.ARROW, participant.maxArrowsUpgrade.getValue(maxArrowsTier)));
-            }
+        for (CreeperfallParticipant participant: participants.values()) {
+            participant.replenishArrows();
         }
     }
 
