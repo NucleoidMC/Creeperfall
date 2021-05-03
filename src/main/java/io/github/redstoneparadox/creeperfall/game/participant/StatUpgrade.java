@@ -9,11 +9,13 @@ import java.util.List;
 public class StatUpgrade implements Upgrade<Integer> {
 	private final List<Integer> tiers;
 	private final ItemStack icon;
+	private Runnable onUpgrade;
 	private int currentTier = -1;
 
-	public StatUpgrade(List<Integer> tiers, ItemStack icon) {
+	public StatUpgrade(List<Integer> tiers, ItemStack icon, Runnable onUpgrade) {
 		this.tiers = tiers;
 		this.icon = icon;
+		this.onUpgrade = onUpgrade;
 	}
 
 	@Override
@@ -36,6 +38,8 @@ public class StatUpgrade implements Upgrade<Integer> {
 
 		currentTier += 1;
 
+		onUpgrade.run();
+
 		return true;
 	}
 
@@ -47,6 +51,7 @@ public class StatUpgrade implements Upgrade<Integer> {
 	public static class Builder {
 		private final List<Integer> tiers = new ArrayList<>();
 		private ItemStack icon = new ItemStack(Items.BARRIER);
+		private Runnable onUpgrade = () -> {};
 
 		public Builder tier(int i) {
 			tiers.add(i);
@@ -58,8 +63,13 @@ public class StatUpgrade implements Upgrade<Integer> {
 			return this;
 		}
 
+		public Builder onUpgrade(Runnable onUpgrade) {
+			this.onUpgrade = onUpgrade;
+			return this;
+		}
+
 		public StatUpgrade build() {
-			return new StatUpgrade(tiers, icon);
+			return new StatUpgrade(tiers, icon, onUpgrade);
 		}
 	}
 }

@@ -38,7 +38,9 @@ public class CreeperfallParticipant {
 			maxArrowsUpgradeBuilder.tier(maxArrows);
 		}
 
-		this.maxArrowsUpgrade = maxArrowsUpgradeBuilder.build();
+		this.maxArrowsUpgrade = maxArrowsUpgradeBuilder
+				.onUpgrade(this::replenishArrows)
+				.build();
 		maxArrowsUpgrade.upgrade(this);
 	}
 
