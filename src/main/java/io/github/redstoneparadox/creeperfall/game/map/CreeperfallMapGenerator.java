@@ -7,6 +7,10 @@ import net.minecraft.block.enums.WallShape;
 import net.minecraft.util.math.BlockPos;
 import xyz.nucleoid.plasmid.map.template.MapTemplate;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class CreeperfallMapGenerator {
 
     private final CreeperfallMapConfig config;
@@ -28,6 +32,29 @@ public class CreeperfallMapGenerator {
 
     private void buildMainPlatform(MapTemplate builder) {
         int radius = config.size/2;
+        int adjustmentConst = 0;
+
+        if (config.size % 2 == 1) adjustmentConst = 1;
+
+        int positiveBound = radius - 1;
+        int negativeBound = -radius - adjustmentConst;
+
+        BlockPos min = new BlockPos(negativeBound, 64, negativeBound);
+        BlockPos max = new BlockPos(positiveBound, 64, positiveBound);
+
+        for (BlockPos pos: BlockPos.iterate(min, max)) {
+            int remainderX = Math.abs(pos.getX()) % 2;
+            int remainderZ = Math.abs(pos.getZ()) % 2;
+
+            if ((remainderX == 0 && remainderZ == 0) || (remainderX == 1 && remainderZ == 1)) {
+                builder.setBlockState(pos, Blocks.BASALT.getDefaultState());
+            }
+            else {
+                builder.setBlockState(pos, Blocks.OBSIDIAN.getDefaultState());
+            }
+        }
+
+        /*
         BlockPos min = new BlockPos(-radius, 64, -radius);
         BlockPos max = new BlockPos(radius, 64, radius);
 
@@ -40,11 +67,56 @@ public class CreeperfallMapGenerator {
                 builder.setBlockState(pos, this.config.spawnBlock);
             }
         }
+        */
     }
 
     private void buildPerimeter(MapTemplate builder) {
-        int radius = config.size/2 + 1;
+        int radius = (config.size + 2)/2;
+        int adjustmentConst = 0;
 
+        if (config.size % 2 == 1) adjustmentConst = 1;
+
+        int positiveBound = radius - 1;
+        int negativeBound = -radius - adjustmentConst;
+
+        BlockPos northMin = new BlockPos(negativeBound, 64, negativeBound);
+        BlockPos northMax = new BlockPos(positiveBound, 68, negativeBound);
+
+        BlockPos southMin = new BlockPos(negativeBound, 64, positiveBound);
+        BlockPos southMax = new BlockPos(positiveBound, 68, positiveBound);
+
+        BlockPos eastMin = new BlockPos(positiveBound, 64, negativeBound);
+        BlockPos eastMax = new BlockPos(positiveBound, 68, positiveBound);
+
+        BlockPos westMin = new BlockPos(negativeBound, 64, negativeBound);
+        BlockPos westMax = new BlockPos(negativeBound, 68, positiveBound);
+
+        List<Iterable<BlockPos>> iterables = new ArrayList<>();
+
+        iterables.add(BlockPos.iterate(northMin, northMax));
+        iterables.add(BlockPos.iterate(southMin, southMax));
+        iterables.add(BlockPos.iterate(eastMin, eastMax));
+        iterables.add(BlockPos.iterate(westMin, westMax));
+
+        for (Iterable<BlockPos> iterable: iterables) {
+            for (BlockPos pos: iterable) {
+                switch (pos.getY()) {
+                    case 64:
+                        builder.setBlockState(pos, Blocks.BLACK_CONCRETE.getDefaultState());
+                        break;
+                    case 65:
+                    case 66:
+                    case 67:
+                        builder.setBlockState(pos, Blocks.GLASS.getDefaultState());
+                        break;
+                    case 68:
+                        builder.setBlockState(pos, Blocks.STONE_BRICK_SLAB.getDefaultState());
+                        break;
+                }
+            }
+        }
+
+        /*
         BlockPos min = new BlockPos(-radius, 64, -radius);
         BlockPos max = new BlockPos(radius, 64, radius);
 
@@ -76,5 +148,6 @@ public class CreeperfallMapGenerator {
                 }
             }
         }
+        */
     }
 }
