@@ -43,12 +43,15 @@ public class CreeperfallShop {
 			));
 			shop.add(summonSkeleton(game, shopConfig));
 			shop.add(summonOcelot(game, shopConfig));
+			/*
 			shop.add(
 					ShopEntry.ofIcon(Items.FIREWORK_ROCKET)
 					.withName(new LiteralText("Crossbow and Fireworks"))
 					.withCost(Cost.ofEmeralds(1))
 					.onBuy(playerEntity -> participant.enableCrossbowAndFireworks())
 			);
+			
+			 */
 		});
 	}
 
