@@ -35,7 +35,7 @@ public class CreeperfallPlayerSpawnLogic {
         player.setGameMode(gameMode);
         player.setVelocity(Vec3d.ZERO);
         player.fallDistance = 0.0f;
-        player.inventory.clear();
+        // player.inventory.clear();
         player.inventory.setCursorStack(ItemStack.EMPTY);
 
         player.addStatusEffect(new StatusEffectInstance(
