@@ -110,7 +110,7 @@ public class CreeperfallMapGenerator {
                         builder.setBlockState(pos, Blocks.GLASS.getDefaultState());
                         break;
                     case 68:
-                        builder.setBlockState(pos, Blocks.STONE_BRICK_SLAB.getDefaultState());
+                        builder.setBlockState(pos, Blocks.SMOOTH_QUARTZ_SLAB.getDefaultState());
                         break;
                 }
             }
