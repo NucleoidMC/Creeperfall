@@ -13,20 +13,20 @@
     "max": 6
   },
   "shop": {
-    "armor_upgrade_prices": [24, 30, 36],
-    "max_arrow_upgrade_prices": [10, 16, 20, 24],
-    "skeleton_price": 20,
-    "ocelot_price": 32
+    "armor_upgrade_prices": [24, 36, 48],
+    "max_arrow_upgrade_prices": [12, 20, 28, 32],
+    "skeleton_price": 24,
+    "ocelot_price": 36
   },
   "creepers": {
-    "stages": 6,
-    "stage_length_secs": 45,
+    "stages": 8,
+    "stage_length_secs": 20,
     "spawn_count_increment": 0.7,
-    "spawn_delay_secs": 5,
+    "spawn_delay_secs": 4,
     "spawn_height": 50,
-    "fall_speed_multiplier": 0.7
+    "fall_speed_multiplier": 0.75
   },
-  "time_limit_secs": 360,
+  "time_limit_secs": 200,
   "max_arrows": [4, 8, 12, 16, 20],
   "arrow_replenish_time_secs": 12,
   "emerald_reward_count": [1, 3]
