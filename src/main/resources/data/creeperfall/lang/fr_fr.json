@@ -1,0 +1,16 @@
+{
+  "game.creeperfall.creeperfall": "Creeperfall",
+  
+  "shop.creeperfall.upgrade_armor": "Améliorer l'armure",
+  "shop.creeperfall.upgrade_armor_complete": "Armure complètement améliorée",
+  "shop.creeperfall.upgrade_arrows": "%d -> %d flèches maximum",
+  "shop.creeperfall.upgrade_arrows_complete": "Maximum de flèches atteint",
+  "shop.creeperfall.guardian_ally": "Allié gardien",
+  "shop.creeperfall.guardian_ally.desc": "Fait appel à un gardien pour tirer sur les Creepers.",
+  "shop.creeperfall.skeleton_ally": "Allié squelette",
+  "shop.creeperfall.skeleton_ally.desc": "Fait appel à un squelette pour tirer sur les Creepers.",
+  "shop.creeperfall.ocelot_ally": "Allié ocelot",
+  "shop.creeperfall.ocelot_ally.desc": "Fait appel à un ocelot pour faire peur aux Creepers qui atterissent.",
+  "shop.creeperfall.despawn": "Disparaît après %d secondes",
+  "shop.creeperfall.error": "Une erreur est survenue."
+}
