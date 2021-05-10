@@ -86,7 +86,7 @@ public class CreeperfallShop {
 			return new TranslatableText(TRANSLATION_ROOT + "upgrade_arrows", currentArrows, nextArrows);
 		}
 
-		return new LiteralText(TRANSLATION_ROOT + "error");
+		return new TranslatableText(TRANSLATION_ROOT + "error");
 	}
 
 	private static <T> ShopEntry upgrade(CreeperfallParticipant participant, List<Integer> prices, Upgrade<T> upgrade, Text message, Text fullyUpgradedMessage) {

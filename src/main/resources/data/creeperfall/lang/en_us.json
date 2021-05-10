@@ -1,5 +1,9 @@
 {
   "game.creeperfall.creeperfall": "Creeperfall",
+  "game.creeperfall.go": "Go!",
+  "game.creeperfall.end.fail": "Game over! No one survived the Creepers.",
+  "game.creeperfall.end.success.one": "Game completed! Only %d survived the Creepers.",
+  "game.creeperfall.end.success.multiple": "Game completed! %d and %d survived the Creepers.",
 
   "shop.creeperfall.title": "Shop",
   "shop.creeperfall.upgrade_armor": "Upgrade Armor",

@@ -34,6 +34,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -342,34 +343,44 @@ public class CreeperfallActive {
         SoundEvent sound;
         if (survivors) {
             ServerWorld world = gameSpace.getWorld();
-            MutableText mutableText = new LiteralText("Game completed! ");
             List<CreeperfallParticipant> survivorsList = new ArrayList<>(participants.values());
 
-            if (survivorsList.size() > 1) {
-                for (int i = 0; i < survivorsList.size(); i++) {
-                    @Nullable ServerPlayerEntity playerEntity = survivorsList.get(i).getPlayer().getEntity(world);
 
-                    if (i + 1 == survivorsList.size()) {
-                        mutableText.append("and ");
-                        mutableText.append(playerEntity.getDisplayName().shallowCopy());
-                    }
-                    else {
-                        mutableText.append(playerEntity.getDisplayName().shallowCopy());
-                        mutableText.append(", ");
-                    }
-                }
-
-                message = mutableText.append(" have survived!").formatted(Formatting.GOLD);
+            if (survivorsList.size() == 1) {
+                ServerPlayerEntity playerEntity = survivorsList.get(0).getPlayer().getEntity(world);
+                assert playerEntity != null;
+                message = new TranslatableText("game.creeperfall.end.success.one", playerEntity.getDisplayName().shallowCopy());
+            }
+            else if (survivorsList.size() == 2) {
+                ServerPlayerEntity playerEntityOne = survivorsList.get(0).getPlayer().getEntity(world);
+                ServerPlayerEntity playerEntityTwo = survivorsList.get(1).getPlayer().getEntity(world);
+                assert playerEntityOne != null;
+                assert playerEntityTwo != null;
+                message = new TranslatableText("game.creeperfall.end.success.two", playerEntityOne.getDisplayName().shallowCopy(), playerEntityTwo.getDisplayName().shallowCopy());
             }
             else {
-                @Nullable ServerPlayerEntity playerEntity = survivorsList.get(0).getPlayer().getEntity(world);
-                message = mutableText.append(playerEntity.getDisplayName().shallowCopy()).append(" survived!");
+                List<CreeperfallParticipant> firstSurvivorsList = survivorsList.subList(0, survivorsList.size() - 1);
+                MutableText survivorsText = new LiteralText("");
+
+                for (CreeperfallParticipant survivor: firstSurvivorsList) {
+                    ServerPlayerEntity playerEntity = survivor.getPlayer().getEntity(world);
+                    assert playerEntity != null;
+                    survivorsText.append(playerEntity.getDisplayName().shallowCopy());
+                    survivorsText.append(", ");
+                }
+
+                String stringifiedSurvivors = survivorsText.asString();
+                stringifiedSurvivors = stringifiedSurvivors.substring(0, stringifiedSurvivors.length() - 1);
+
+                ServerPlayerEntity playerEntityLast = survivorsList.get(survivorsList.size() - 1).getPlayer().getEntity(world);
+                assert playerEntityLast != null;
+                message = new TranslatableText("game.creeperfall.end.success.multiple", stringifiedSurvivors, playerEntityLast.getDisplayName().shallowCopy());
             }
 
             sound = SoundEvents.ENTITY_VILLAGER_CELEBRATE;
 
         } else {
-            message = new LiteralText("Game Over! No one survived the Creepers...").formatted(Formatting.RED);
+            message = new TranslatableText("game.creeperfall.end.fail").formatted(Formatting.RED);
             sound = SoundEvents.ENTITY_VILLAGER_NO;
         }
 

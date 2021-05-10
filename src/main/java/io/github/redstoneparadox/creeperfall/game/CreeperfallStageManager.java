@@ -9,6 +9,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
@@ -112,7 +113,7 @@ public class CreeperfallStageManager {
                 players.sendTitle(new LiteralText(Integer.toString(sec)).formatted(Formatting.BOLD));
                 players.sendSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, SoundCategory.PLAYERS, 1.0F, 1.0F);
             } else {
-                players.sendTitle(new LiteralText("Go!").formatted(Formatting.BOLD));
+                players.sendTitle(new TranslatableText("game.creeperfall.go").formatted(Formatting.BOLD));
                 players.sendSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, SoundCategory.PLAYERS, 1.0F, 2.0F);
             }
         }
