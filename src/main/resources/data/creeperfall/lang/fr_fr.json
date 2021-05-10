@@ -1,6 +1,11 @@
 {
   "game.creeperfall.creeperfall": "Creeperfall",
-  
+  "game.creeperfall.go": "Go !",
+  "game.creeperfall.end.fail": "Perdu ! Personne n'a survécu aux Creepers.",
+  "game.creeperfall.end.success.one": "Victoire ! Seulement %d a survécu aux Creepers.",
+  "game.creeperfall.end.success.multiple": "Victoire ! %d et %d ont survécu aux Creepers.",
+
+  "shop.creeperfall.title": "Shop",
   "shop.creeperfall.upgrade_armor": "Améliorer l'armure",
   "shop.creeperfall.upgrade_armor_complete": "Armure complètement améliorée",
   "shop.creeperfall.upgrade_arrows": "%d -> %d flèches maximum",
