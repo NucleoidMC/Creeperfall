@@ -1,6 +1,7 @@
 {
   "game.creeperfall.creeperfall": "Creeperfall",
-  
+
+  "shop.creeperfall.title": "Shop",
   "shop.creeperfall.upgrade_armor": "Upgrade Armor",
   "shop.creeperfall.upgrade_armor_complete": "Armor Fully Upgraded",
   "shop.creeperfall.upgrade_arrows": "%d -> %d Max Arrows",

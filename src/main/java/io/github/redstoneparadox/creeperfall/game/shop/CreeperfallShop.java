@@ -26,7 +26,7 @@ public class CreeperfallShop {
 	private static final String TRANSLATION_ROOT = "shop.creeperfall.";
 
 	public static ShopUi create(CreeperfallParticipant participant, CreeperfallActive game, CreeperfallShopConfig shopConfig) {
-		return ShopUi.create(new LiteralText("Shop"), shop -> {
+		return ShopUi.create(new TranslatableText(TRANSLATION_ROOT + "title"), shop -> {
 			shop.add(upgrade(
 					participant,
 					shopConfig.armorUpgradePrices,
