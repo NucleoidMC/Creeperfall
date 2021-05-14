@@ -47,10 +47,10 @@ public class CreeperfallMapGenerator {
             int remainderZ = Math.abs(pos.getZ()) % 2;
 
             if ((remainderX == 0 && remainderZ == 0) || (remainderX == 1 && remainderZ == 1)) {
-                builder.setBlockState(pos, Blocks.BASALT.getDefaultState());
+                builder.setBlockState(pos, Blocks.BLACK_STAINED_GLASS.getDefaultState());
             }
             else {
-                builder.setBlockState(pos, Blocks.OBSIDIAN.getDefaultState());
+                builder.setBlockState(pos, Blocks.LIGHT_GRAY_STAINED_GLASS.getDefaultState());
             }
         }
 
@@ -80,16 +80,16 @@ public class CreeperfallMapGenerator {
         int negativeBound = -radius - adjustmentConst;
 
         BlockPos northMin = new BlockPos(negativeBound, 64, negativeBound);
-        BlockPos northMax = new BlockPos(positiveBound, 68, negativeBound);
+        BlockPos northMax = new BlockPos(positiveBound, 70, negativeBound);
 
         BlockPos southMin = new BlockPos(negativeBound, 64, positiveBound);
-        BlockPos southMax = new BlockPos(positiveBound, 68, positiveBound);
+        BlockPos southMax = new BlockPos(positiveBound, 70, positiveBound);
 
         BlockPos eastMin = new BlockPos(positiveBound, 64, negativeBound);
-        BlockPos eastMax = new BlockPos(positiveBound, 68, positiveBound);
+        BlockPos eastMax = new BlockPos(positiveBound, 70, positiveBound);
 
         BlockPos westMin = new BlockPos(negativeBound, 64, negativeBound);
-        BlockPos westMax = new BlockPos(negativeBound, 68, positiveBound);
+        BlockPos westMax = new BlockPos(negativeBound, 70, positiveBound);
 
         List<Iterable<BlockPos>> iterables = new ArrayList<>();
 
@@ -107,11 +107,13 @@ public class CreeperfallMapGenerator {
                     case 65:
                     case 66:
                     case 67:
-                        builder.setBlockState(pos, Blocks.GLASS.getDefaultState());
+                        builder.setBlockState(pos, Blocks.BRICK_WALL.getDefaultState());
                         break;
                     case 68:
-                        builder.setBlockState(pos, Blocks.SMOOTH_QUARTZ_SLAB.getDefaultState());
+                        builder.setBlockState(pos, Blocks.MOSSY_STONE_BRICK_SLAB.getDefaultState());
                         break;
+                    default:
+                        builder.setBlockState(pos, Blocks.BARRIER.getDefaultState());
                 }
             }
         }
