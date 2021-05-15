@@ -1,6 +1,7 @@
 {
   "game.creeperfall.creeperfall": "Creeperfall",
   "game.creeperfall.go": "Go !",
+  "game.creeperfall.stage": "La phase %d commence !",
   "game.creeperfall.end.fail": "Perdu ! Personne n'a survécu aux Creepers.",
   "game.creeperfall.end.success.one": "Victoire ! Seulement %d a survécu aux Creepers.",
   "game.creeperfall.end.success.multiple": "Victoire ! %d et %d ont survécu aux Creepers.",
