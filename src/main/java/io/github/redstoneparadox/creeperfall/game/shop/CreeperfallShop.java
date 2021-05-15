@@ -26,7 +26,7 @@ public class CreeperfallShop {
 	private static final String TRANSLATION_ROOT = "shop.creeperfall.";
 
 	public static ShopUi create(CreeperfallParticipant participant, CreeperfallActive game, CreeperfallShopConfig shopConfig) {
-		return ShopUi.create(new LiteralText("Shop"), shop -> {
+		return ShopUi.create(new TranslatableText(TRANSLATION_ROOT + "title"), shop -> {
 			shop.add(upgrade(
 					participant,
 					shopConfig.armorUpgradePrices,
@@ -43,6 +43,15 @@ public class CreeperfallShop {
 			));
 			shop.add(summonSkeleton(game, shopConfig));
 			shop.add(summonOcelot(game, shopConfig));
+			/*
+			shop.add(
+					ShopEntry.ofIcon(Items.FIREWORK_ROCKET)
+					.withName(new LiteralText("Crossbow and Fireworks"))
+					.withCost(Cost.ofEmeralds(1))
+					.onBuy(playerEntity -> participant.enableCrossbowAndFireworks())
+			);
+			
+			 */
 		});
 	}
 
@@ -77,7 +86,7 @@ public class CreeperfallShop {
 			return new TranslatableText(TRANSLATION_ROOT + "upgrade_arrows", currentArrows, nextArrows);
 		}
 
-		return new LiteralText(TRANSLATION_ROOT + "error");
+		return new TranslatableText(TRANSLATION_ROOT + "error");
 	}
 
 	private static <T> ShopEntry upgrade(CreeperfallParticipant participant, List<Integer> prices, Upgrade<T> upgrade, Text message, Text fullyUpgradedMessage) {

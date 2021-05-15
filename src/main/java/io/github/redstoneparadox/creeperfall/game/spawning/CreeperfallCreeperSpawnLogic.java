@@ -42,6 +42,7 @@ public class CreeperfallCreeperSpawnLogic {
 		this.creeperIncreaseTimer = Timer.createRepeating(stageLength, () -> {
 			if (currentStage < stages) {
 				currentStage += 1;
+				game.announceStage(currentStage);
 			}
 		});
 	}

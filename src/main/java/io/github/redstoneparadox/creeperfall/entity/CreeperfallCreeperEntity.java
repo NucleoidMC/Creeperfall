@@ -40,11 +40,8 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 		this.goalSelector.add(2, new CreeperIgniteGoal(this));
 		this.goalSelector.add(3, new FleeEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
 		this.goalSelector.add(3, new FleeEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
-		this.goalSelector.add(4, new MeleeAttackGoal(this, 1.5D, false));
-		this.goalSelector.add(5, new WanderAroundFarGoal(this, 0.8D));
-		this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 64.0F, 1.0f));
-		this.goalSelector.add(6, new LookAtEntityGoal(this, SkeletonEntity.class, 64.0f, 1.0f));
-		this.goalSelector.add(6, new LookAroundGoal(this));
+		this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 128.0F, 1.0f));
+		this.goalSelector.add(6, new LookAtEntityGoal(this, SkeletonEntity.class, 128.0f, 1.0f));
 		this.targetSelector.add(1, new CreeperfallFollowTargetGoal<>(
 						this,
 						PlayerEntity.class,
@@ -54,7 +51,7 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 						livingEntity -> true
 				)
 		);
-		this.targetSelector.add(1, new CreeperfallFollowTargetGoal<>(
+		this.targetSelector.add(2, new CreeperfallFollowTargetGoal<>(
 				this,
 				SkeletonEntity.class,
 				1,
@@ -63,6 +60,11 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 				livingEntity -> true
 				)
 		);
+	}
+
+	@Override
+	public void setMovementSpeed(float movementSpeed) {
+		super.setMovementSpeed(movementSpeed * 1.15f);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -35,7 +36,7 @@ public class CreeperfallPlayerSpawnLogic {
         player.setGameMode(gameMode);
         player.setVelocity(Vec3d.ZERO);
         player.fallDistance = 0.0f;
-        player.inventory.clear();
+        // player.inventory.clear();
         player.inventory.setCursorStack(ItemStack.EMPTY);
 
         player.addStatusEffect(new StatusEffectInstance(
@@ -49,7 +50,7 @@ public class CreeperfallPlayerSpawnLogic {
         if (gameMode != GameMode.SPECTATOR && !lobby) {
             ItemStack compassStack = new ItemStack(Items.COMPASS);
 
-            compassStack.setCustomName(new LiteralText("Shop").formatted(Formatting.AQUA, Formatting.ITALIC));
+            compassStack.setCustomName(new TranslatableText("shop.creeperfall.title", Formatting.AQUA, Formatting.ITALIC));
             player.giveItemStack(compassStack);
 
             ItemStack bowStack = new ItemStack(Items.BOW);
@@ -57,7 +58,7 @@ public class CreeperfallPlayerSpawnLogic {
 
             nbt.putBoolean("Unbreakable", true);
             player.giveItemStack(bowStack);
-            player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows.get(0)));
+            //player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows.get(0)));
         }
 
         if (lobby) {
