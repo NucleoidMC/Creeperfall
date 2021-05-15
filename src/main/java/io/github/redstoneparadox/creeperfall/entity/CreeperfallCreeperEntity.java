@@ -63,6 +63,11 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 	}
 
 	@Override
+	public void setMovementSpeed(float movementSpeed) {
+		super.setMovementSpeed(movementSpeed * 1.15f);
+	}
+
+	@Override
 	public void tick() {
 		if (isOnGround()) {
 			setInvulnerable(true);
