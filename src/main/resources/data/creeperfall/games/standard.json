@@ -15,8 +15,8 @@
   "shop": {
     "armor_upgrade_prices": [24, 36, 48],
     "max_arrow_upgrade_prices": [12, 20, 28, 32],
-    "skeleton_price": 24,
-    "ocelot_price": 36
+    "skeleton_price": 18,
+    "ocelot_price": 28
   },
   "creepers": {
     "stages": 6,
