@@ -143,6 +143,11 @@ public class CreeperfallActive {
         });
     }
 
+    public void announceStage(int stage) {
+        PlayerSet players = gameSpace.getPlayers();
+        players.sendTitle(new TranslatableText("game.creeperfall.stage", stage), 5, 10, 5);
+    }
+
     public void spawnGuardian() {
         ServerWorld world = gameSpace.getWorld();
         CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(world);
