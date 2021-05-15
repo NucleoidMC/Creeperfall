@@ -78,18 +78,19 @@ public class CreeperfallMapGenerator {
 
         int positiveBound = radius - 1;
         int negativeBound = -radius - adjustmentConst;
+        int topY = 100;
 
         BlockPos northMin = new BlockPos(negativeBound, 64, negativeBound);
-        BlockPos northMax = new BlockPos(positiveBound, 70, negativeBound);
+        BlockPos northMax = new BlockPos(positiveBound, topY, negativeBound);
 
         BlockPos southMin = new BlockPos(negativeBound, 64, positiveBound);
-        BlockPos southMax = new BlockPos(positiveBound, 70, positiveBound);
+        BlockPos southMax = new BlockPos(positiveBound, topY, positiveBound);
 
         BlockPos eastMin = new BlockPos(positiveBound, 64, negativeBound);
-        BlockPos eastMax = new BlockPos(positiveBound, 70, positiveBound);
+        BlockPos eastMax = new BlockPos(positiveBound, topY, positiveBound);
 
         BlockPos westMin = new BlockPos(negativeBound, 64, negativeBound);
-        BlockPos westMax = new BlockPos(negativeBound, 70, positiveBound);
+        BlockPos westMax = new BlockPos(negativeBound, topY, positiveBound);
 
         List<Iterable<BlockPos>> iterables = new ArrayList<>();
 
