@@ -102,7 +102,7 @@ public class CreeperfallMapGenerator {
             for (BlockPos pos: iterable) {
                 switch (pos.getY()) {
                     case 64:
-                        builder.setBlockState(pos, Blocks.BLACK_CONCRETE.getDefaultState());
+                        builder.setBlockState(pos, Blocks.BLACKSTONE.getDefaultState());
                         break;
                     case 65:
                     case 66:
