@@ -19,8 +19,8 @@
     "ocelot_price": 36
   },
   "creepers": {
-    "stages": 8,
-    "stage_length_secs": 20,
+    "stages": 6,
+    "stage_length_secs": 30,
     "spawn_count_increment": 0.7,
     "spawn_delay_secs": 4,
     "spawn_height": 50,
