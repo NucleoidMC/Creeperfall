@@ -86,6 +86,10 @@ public class CreeperfallPlayerSpawnLogic {
 
             player.giveItemStack(bookStack);
         }
+
+        if (gameMode == GameMode.SPECTATOR) {
+            player.inventory.clear();
+        }
     }
 
     public void spawnPlayer(ServerPlayerEntity player) {
