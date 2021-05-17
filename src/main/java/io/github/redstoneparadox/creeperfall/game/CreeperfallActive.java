@@ -275,6 +275,12 @@ public class CreeperfallActive {
                 break;
             case TICK_FINISHED:
                 return;
+            case GAME_STARTED:
+                for (CreeperfallParticipant participant: participants.values()) {
+                    participant.notifyOfStart();
+                    participant.replenishArrows();
+                }
+                return;
             case GAME_FINISHED:
                 this.broadcastResult(this.checkWinResult());
                 return;
