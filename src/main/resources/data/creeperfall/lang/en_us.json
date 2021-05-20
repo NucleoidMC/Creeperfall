@@ -1,6 +1,8 @@
 {
   "game.creeperfall.creeperfall": "Creeperfall",
+  "game.creeperfall.waiting": "Waiting for the game to start...",
   "game.creeperfall.go": "Go!",
+  "game.creeperfall.time_left": "%d:%d left",
   "game.creeperfall.stage": "Stage %d begins!",
   "game.creeperfall.end.fail": "Game over! No one survived the Creepers.",
   "game.creeperfall.end.success.one": "Game completed! Only %d survived the Creepers.",

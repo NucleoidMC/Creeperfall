@@ -78,7 +78,7 @@ public class CreeperfallMapGenerator {
 
         int positiveBound = radius - 1;
         int negativeBound = -radius - adjustmentConst;
-        int topY = 100;
+        int topY = 200;
 
         BlockPos northMin = new BlockPos(negativeBound, 64, negativeBound);
         BlockPos northMax = new BlockPos(positiveBound, topY, negativeBound);
