@@ -11,7 +11,7 @@ public final class CreeperfallTimerBar {
     private final BossBarWidget widget;
 
     public CreeperfallTimerBar(GlobalWidgets widgets) {
-        Text title = new TranslatableText("creeperfall.game.waiting");
+        Text title = new TranslatableText("game.creeperfall.waiting");
         this.widget = widgets.addBossBar(title, BossBar.Color.GREEN, BossBar.Style.NOTCHED_10);
     }
 
