@@ -60,6 +60,10 @@ public class CreeperfallStageManager {
             return IdleTickResult.TICK_FINISHED;
         }
 
+        if (this.startTime == time) {
+            return IdleTickResult.GAME_STARTED;
+        }
+
         // Game has just finished. Transition to the waiting-before-close state.
         if (time > this.finishTime || space.getPlayers().isEmpty()) {
             if (!this.setSpectator) {
@@ -126,6 +130,7 @@ public class CreeperfallStageManager {
     public enum IdleTickResult {
         CONTINUE_TICK,
         TICK_FINISHED,
+        GAME_STARTED,
         GAME_FINISHED,
         GAME_CLOSED,
     }

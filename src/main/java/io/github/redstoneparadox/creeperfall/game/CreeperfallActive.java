@@ -24,6 +24,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -39,13 +40,16 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.GameSpace;
+import xyz.nucleoid.plasmid.game.event.AttackEntityListener;
 import xyz.nucleoid.plasmid.game.event.EntityDeathListener;
 import xyz.nucleoid.plasmid.game.event.EntityDropLootListener;
+import xyz.nucleoid.plasmid.game.event.EntityHitListener;
 import xyz.nucleoid.plasmid.game.event.ExplosionListener;
 import xyz.nucleoid.plasmid.game.event.GameCloseListener;
 import xyz.nucleoid.plasmid.game.event.GameOpenListener;
@@ -140,6 +144,8 @@ public class CreeperfallActive {
 
             game.on(PlayerDamageListener.EVENT, active::onPlayerDamage);
             game.on(PlayerDeathListener.EVENT, active::onPlayerDeath);
+            game.on(AttackEntityListener.EVENT, active::onAttackEntity);
+            game.on(EntityHitListener.EVENT, active::onEntityHit);
         });
     }
 
@@ -246,6 +252,16 @@ public class CreeperfallActive {
         return ActionResult.FAIL;
     }
 
+    private ActionResult onAttackEntity(ServerPlayerEntity attacker, Hand hand, Entity attacked, EntityHitResult hitResult) {
+        if (!(attacked instanceof CreeperEntity)) return ActionResult.FAIL;
+        return ActionResult.PASS;
+    }
+
+    private ActionResult onEntityHit(ProjectileEntity entity, EntityHitResult hitResult) {
+        if (!(hitResult.getEntity() instanceof CreeperEntity)) return ActionResult.FAIL;
+        return ActionResult.PASS;
+    }
+
     private void spawnParticipant(ServerPlayerEntity player) {
         this.playerSpawnLogic.resetPlayer(player, GameMode.SURVIVAL, false);
         this.playerSpawnLogic.spawnPlayer(player);
@@ -274,6 +290,12 @@ public class CreeperfallActive {
             case CONTINUE_TICK:
                 break;
             case TICK_FINISHED:
+                return;
+            case GAME_STARTED:
+                for (CreeperfallParticipant participant: participants.values()) {
+                    participant.notifyOfStart();
+                    participant.replenishArrows();
+                }
                 return;
             case GAME_FINISHED:
                 this.broadcastResult(this.checkWinResult());

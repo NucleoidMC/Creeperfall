@@ -17,6 +17,7 @@ import java.util.Objects;
 public class CreeperfallParticipant {
     private final PlayerRef player;
     private final GameSpace gameSpace;
+    private boolean gameStarted = false;
     private boolean fireworks = false;
 
     public final ArmorUpgrade armorUpgrade = new ArmorUpgrade.Builder()
@@ -56,6 +57,8 @@ public class CreeperfallParticipant {
 	}
 
 	public void replenishArrows() {
+		if (!gameStarted) return;
+
 		PlayerEntity player = getPlayer().getEntity(gameSpace.getWorld());
 		PlayerInventory inventory = Objects.requireNonNull(player).inventory;
 
@@ -78,6 +81,10 @@ public class CreeperfallParticipant {
 		} else {
 			player.giveItemStack(new ItemStack(Items.ARROW, maxArrowsUpgrade.getValue(maxArrowsTier)));
 		}
+	}
+
+	public void notifyOfStart() {
+		gameStarted = true;
 	}
 
 	public void enableCrossbowAndFireworks() {
