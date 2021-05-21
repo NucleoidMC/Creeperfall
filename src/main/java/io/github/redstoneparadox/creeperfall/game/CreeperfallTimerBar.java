@@ -28,6 +28,13 @@ public final class CreeperfallTimerBar {
         long minutes = secondsUntilEnd / 60;
         long seconds = secondsUntilEnd % 60;
 
-        return new TranslatableText("game.creeperfall.time_left", minutes, seconds);
+        return new TranslatableText("game.creeperfall.time_left", minutes, formatSeconds(seconds));
+    }
+
+    private String formatSeconds(long seconds) {
+        if (seconds < 10) {
+            return "0" + seconds;
+        }
+        return String.valueOf(seconds);
     }
 }
