@@ -383,7 +383,7 @@ public class CreeperfallActive {
                 ServerPlayerEntity playerEntityTwo = survivorsList.get(1).getPlayer().getEntity(world);
                 assert playerEntityOne != null;
                 assert playerEntityTwo != null;
-                message = new TranslatableText("game.creeperfall.end.success.two", playerEntityOne.getDisplayName().shallowCopy(), playerEntityTwo.getDisplayName().shallowCopy());
+                message = new TranslatableText("game.creeperfall.end.success.multiple", playerEntityOne.getDisplayName().shallowCopy(), playerEntityTwo.getDisplayName().shallowCopy());
             }
             else {
                 List<CreeperfallParticipant> firstSurvivorsList = survivorsList.subList(0, survivorsList.size() - 1);
