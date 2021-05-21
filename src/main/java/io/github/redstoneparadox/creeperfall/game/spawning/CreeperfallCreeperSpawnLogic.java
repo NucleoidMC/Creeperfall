@@ -85,7 +85,7 @@ public class CreeperfallCreeperSpawnLogic {
 		int adjustmentConst = 0;
 
 		if (size % 2 == 1) adjustmentConst = 1;
-		
+
 		int negativeBound = -radius - adjustmentConst;
 
 		int x = random.nextInt(size) + negativeBound;
