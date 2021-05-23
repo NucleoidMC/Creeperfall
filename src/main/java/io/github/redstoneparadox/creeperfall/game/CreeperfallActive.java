@@ -250,6 +250,7 @@ public class CreeperfallActive {
         this.removePlayer(player);
         this.spawnSpectator(player);
         this.spawnOcelot();
+        this.broadcastDeath(player.getDisplayName());
         return ActionResult.FAIL;
     }
 
@@ -362,6 +363,12 @@ public class CreeperfallActive {
         }
 
         return TypedActionResult.pass(stack);
+    }
+
+    private void broadcastDeath(Text playerName) {
+        PlayerSet players = gameSpace.getPlayers();
+
+        players.sendMessage(new TranslatableText("game.creeperfall.death", playerName));
     }
 
     private void broadcastResult(GameResult result) {

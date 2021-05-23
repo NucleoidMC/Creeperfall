@@ -7,6 +7,7 @@
   "game.creeperfall.end.fail": "Game over! No one survived the Creepers.",
   "game.creeperfall.end.success.one": "Game completed! Only %d survived the Creepers.",
   "game.creeperfall.end.success.multiple": "Game completed! %d and %d survived the Creepers.",
+  "game.creeperfall.death": "%d was blown up by a Creeper. An Ocelot ally has been spawned.",
 
   "shop.creeperfall.title": "Shop",
   "shop.creeperfall.upgrade_armor": "Upgrade Armor",
