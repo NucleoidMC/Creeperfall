@@ -82,11 +82,18 @@ public class CreeperfallCreeperSpawnLogic {
 
 		int size = config.mapConfig.size;
 		int radius = size/2;
-		int x = random.nextInt(size) - radius;
+		int adjustmentConst = 0;
+
+		if (size % 2 == 1) adjustmentConst = 1;
+
+		int negativeBound = -radius - adjustmentConst;
+
+		int x = random.nextInt(size) + negativeBound;
 		int y = map.spawn.getY() + config.creeperConfig.spawnHeight;
-		int z = random.nextInt(size) - radius;
+		int z = random.nextInt(size) + negativeBound;
 
 		entity.setHealth(0.5f);
 		game.spawnEntity(entity, x, y, z, SpawnReason.NATURAL);
 	}
+
 }
