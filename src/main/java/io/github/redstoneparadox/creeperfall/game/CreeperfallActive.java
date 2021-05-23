@@ -249,6 +249,7 @@ public class CreeperfallActive {
     private ActionResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
         this.removePlayer(player);
         this.spawnSpectator(player);
+        this.spawnOcelot();
         return ActionResult.FAIL;
     }
 
