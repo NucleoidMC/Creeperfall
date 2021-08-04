@@ -151,7 +151,7 @@ public class CreeperfallActive {
 
     public void announceStage(int stage) {
         PlayerSet players = gameSpace.getPlayers();
-        players.sendTitle(new TranslatableText("game.creeperfall.stage", stage), 5, 10, 5);
+        players.sendTitle(new TranslatableText("game.creeperfall.stage", stage), 5, 40, 5);
     }
 
     public void spawnGuardian() {
