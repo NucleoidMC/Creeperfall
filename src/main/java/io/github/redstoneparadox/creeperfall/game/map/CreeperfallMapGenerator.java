@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class CreeperfallMapGenerator {
-
     private final CreeperfallMapConfig config;
 
     public CreeperfallMapGenerator(CreeperfallMapConfig config) {
@@ -53,21 +52,6 @@ public class CreeperfallMapGenerator {
                 builder.setBlockState(pos, Blocks.LIGHT_GRAY_STAINED_GLASS.getDefaultState());
             }
         }
-
-        /*
-        BlockPos min = new BlockPos(-radius, 64, -radius);
-        BlockPos max = new BlockPos(radius, 64, radius);
-
-        for (BlockPos pos : BlockPos.iterate(min, max)) {
-            if (pos.getX() == 0 && pos.getZ() == 0) {
-                builder.setBlockState(pos, Blocks.GRAY_CONCRETE.getDefaultState());
-            } else if (pos.getX() == 0 || pos.getZ() == 0) {
-                builder.setBlockState(pos, Blocks.LIGHT_GRAY_STAINED_GLASS.getDefaultState());
-            } else {
-                builder.setBlockState(pos, this.config.spawnBlock);
-            }
-        }
-        */
     }
 
     private void buildPerimeter(MapTemplate builder) {
@@ -78,7 +62,7 @@ public class CreeperfallMapGenerator {
 
         int positiveBound = radius - 1;
         int negativeBound = -radius - adjustmentConst;
-        int topY = 200;
+        int topY = 68;
 
         BlockPos northMin = new BlockPos(negativeBound, 64, negativeBound);
         BlockPos northMax = new BlockPos(positiveBound, topY, negativeBound);
@@ -114,43 +98,9 @@ public class CreeperfallMapGenerator {
                         builder.setBlockState(pos, Blocks.MOSSY_STONE_BRICK_SLAB.getDefaultState());
                         break;
                     default:
-                        builder.setBlockState(pos, Blocks.BARRIER.getDefaultState());
+                        break;
                 }
             }
         }
-
-        /*
-        BlockPos min = new BlockPos(-radius, 64, -radius);
-        BlockPos max = new BlockPos(radius, 64, radius);
-
-        for (BlockPos pos : BlockPos.iterate(min, max)) {
-            if (builder.getBlockState(pos).isAir()) {
-                builder.setBlockState(pos, Blocks.GRAY_CONCRETE.getDefaultState());
-
-                if (Math.abs(pos.getX()) == Math.abs(pos.getZ())) {
-                    builder.setBlockState(pos.up(), Blocks.RED_TERRACOTTA.getDefaultState());
-                    builder.setBlockState(pos.up(2), Blocks.BRICK_SLAB.getDefaultState());
-                } else if (pos.getX() == radius || pos.getX() == -radius) {
-                    builder.setBlockState(
-                            pos.up(),
-                            Blocks.BRICK_WALL
-                                    .getDefaultState()
-                                    .with(WallBlock.NORTH_SHAPE, WallShape.LOW)
-                                    .with(WallBlock.SOUTH_SHAPE, WallShape.LOW)
-                                    .with(WallBlock.UP, false)
-                    );
-                } else {
-                    builder.setBlockState(
-                            pos.up(),
-                            Blocks.BRICK_WALL
-                                    .getDefaultState()
-                                    .with(WallBlock.EAST_SHAPE, WallShape.LOW)
-                                    .with(WallBlock.WEST_SHAPE, WallShape.LOW)
-                                    .with(WallBlock.UP, false)
-                    );
-                }
-            }
-        }
-        */
     }
 }
