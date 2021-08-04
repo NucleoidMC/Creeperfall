@@ -249,6 +249,10 @@ public class CreeperfallActive {
     private ActionResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
         this.removePlayer(player);
         this.spawnSpectator(player);
+
+        PlayerSet players = this.gameSpace.getPlayers();
+        players.sendMessage(source.getDeathMessage(player));
+
         return ActionResult.FAIL;
     }
 
