@@ -396,12 +396,9 @@ public class CreeperfallActive {
                     survivorsText.append(", ");
                 }
 
-                String stringifiedSurvivors = survivorsText.asString();
-                stringifiedSurvivors = stringifiedSurvivors.substring(0, stringifiedSurvivors.length() - 1);
-
                 ServerPlayerEntity playerEntityLast = survivorsList.get(survivorsList.size() - 1).getPlayer().getEntity(world);
                 assert playerEntityLast != null;
-                message = new TranslatableText("game.creeperfall.end.success.multiple", stringifiedSurvivors, playerEntityLast.getDisplayName().shallowCopy());
+                message = new TranslatableText("game.creeperfall.end.success.multiple", survivorsText.asString(), playerEntityLast.getDisplayName().shallowCopy());
             }
 
             sound = SoundEvents.ENTITY_VILLAGER_CELEBRATE;
