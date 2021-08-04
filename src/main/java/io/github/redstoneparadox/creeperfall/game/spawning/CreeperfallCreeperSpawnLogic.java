@@ -77,20 +77,20 @@ public class CreeperfallCreeperSpawnLogic {
 	}
 
 	private void spawnCreeper() {
-		ServerWorld world = gameSpace.getWorld();
-		CreeperEntity entity = new CreeperfallCreeperEntity(world, config.creeperConfig.fallSpeedMultiplier);
-
 		int size = config.mapConfig.size;
-		int radius = size/2;
+		double radius = size/2.0 - 0.5;
 		int adjustmentConst = 0;
 
 		if (size % 2 == 1) adjustmentConst = 1;
 
-		int negativeBound = -radius - adjustmentConst;
+		double negativeBound = -radius - adjustmentConst;
 
-		int x = random.nextInt(size) + negativeBound;
+		double x = random.nextInt(size) + negativeBound;
 		int y = map.spawn.getY() + config.creeperConfig.spawnHeight;
-		int z = random.nextInt(size) + negativeBound;
+		double z = random.nextInt(size) + negativeBound;
+
+		ServerWorld world = gameSpace.getWorld();
+		CreeperEntity entity = new CreeperfallCreeperEntity(world, config.creeperConfig.fallSpeedMultiplier, radius, negativeBound);
 
 		entity.setHealth(0.5f);
 		game.spawnEntity(entity, x, y, z, SpawnReason.NATURAL);
