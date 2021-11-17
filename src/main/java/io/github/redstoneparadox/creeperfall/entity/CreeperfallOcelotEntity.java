@@ -4,12 +4,9 @@ import io.github.redstoneparadox.creeperfall.entity.ai.goal.CreeperfallFollowTar
 import io.github.redstoneparadox.creeperfall.game.util.EntityTracker;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.passive.OcelotEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Set;
@@ -52,8 +49,8 @@ public class CreeperfallOcelotEntity extends OcelotEntity {
 
 		timeToDespawn -= 1;
 
-		if (timeToDespawn <= 0 && !removed) {
-			remove();
+		if (timeToDespawn <= 0 && !this.isRemoved()) {
+			remove(RemovalReason.DISCARDED);
 		}
 
 		super.tick();

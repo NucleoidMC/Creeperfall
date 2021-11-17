@@ -21,7 +21,7 @@ public class LookUpAtEntityGoal extends LookAtEntityGoal {
 			if (this.targetType == PlayerEntity.class) {
 				this.target = mob.world.getClosestPlayer(targetPredicate, mob, mob.getX(), mob.getEyeY(), mob.getZ());
 			} else {
-				this.target = mob.world.getClosestEntityIncludingUngeneratedChunks(targetType, targetPredicate, mob, mob.getX(), mob.getEyeY(), mob.getZ(), mob.getBoundingBox().expand(range, range, range));
+				this.target = mob.world.getClosestEntity(targetType, targetPredicate, mob, mob.getX(), mob.getEyeY(), mob.getZ(), mob.getBoundingBox().expand(range, range, range));
 			}
 
 			return this.target != null;

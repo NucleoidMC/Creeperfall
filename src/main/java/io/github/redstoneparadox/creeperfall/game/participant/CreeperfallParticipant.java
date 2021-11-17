@@ -7,8 +7,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
+import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.util.PlayerRef;
 
@@ -16,8 +18,8 @@ import java.util.Objects;
 
 public class CreeperfallParticipant {
     private final PlayerRef player;
-    private final GameSpace gameSpace;
-    private boolean gameStarted = false;
+	private final ServerWorld world;
+	private boolean gameStarted = false;
     private boolean fireworks = false;
 
     public final ArmorUpgrade armorUpgrade = new ArmorUpgrade.Builder()
@@ -29,10 +31,9 @@ public class CreeperfallParticipant {
 
     public final StatUpgrade maxArrowsUpgrade;
 
-	public CreeperfallParticipant(PlayerRef player, GameSpace gameSpace, CreeperfallConfig config) {
+	public CreeperfallParticipant(PlayerRef player, ServerWorld world, CreeperfallConfig config) {
 		this.player = player;
-		this.gameSpace = gameSpace;
-
+		this.world = world;
 		armorUpgrade.upgrade(this);
 
 		StatUpgrade.Builder maxArrowsUpgradeBuilder = new StatUpgrade.Builder()
@@ -52,15 +53,20 @@ public class CreeperfallParticipant {
 		return player;
 	}
 
-	public GameSpace getGameSpace() {
-		return gameSpace;
+	@Nullable
+	public ServerPlayerEntity getPlayerEntity() {
+		return getPlayer().getEntity(this.world);
+	}
+
+	public ServerWorld getWorld() {
+		return this.world;
 	}
 
 	public void replenishArrows() {
 		if (!gameStarted) return;
 
-		PlayerEntity player = getPlayer().getEntity(gameSpace.getWorld());
-		PlayerInventory inventory = Objects.requireNonNull(player).inventory;
+		PlayerEntity player = getPlayer().getEntity(this.world);
+		PlayerInventory inventory = Objects.requireNonNull(player).getInventory();
 
 		int maxArrowsTier = maxArrowsUpgrade.getTier();
 
@@ -71,9 +77,9 @@ public class CreeperfallParticipant {
 			}
 		}
 
-		Item cursorItem = inventory.getCursorStack().getItem();
+		Item cursorItem = player.currentScreenHandler.getCursorStack().getItem();
 		if (cursorItem == Items.ARROW || cursorItem == Items.FIREWORK_ROCKET) {
-			inventory.setCursorStack(ItemStack.EMPTY);
+			player.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
 		}
 
 		if (fireworks) {
@@ -90,8 +96,8 @@ public class CreeperfallParticipant {
 	public void enableCrossbowAndFireworks() {
 		fireworks = true;
 
-		PlayerEntity player = getPlayer().getEntity(gameSpace.getWorld());
-		PlayerInventory inventory = Objects.requireNonNull(player).inventory;
+		PlayerEntity player = getPlayer().getEntity(this.world);
+		PlayerInventory inventory = Objects.requireNonNull(player).getInventory();
 
 		for (int i = 0; i < inventory.size(); i++) {
 			if (inventory.getStack(i).getItem() == Items.BOW) {
@@ -99,8 +105,8 @@ public class CreeperfallParticipant {
 			}
 		}
 
-		if (inventory.getCursorStack().getItem() == Items.BOW) {
-			inventory.setCursorStack(ItemStack.EMPTY);
+		if (player.currentScreenHandler.getCursorStack().getItem() == Items.BOW) {
+			player.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
 		}
 
 		ItemStack crossbowStack = new ItemStack(Items.CROSSBOW);

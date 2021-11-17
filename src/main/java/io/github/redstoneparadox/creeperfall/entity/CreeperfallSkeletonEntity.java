@@ -26,7 +26,7 @@ public class CreeperfallSkeletonEntity extends SkeletonEntity {
 		super.tick();
 
 		if (timeToDespawn <= 0) {
-			remove();
+			remove(RemovalReason.DISCARDED);
 		} else {
 			timeToDespawn -= 1;
 		}

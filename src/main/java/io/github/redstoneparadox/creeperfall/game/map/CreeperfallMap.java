@@ -4,8 +4,8 @@ import io.github.redstoneparadox.creeperfall.game.config.CreeperfallMapConfig;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import xyz.nucleoid.plasmid.map.template.MapTemplate;
-import xyz.nucleoid.plasmid.map.template.TemplateChunkGenerator;
+import xyz.nucleoid.map_templates.MapTemplate;
+import xyz.nucleoid.plasmid.game.world.generator.TemplateChunkGenerator;
 
 public class CreeperfallMap {
     private final MapTemplate template;

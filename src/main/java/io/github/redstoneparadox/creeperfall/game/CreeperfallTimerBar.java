@@ -1,11 +1,10 @@
 package io.github.redstoneparadox.creeperfall.game;
 
 import net.minecraft.entity.boss.BossBar;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import xyz.nucleoid.plasmid.widget.BossBarWidget;
-import xyz.nucleoid.plasmid.widget.GlobalWidgets;
+import xyz.nucleoid.plasmid.game.common.GlobalWidgets;
+import xyz.nucleoid.plasmid.game.common.widget.BossBarWidget;
 
 public final class CreeperfallTimerBar {
     private final BossBarWidget widget;

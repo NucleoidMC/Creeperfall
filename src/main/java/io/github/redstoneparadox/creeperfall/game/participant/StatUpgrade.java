@@ -29,7 +29,7 @@ public class StatUpgrade implements Upgrade<Integer> {
 	}
 
 	public Integer getValue(int tier) {
-		return tiers.get(tier);
+		return tiers.get(Math.min(tier, tiers.size() - 1));
 	}
 
 	@Override

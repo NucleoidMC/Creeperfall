@@ -16,8 +16,8 @@ public class Creeperfall implements ModInitializer {
 
     public static final GameType<CreeperfallConfig> TYPE = GameType.register(
             new Identifier(ID, "creeperfall"),
-            CreeperfallWaiting::open,
-            CreeperfallConfig.CODEC
+            CreeperfallConfig.CODEC,
+            CreeperfallWaiting::open
     );
 
     @Override

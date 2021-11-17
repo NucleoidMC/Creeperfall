@@ -60,9 +60,9 @@ public class ArmorUpgrade implements Upgrade<List<ItemStack>> {
 
 	@Override
 	public boolean upgrade(CreeperfallParticipant participant) {
-		ServerWorld world = participant.getGameSpace().getWorld();
+		ServerWorld world = participant.getWorld();
 		ServerPlayerEntity player = participant.getPlayer().getEntity(world);
-		PlayerInventory inventory = Objects.requireNonNull(player).inventory;
+		PlayerInventory inventory = Objects.requireNonNull(player).getInventory();
 
 		if (currentTier + 1 >= tiers.size()) return false;
 

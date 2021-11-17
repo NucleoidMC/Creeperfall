@@ -39,7 +39,7 @@ public class FindTrackedTargetGoal<T extends LivingEntity> extends TrackTargetGo
 
 	@Override
 	public boolean shouldContinue() {
-		if (target == null || target.removed) {
+		if (target == null || target.isRemoved()) {
 			return false;
 		}
 

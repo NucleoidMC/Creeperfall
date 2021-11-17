@@ -6,56 +6,60 @@ import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMapGenerator;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallPlayerSpawnLogic;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.GameRules;
-import xyz.nucleoid.fantasy.BubbleWorldConfig;
+import xyz.nucleoid.fantasy.RuntimeWorldConfig;
+import xyz.nucleoid.plasmid.event.GameEvents;
 import xyz.nucleoid.plasmid.game.GameOpenContext;
 import xyz.nucleoid.plasmid.game.GameOpenProcedure;
+import xyz.nucleoid.plasmid.game.GameResult;
 import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.GameWaitingLobby;
-import xyz.nucleoid.plasmid.game.StartResult;
-import xyz.nucleoid.plasmid.game.event.PlayerAddListener;
-import xyz.nucleoid.plasmid.game.event.PlayerDeathListener;
-import xyz.nucleoid.plasmid.game.event.RequestStartListener;
+import xyz.nucleoid.plasmid.game.common.GameWaitingLobby;
+import xyz.nucleoid.plasmid.game.event.GameActivityEvents;
+import xyz.nucleoid.plasmid.game.event.GamePlayerEvents;
+import xyz.nucleoid.stimuli.event.player.PlayerDeathEvent;
 
 public class CreeperfallWaiting {
     private final GameSpace gameSpace;
     private final CreeperfallMap map;
     private final CreeperfallConfig config;
     private final CreeperfallPlayerSpawnLogic spawnLogic;
+    private final ServerWorld world;
 
-    private CreeperfallWaiting(GameSpace gameSpace, CreeperfallMap map, CreeperfallConfig config) {
+    private CreeperfallWaiting(GameSpace gameSpace, ServerWorld world, CreeperfallMap map, CreeperfallConfig config) {
         this.gameSpace = gameSpace;
+        this.world = world;
         this.map = map;
         this.config = config;
-        this.spawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map, config);
+        this.spawnLogic = new CreeperfallPlayerSpawnLogic(world, map);
     }
 
     public static GameOpenProcedure open(GameOpenContext<CreeperfallConfig> context) {
-        CreeperfallConfig config = context.getConfig();
+        CreeperfallConfig config = context.config();
         CreeperfallMapGenerator generator = new CreeperfallMapGenerator(config.mapConfig);
         CreeperfallMap map = generator.build();
 
-        BubbleWorldConfig worldConfig = new BubbleWorldConfig()
-                .setGenerator(map.asGenerator(context.getServer()))
-                .setDefaultGameMode(GameMode.SPECTATOR)
+        RuntimeWorldConfig worldConfig = new RuntimeWorldConfig()
+                .setGenerator(map.asGenerator(context.server()))
                 .setGameRule(GameRules.NATURAL_REGENERATION, false);
 
-        return context.createOpenProcedure(worldConfig, game -> {
-            CreeperfallWaiting waiting = new CreeperfallWaiting(game.getSpace(), map, context.getConfig());
+        return context.openWithWorld(worldConfig, (game, world) -> {
+            CreeperfallWaiting waiting = new CreeperfallWaiting(game.getGameSpace(), world, map, context.config());
 
-            GameWaitingLobby.applyTo(game, config.playerConfig);
-
-            game.on(RequestStartListener.EVENT, waiting::requestStart);
-            game.on(PlayerAddListener.EVENT, waiting::addPlayer);
-            game.on(PlayerDeathListener.EVENT, waiting::onPlayerDeath);
+            GameWaitingLobby.addTo(game, config.playerConfig);
+            game.listen(GamePlayerEvents.OFFER, offer -> offer.accept(world, Vec3d.ZERO));
+            game.listen(GameActivityEvents.REQUEST_START, waiting::requestStart);
+            game.listen(GamePlayerEvents.ADD, waiting::addPlayer);
+            game.listen(PlayerDeathEvent.EVENT, waiting::onPlayerDeath);
         });
     }
 
-    private StartResult requestStart() {
-        CreeperfallActive.open(this.gameSpace, this.map, this.config);
-        return StartResult.OK;
+    private GameResult requestStart() {
+        CreeperfallActive.open(this.gameSpace, this.world, this.map, this.config);
+        return GameResult.ok();
     }
 
     private void addPlayer(ServerPlayerEntity player) {

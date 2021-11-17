@@ -69,7 +69,7 @@ public class CreeperfallStageManager {
             if (!this.setSpectator) {
                 this.setSpectator = true;
                 for (ServerPlayerEntity player : space.getPlayers()) {
-                    player.setGameMode(GameMode.SPECTATOR);
+                    player.changeGameMode(GameMode.SPECTATOR);
                 }
             }
 
@@ -100,11 +100,8 @@ public class CreeperfallStageManager {
                 double destY = state.lastPos.y;
                 double destZ = state.lastPos.z;
 
-                // Set X and Y as relative so it will send 0 change when we pass yaw (yaw - yaw = 0) and pitch
-                Set<Flag> flags = ImmutableSet.of(Flag.X_ROT, Flag.Y_ROT);
-
                 // Teleport without changing the pitch and yaw
-                player.networkHandler.teleportRequest(destX, destY, destZ, player.yaw, player.pitch, flags);
+                player.requestTeleport(destX, destY, destZ);
             }
         }
 
@@ -114,11 +111,11 @@ public class CreeperfallStageManager {
             PlayerSet players = space.getPlayers();
 
             if (sec > 0) {
-                players.sendTitle(new LiteralText(Integer.toString(sec)).formatted(Formatting.BOLD));
-                players.sendSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                players.showTitle(new LiteralText(Integer.toString(sec)).formatted(Formatting.BOLD), 80);
+                players.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, SoundCategory.PLAYERS, 1.0F, 1.0F);
             } else {
-                players.sendTitle(new TranslatableText("game.creeperfall.go").formatted(Formatting.BOLD));
-                players.sendSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, SoundCategory.PLAYERS, 1.0F, 2.0F);
+                players.showTitle(new TranslatableText("game.creeperfall.go").formatted(Formatting.BOLD), 80);
+                players.playSound(SoundEvents.BLOCK_NOTE_BLOCK_HARP, SoundCategory.PLAYERS, 1.0F, 2.0F);
             }
         }
     }
