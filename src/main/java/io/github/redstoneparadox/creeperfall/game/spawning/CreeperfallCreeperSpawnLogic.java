@@ -25,11 +25,13 @@ public class CreeperfallCreeperSpawnLogic {
 	private final Random random;
 	private final Timer spawnTimer;
 	private final Timer creeperIncreaseTimer;
+	private final ServerWorld world;
 	private int currentStage = 1;
 	private boolean spawnedFirstWave = false;
 
-	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, CreeperfallActive game, CreeperfallMap map, CreeperfallConfig config, EntityTracker tracker) {
+	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, ServerWorld world, CreeperfallActive game, CreeperfallMap map, CreeperfallConfig config, EntityTracker tracker) {
 		this.gameSpace = gameSpace;
+		this.world = world;
 		this.game = game;
 		this.map = map;
 		this.config = config;
@@ -78,7 +80,7 @@ public class CreeperfallCreeperSpawnLogic {
 
 	private void spawnCreeper() {
 		int size = config.mapConfig.size;
-		double radius = size/2.0 - 0.5;
+		double radius = size / 2.0 - 0.5;
 		int adjustmentConst = 0;
 
 		if (size % 2 == 1) adjustmentConst = 1;
@@ -89,8 +91,7 @@ public class CreeperfallCreeperSpawnLogic {
 		int y = map.spawn.getY() + config.creeperConfig.spawnHeight;
 		double z = random.nextInt(size) + negativeBound;
 
-		ServerWorld world = gameSpace.getWorld();
-		CreeperEntity entity = new CreeperfallCreeperEntity(world, config.creeperConfig.fallSpeedMultiplier, radius, negativeBound);
+		CreeperEntity entity = new CreeperfallCreeperEntity(this.world, config.creeperConfig.fallSpeedMultiplier, 0.02, 0.02);
 
 		entity.setHealth(0.5f);
 		game.spawnEntity(entity, x, y, z, SpawnReason.NATURAL);

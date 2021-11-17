@@ -1,43 +1,38 @@
 package io.github.redstoneparadox.creeperfall.game.spawning;
 
 import io.github.redstoneparadox.creeperfall.Creeperfall;
-import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
-import xyz.nucleoid.plasmid.game.GameSpace;
 
 public class CreeperfallPlayerSpawnLogic {
-    private final GameSpace gameSpace;
     private final CreeperfallMap map;
-    private final CreeperfallConfig config;
+    private final ServerWorld world;
 
-    public CreeperfallPlayerSpawnLogic(GameSpace gameSpace, CreeperfallMap map, CreeperfallConfig config) {
-        this.gameSpace = gameSpace;
+    public CreeperfallPlayerSpawnLogic(ServerWorld world, CreeperfallMap map) {
+        this.world = world;
         this.map = map;
-        this.config = config;
     }
 
     public void resetPlayer(ServerPlayerEntity player, GameMode gameMode, boolean lobby) {
-        player.setGameMode(gameMode);
+        player.changeGameMode(gameMode);
         player.setVelocity(Vec3d.ZERO);
         player.fallDistance = 0.0f;
         // player.inventory.clear();
-        player.inventory.setCursorStack(ItemStack.EMPTY);
+        player.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
 
         player.addStatusEffect(new StatusEffectInstance(
                 StatusEffects.NIGHT_VISION,
@@ -54,7 +49,7 @@ public class CreeperfallPlayerSpawnLogic {
             player.giveItemStack(compassStack);
 
             ItemStack bowStack = new ItemStack(Items.BOW);
-            CompoundTag nbt = bowStack.getOrCreateTag();
+            NbtCompound nbt = bowStack.getOrCreateNbt();
 
             nbt.putBoolean("Unbreakable", true);
             player.giveItemStack(bowStack);
@@ -63,22 +58,22 @@ public class CreeperfallPlayerSpawnLogic {
 
         if (lobby) {
             ItemStack bookStack = new ItemStack(Items.WRITTEN_BOOK);
-            CompoundTag nbt = bookStack.getOrCreateTag();
-            ListTag pages = new ListTag();
-            CompoundTag display = new CompoundTag();
-            ListTag lore = new ListTag();
+            NbtCompound nbt = bookStack.getOrCreateNbt();
+            NbtList pages = new NbtList();
+            NbtCompound display = new NbtCompound();
+            NbtList lore = new NbtList();
 
             pages.add(
-                    StringTag.of(
+                    NbtString.of(
                             "[\"\",{\"text\":\"Creepers:\",\"bold\":true,\"italic\":true,\"color\":\"green\"},{\"text\":\"\\nCreepers periodically fall from the sky, shoot them down before they land or they will become invincible.\\n\\n\",\"color\":\"reset\"},{\"text\":\"Shop:\",\"bold\":true,\"italic\":true,\"color\":\"aqua\"},{\"text\":\"\\nKilling Creepers gives you emeralds to spend in the shop.\",\"color\":\"reset\"}]"
                     )
             );
             pages.add(
-                    StringTag.of(
+                    NbtString.of(
                             "[\"\",{\"text\":\"Survive:\",\"bold\":true,\"italic\":true,\"color\":\"gold\"},{\"text\":\"\\nThe goal is to survive to the end of the game; your health does not regen so be careful!\",\"color\":\"reset\"}]"
                     )
             );
-            lore.add(StringTag.of("How to play Creeperfall"));
+            lore.add(NbtString.of("How to play Creeperfall"));
             display.put("Lore", lore);
             nbt.put("pages", pages);
             nbt.putString("title", "How to Play");
@@ -88,13 +83,11 @@ public class CreeperfallPlayerSpawnLogic {
         }
 
         if (gameMode == GameMode.SPECTATOR) {
-            player.inventory.clear();
+            player.getInventory().clear();
         }
     }
 
     public void spawnPlayer(ServerPlayerEntity player) {
-        ServerWorld world = this.gameSpace.getWorld();
-
         BlockPos pos = this.map.spawn;
         if (pos == null) {
             Creeperfall.LOGGER.error("Cannot spawn player! No spawn is defined in the map!");
@@ -105,6 +98,6 @@ public class CreeperfallPlayerSpawnLogic {
         float x = pos.getX() + MathHelper.nextFloat(player.getRandom(), -radius, radius);
         float z = pos.getZ() + MathHelper.nextFloat(player.getRandom(), -radius, radius);
 
-        player.teleport(world, x, pos.getY() + 0.5, z, 0.0F, 0.0F);
+        player.teleport(this.world, x, pos.getY() + 0.5, z, 0.0F, 0.0F);
     }
 }

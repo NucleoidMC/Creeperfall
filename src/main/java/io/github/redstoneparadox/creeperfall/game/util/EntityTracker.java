@@ -28,7 +28,7 @@ public class EntityTracker {
 		Collection<Set<Entity>> setCollection = entityMap.values();
 
 		for (Set<Entity> set : setCollection) {
-			set.removeIf(entity -> entity.removed);
+			set.removeIf(entity -> entity.isRemoved());
 		}
 	}
 

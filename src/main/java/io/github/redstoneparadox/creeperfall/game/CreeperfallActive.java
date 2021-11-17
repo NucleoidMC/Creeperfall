@@ -22,7 +22,6 @@ import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SkeletonEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -44,28 +43,24 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
+import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.plasmid.game.GameCloseReason;
 import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.event.AttackEntityListener;
-import xyz.nucleoid.plasmid.game.event.EntityDeathListener;
-import xyz.nucleoid.plasmid.game.event.EntityDropLootListener;
-import xyz.nucleoid.plasmid.game.event.EntityHitListener;
-import xyz.nucleoid.plasmid.game.event.ExplosionListener;
-import xyz.nucleoid.plasmid.game.event.GameCloseListener;
-import xyz.nucleoid.plasmid.game.event.GameOpenListener;
-import xyz.nucleoid.plasmid.game.event.GameTickListener;
-import xyz.nucleoid.plasmid.game.event.OfferPlayerListener;
-import xyz.nucleoid.plasmid.game.event.PlayerAddListener;
-import xyz.nucleoid.plasmid.game.event.PlayerDamageListener;
-import xyz.nucleoid.plasmid.game.event.PlayerDeathListener;
-import xyz.nucleoid.plasmid.game.event.PlayerRemoveListener;
-import xyz.nucleoid.plasmid.game.event.UseItemListener;
-import xyz.nucleoid.plasmid.game.player.JoinResult;
+import xyz.nucleoid.plasmid.game.common.GlobalWidgets;
+import xyz.nucleoid.plasmid.game.event.GameActivityEvents;
+import xyz.nucleoid.plasmid.game.event.GamePlayerEvents;
 import xyz.nucleoid.plasmid.game.player.PlayerSet;
-import xyz.nucleoid.plasmid.game.rule.GameRule;
-import xyz.nucleoid.plasmid.game.rule.RuleResult;
+import xyz.nucleoid.plasmid.game.rule.GameRuleType;
 import xyz.nucleoid.plasmid.util.PlayerRef;
-import xyz.nucleoid.plasmid.widget.GlobalWidgets;
+import xyz.nucleoid.stimuli.event.entity.EntityDeathEvent;
+import xyz.nucleoid.stimuli.event.entity.EntityDropItemsEvent;
+import xyz.nucleoid.stimuli.event.item.ItemUseEvent;
+import xyz.nucleoid.stimuli.event.player.PlayerAttackEntityEvent;
+import xyz.nucleoid.stimuli.event.player.PlayerDamageEvent;
+import xyz.nucleoid.stimuli.event.player.PlayerDeathEvent;
+import xyz.nucleoid.stimuli.event.projectile.ProjectileHitEvent;
+import xyz.nucleoid.stimuli.event.world.ExplosionDetonatedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,18 +85,20 @@ public class CreeperfallActive {
     private final boolean ignoreWinState;
     private final CreeperfallTimerBar timerBar;
     private final Timer arrowReplenishTimer;
+    private final ServerWorld world;
 
-    private CreeperfallActive(GameSpace gameSpace, CreeperfallMap map, GlobalWidgets widgets, CreeperfallConfig config, Set<PlayerRef> participants) {
+    private CreeperfallActive(GameSpace gameSpace, ServerWorld world, CreeperfallMap map, GlobalWidgets widgets, CreeperfallConfig config, Set<PlayerRef> participants) {
         this.gameSpace = gameSpace;
+        this.world = world;
         this.config = config;
         this.gameMap = map;
         this.tracker = new EntityTracker();
-        this.playerSpawnLogic = new CreeperfallPlayerSpawnLogic(gameSpace, map, config);
-        this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, this, map, config, tracker);
+        this.playerSpawnLogic = new CreeperfallPlayerSpawnLogic(world, map);
+        this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, world,this, map, config, tracker);
         this.participants = new Object2ObjectOpenHashMap<>();
 
         for (PlayerRef player : participants) {
-            this.participants.put(player, new CreeperfallParticipant(player, gameSpace, config));
+            this.participants.put(player, new CreeperfallParticipant(player, world, config));
         }
 
         this.stageManager = new CreeperfallStageManager();
@@ -111,76 +108,72 @@ public class CreeperfallActive {
         this.arrowReplenishTimer = Timer.createRepeating(arrowReplenishTime, this::onReplenishArrows);
     }
 
-    public static void open(GameSpace gameSpace, CreeperfallMap map, CreeperfallConfig config) {
-        gameSpace.openGame(game -> {
+    public static void open(GameSpace gameSpace, ServerWorld world, CreeperfallMap map, CreeperfallConfig config) {
+        gameSpace.setActivity(game -> {
             Set<PlayerRef> participants = gameSpace.getPlayers().stream()
                     .map(PlayerRef::of)
                     .collect(Collectors.toSet());
-            GlobalWidgets widgets = new GlobalWidgets(game);
-            CreeperfallActive active = new CreeperfallActive(gameSpace, map, widgets, config, participants);
+            GlobalWidgets widgets = GlobalWidgets.addTo(game);
+            CreeperfallActive active = new CreeperfallActive(gameSpace, world, map, widgets, config, participants);
 
-            game.setRule(GameRule.CRAFTING, RuleResult.DENY);
-            game.setRule(GameRule.PORTALS, RuleResult.DENY);
-            game.setRule(GameRule.PVP, RuleResult.DENY);
-            game.setRule(GameRule.HUNGER, RuleResult.DENY);
-            game.setRule(GameRule.FALL_DAMAGE, RuleResult.DENY);
-            game.setRule(GameRule.BLOCK_DROPS, RuleResult.DENY);
-            game.setRule(GameRule.THROW_ITEMS, RuleResult.DENY);
-            game.setRule(GameRule.UNSTABLE_TNT, RuleResult.DENY);
-            game.setRule(GameRule.BREAK_BLOCKS, RuleResult.DENY);
+            game.setRule(GameRuleType.CRAFTING, ActionResult.FAIL);
+            game.setRule(GameRuleType.PORTALS, ActionResult.FAIL);
+            game.setRule(GameRuleType.PVP, ActionResult.FAIL);
+            game.setRule(GameRuleType.HUNGER, ActionResult.FAIL);
+            game.setRule(GameRuleType.FALL_DAMAGE, ActionResult.FAIL);
+            game.setRule(GameRuleType.BLOCK_DROPS, ActionResult.FAIL);
+            game.setRule(GameRuleType.THROW_ITEMS, ActionResult.FAIL);
+            game.setRule(GameRuleType.UNSTABLE_TNT, ActionResult.FAIL);
+            game.setRule(GameRuleType.BREAK_BLOCKS, ActionResult.FAIL);
 
-            game.on(GameOpenListener.EVENT, active::onOpen);
-            game.on(GameCloseListener.EVENT, active::onClose);
+            game.listen(GameActivityEvents.ENABLE, active::onOpen);
+            game.listen(GameActivityEvents.DISABLE, active::onClose);
 
-            game.on(OfferPlayerListener.EVENT, player -> JoinResult.ok());
-            game.on(PlayerAddListener.EVENT, active::addPlayer);
-            game.on(PlayerRemoveListener.EVENT, active::removePlayer);
+            game.listen(GamePlayerEvents.OFFER, offer -> offer.accept(world, Vec3d.ZERO));
+            game.listen(GamePlayerEvents.ADD, active::addPlayer);
+            game.listen(GamePlayerEvents.REMOVE, active::removePlayer);
 
-            game.on(GameTickListener.EVENT, active::tick);
-            game.on(ExplosionListener.EVENT, active::onExplosion);
-            game.on(EntityDeathListener.EVENT, active::onEntityDeath);
-            game.on(EntityDropLootListener.EVENT, active::onDropLoot);
-            game.on(UseItemListener.EVENT, active::onUseItem);
+            game.listen(GameActivityEvents.TICK, active::tick);
+            game.listen(ExplosionDetonatedEvent.EVENT, active::onExplosion);
+            game.listen(EntityDeathEvent.EVENT, active::onEntityDeath);
+            game.listen(EntityDropItemsEvent.EVENT, active::onDropLoot);
+            game.listen(ItemUseEvent.EVENT, active::onUseItem);
 
-            game.on(PlayerDamageListener.EVENT, active::onPlayerDamage);
-            game.on(PlayerDeathListener.EVENT, active::onPlayerDeath);
-            game.on(AttackEntityListener.EVENT, active::onAttackEntity);
-            game.on(EntityHitListener.EVENT, active::onEntityHit);
+            game.listen(PlayerDamageEvent.EVENT, active::onPlayerDamage);
+            game.listen(PlayerDeathEvent.EVENT, active::onPlayerDeath);
+            game.listen(PlayerAttackEntityEvent.EVENT, active::onAttackEntity);
+            game.listen(ProjectileHitEvent.ENTITY, active::onEntityHit);
         });
     }
 
     public void announceStage(int stage) {
         PlayerSet players = gameSpace.getPlayers();
-        players.sendTitle(new TranslatableText("game.creeperfall.stage", stage), 5, 40, 5);
+        players.showTitle(new TranslatableText("game.creeperfall.stage", stage), 5, 40, 5);
     }
 
     public void spawnGuardian() {
-        ServerWorld world = gameSpace.getWorld();
-        CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(world);
+        CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(this.world);
 
         entity.setInvulnerable(true);
         spawnEntity(entity, 0.5, 68, 0.5, SpawnReason.SPAWN_EGG);
     }
 
     public void spawnOcelot() {
-        ServerWorld world = gameSpace.getWorld();
-        CreeperfallOcelotEntity entity = new CreeperfallOcelotEntity(tracker, world);
+        CreeperfallOcelotEntity entity = new CreeperfallOcelotEntity(tracker, this.world);
 
         entity.setInvulnerable(true);
         spawnEntity(entity, 0.5, 65, 0.5, SpawnReason.SPAWN_EGG);
     }
 
     public void spawnSkeleton() {
-        ServerWorld world = gameSpace.getWorld();
-        CreeperfallSkeletonEntity entity = new CreeperfallSkeletonEntity(world);
+        CreeperfallSkeletonEntity entity = new CreeperfallSkeletonEntity(this.world);
 
         spawnEntity(entity, 0.5, 65, 0.5, SpawnReason.SPAWN_EGG);
     }
 
     public void spawnEntity(Entity entity, double x, double y, double z, SpawnReason spawnReason) {
-        ServerWorld world = gameSpace.getWorld();
 
-        if (gameSpace.getWorld() != entity.world) {
+        if (this.world != entity.world) {
             Creeperfall.LOGGER.error("Attempted to add an entity to Creeperfall's gamespace that was not in the correct ServerWorld.");
             return;
         }
@@ -208,16 +201,14 @@ public class CreeperfallActive {
     }
 
     private void onOpen() {
-        ServerWorld world = this.gameSpace.getWorld();
         for (PlayerRef ref : this.participants.keySet()) {
             ref.ifOnline(world, this::spawnParticipant);
         }
-        this.stageManager.onOpen(world.getTime(), this.config);
-        // TODO setup logic
+        this.stageManager.onOpen(this.world.getTime(), this.config);
     }
 
     private void onClose() {
-        // TODO teardown logic
+
     }
 
     private void addPlayer(ServerPlayerEntity player) {
@@ -280,7 +271,6 @@ public class CreeperfallActive {
         tracker.clean();
         boolean finishedEarly = participants.isEmpty();
 
-        ServerWorld world = this.gameSpace.getWorld();
         long time = world.getTime();
 
         if (finishedEarly) {
@@ -305,7 +295,7 @@ public class CreeperfallActive {
                 this.broadcastResult(this.checkWinResult());
                 return;
             case GAME_CLOSED:
-                this.gameSpace.close();
+                this.gameSpace.close(GameCloseReason.FINISHED);
                 return;
         }
 
@@ -319,8 +309,8 @@ public class CreeperfallActive {
         }
     }
 
-    private void onExplosion(List<BlockPos> affectedBlocks) {
-        affectedBlocks.clear();
+    private void onExplosion(Explosion explosion, boolean bool) {
+        explosion.clearAffectedBlocks();
     }
 
     private ActionResult onEntityDeath(LivingEntity entity, DamageSource source) {
@@ -328,13 +318,13 @@ public class CreeperfallActive {
             @Nullable Entity sourceEntity = source.getSource();
             @Nullable ServerPlayerEntity player = null;
 
-            if (sourceEntity instanceof ServerPlayerEntity && gameSpace.containsEntity(sourceEntity)) {
+            if (sourceEntity instanceof ServerPlayerEntity && this.world.getEntityById(sourceEntity.getId()) != null) {
                 player = (ServerPlayerEntity) sourceEntity;
             }
             else if (sourceEntity instanceof ArrowEntity) {
                 Entity owner = ((ArrowEntity)sourceEntity).getOwner();
 
-                if (owner instanceof ServerPlayerEntity && gameSpace.containsEntity(owner)) {
+                if (owner instanceof ServerPlayerEntity && this.world.getEntityById(sourceEntity.getId()) != null) {
                     player = (ServerPlayerEntity) owner;
                 }
             }
@@ -360,7 +350,7 @@ public class CreeperfallActive {
         ItemStack stack = player.getStackInHand(hand);
 
         if (stack.getItem() == Items.COMPASS) {
-            player.openHandledScreen(CreeperfallShop.create(participants.get(PlayerRef.of(player)), this, config.shopConfig));
+            CreeperfallShop.create(participants.get(PlayerRef.of(player)), this, config.shopConfig);
             return TypedActionResult.success(stack);
         }
 
@@ -373,7 +363,6 @@ public class CreeperfallActive {
         Text message;
         SoundEvent sound;
         if (survivors) {
-            ServerWorld world = gameSpace.getWorld();
             List<CreeperfallParticipant> survivorsList = new ArrayList<>(participants.values());
 
 
@@ -414,7 +403,7 @@ public class CreeperfallActive {
 
         PlayerSet players = this.gameSpace.getPlayers();
         players.sendMessage(message);
-        players.sendSound(sound);
+        players.playSound(sound);
     }
 
     private GameResult checkWinResult() {

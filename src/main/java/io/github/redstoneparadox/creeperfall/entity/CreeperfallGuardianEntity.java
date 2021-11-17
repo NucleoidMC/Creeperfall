@@ -71,8 +71,8 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 
 		timeToDespawn -= 1;
 
-		if (timeToDespawn <= 0) {
-			remove();
+		if (timeToDespawn <= 0 && !this.isRemoved()) {
+			this.remove(RemovalReason.DISCARDED);
 		}
 	}
 
@@ -116,7 +116,7 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 			} else {
 				++this.beamTicks;
 				if (this.beamTicks == 0) {
-					((GuardianEntityAccessor)this.guardian).invokeSetBeamTarget(this.guardian.getTarget().getEntityId());
+					((GuardianEntityAccessor)this.guardian).invokeSetBeamTarget(this.guardian.getTarget().getId());
 					if (!this.guardian.isSilent()) {
 						this.guardian.world.sendEntityStatus(this.guardian, (byte)21);
 					}

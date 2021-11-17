@@ -1,14 +1,14 @@
 package io.github.redstoneparadox.creeperfall.entity.ai.goal;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.FollowTargetGoal;
+import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.Box;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public class CreeperfallFollowTargetGoal<T extends LivingEntity> extends FollowTargetGoal<T> {
+public class CreeperfallFollowTargetGoal<T extends LivingEntity> extends ActiveTargetGoal<T> {
 	private final boolean airborneTargetsOnly;
 
 	public CreeperfallFollowTargetGoal(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable Predicate<LivingEntity> targetPredicate) {
