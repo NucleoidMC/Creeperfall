@@ -83,19 +83,10 @@ public class CreeperfallMapGenerator {
         for (Iterable<BlockPos> iterable: iterables) {
             for (BlockPos pos: iterable) {
                 switch (pos.getY()) {
-                    case 64:
-                        builder.setBlockState(pos, Blocks.BLACKSTONE.getDefaultState());
-                        break;
-                    case 65:
-                    case 66:
-                    case 67:
-                        builder.setBlockState(pos, Blocks.BRICK_WALL.getDefaultState());
-                        break;
-                    case 68:
-                        builder.setBlockState(pos, Blocks.MOSSY_STONE_BRICK_SLAB.getDefaultState());
-                        break;
-                    default:
-                        break;
+                    case 64 -> builder.setBlockState(pos, Blocks.BLACKSTONE.getDefaultState());
+                    case 65, 66, 67 -> builder.setBlockState(pos, Blocks.BRICK_WALL.getDefaultState());
+                    case 68 -> builder.setBlockState(pos, Blocks.MOSSY_STONE_BRICK_SLAB.getDefaultState());
+                    default -> { builder.setBlockState(pos, Blocks.BARRIER.getDefaultState());}
                 }
             }
         }
