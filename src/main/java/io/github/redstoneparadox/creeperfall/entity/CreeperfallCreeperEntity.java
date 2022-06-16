@@ -78,16 +78,18 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 		else {
 			Vec3d velocity = getVelocity();
 
-			double value = ((double) this.age) / 10 + this.getId();
+			// double value = ((double) this.age) / 10 + this.getId();
 
-			velocity = new Vec3d(velocity.x + Math.sin(value) * this.multX, velocity.y, velocity.z + Math.cos(value) * this.multZ);
+			// velocity = new Vec3d(velocity.x + Math.sin(value) * this.multX, velocity.y, velocity.z + Math.cos(value) * this.multZ);
+
+			velocity = new Vec3d(0, velocity.y, 0);
 
 			setVelocity(velocity);
 		}
 
 		if (!isInvulnerable()) {
 			Vec3d velocity = getVelocity();
-			setVelocity(velocity.multiply(1.0, fallSpeedMultiplier, 1.0));
+			setVelocity(velocity.multiply(0, fallSpeedMultiplier, 0));
 		}
 
 		if (getY() <= 0) {
