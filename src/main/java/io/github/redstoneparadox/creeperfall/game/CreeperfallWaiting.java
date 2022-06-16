@@ -5,9 +5,15 @@ import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMapGenerator;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallPlayerSpawnLogic;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.WrittenBookItem;
+import net.minecraft.network.packet.s2c.play.OpenWrittenBookS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.GameRules;
@@ -20,6 +26,7 @@ import xyz.nucleoid.plasmid.game.GameSpace;
 import xyz.nucleoid.plasmid.game.common.GameWaitingLobby;
 import xyz.nucleoid.plasmid.game.event.GameActivityEvents;
 import xyz.nucleoid.plasmid.game.event.GamePlayerEvents;
+import xyz.nucleoid.stimuli.event.item.ItemUseEvent;
 import xyz.nucleoid.stimuli.event.player.PlayerDeathEvent;
 
 public class CreeperfallWaiting {
@@ -54,6 +61,7 @@ public class CreeperfallWaiting {
             game.listen(GameActivityEvents.REQUEST_START, waiting::requestStart);
             game.listen(GamePlayerEvents.ADD, waiting::addPlayer);
             game.listen(PlayerDeathEvent.EVENT, waiting::onPlayerDeath);
+            game.listen(ItemUseEvent.EVENT, waiting::onItemUse);
         });
     }
 
@@ -75,5 +83,18 @@ public class CreeperfallWaiting {
     private void spawnPlayer(ServerPlayerEntity player) {
         this.spawnLogic.resetPlayer(player, GameMode.ADVENTURE, true);
         this.spawnLogic.spawnPlayer(player);
+    }
+
+    private TypedActionResult<ItemStack> onItemUse(ServerPlayerEntity player, Hand hand) {
+        var stack = player.getStackInHand(hand);
+        if (stack.isOf(Items.WRITTEN_BOOK)) {
+            if (WrittenBookItem.resolve(stack, player.getCommandSource(), player)) {
+                player.currentScreenHandler.sendContentUpdates();
+            }
+
+            player.networkHandler.sendPacket(new OpenWrittenBookS2CPacket(hand));
+        }
+
+        return TypedActionResult.success(stack, true);
     }
 }

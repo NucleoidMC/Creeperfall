@@ -87,9 +87,9 @@ public class CreeperfallCreeperSpawnLogic {
 
 		double negativeBound = -radius - adjustmentConst;
 
-		double x = random.nextInt(size) + negativeBound;
+		double x = random.nextInt(size - 2) + negativeBound + 1;
 		int y = map.spawn.getY() + config.creeperConfig.spawnHeight;
-		double z = random.nextInt(size) + negativeBound;
+		double z = random.nextInt(size - 2) + negativeBound + 1;
 
 		CreeperEntity entity = new CreeperfallCreeperEntity(this.world, config.creeperConfig.fallSpeedMultiplier, 0.02, 0.02);
 
