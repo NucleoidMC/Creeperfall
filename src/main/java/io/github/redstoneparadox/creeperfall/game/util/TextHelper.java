@@ -1,6 +1,5 @@
 package io.github.redstoneparadox.creeperfall.game.util;
 
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.text.WordUtils;
@@ -16,7 +15,7 @@ public class TextHelper {
 		List<Text> texts = new ArrayList<>();
 
 		for (String string: strings) {
-			texts.add(new LiteralText(string.substring(0, string.length() - 1)));
+			texts.add(Text.literal(string.substring(0, string.length() - 1)));
 		}
 
 		return texts;

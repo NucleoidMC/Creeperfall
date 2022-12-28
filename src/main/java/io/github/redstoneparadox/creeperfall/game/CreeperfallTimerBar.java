@@ -2,7 +2,6 @@ package io.github.redstoneparadox.creeperfall.game;
 
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import xyz.nucleoid.plasmid.game.common.GlobalWidgets;
 import xyz.nucleoid.plasmid.game.common.widget.BossBarWidget;
 
@@ -10,7 +9,7 @@ public final class CreeperfallTimerBar {
     private final BossBarWidget widget;
 
     public CreeperfallTimerBar(GlobalWidgets widgets) {
-        Text title = new TranslatableText("game.creeperfall.waiting");
+        Text title = Text.translatable("game.creeperfall.waiting");
         this.widget = widgets.addBossBar(title, BossBar.Color.GREEN, BossBar.Style.NOTCHED_10);
     }
 
@@ -27,7 +26,7 @@ public final class CreeperfallTimerBar {
         long minutes = secondsUntilEnd / 60;
         long seconds = secondsUntilEnd % 60;
 
-        return new TranslatableText("game.creeperfall.time_left", minutes, formatSeconds(seconds));
+        return Text.translatable("game.creeperfall.time_left", minutes, formatSeconds(seconds));
     }
 
     private String formatSeconds(long seconds) {
