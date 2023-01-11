@@ -11,9 +11,8 @@ import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
 import xyz.nucleoid.plasmid.game.GameSpace;
-
-import java.util.Random;
 
 public class CreeperfallCreeperSpawnLogic {
 	private final GameSpace gameSpace;
@@ -39,7 +38,7 @@ public class CreeperfallCreeperSpawnLogic {
 		this.stages = config.creeperConfig.stages;
 		int stageLength = config.creeperConfig.stageLengthSeconds * 20;
 		int spawnDelay = config.creeperConfig.spawnDelaySeconds * 20;
-		this.random = new Random();
+		this.random = Random.create();
 		this.spawnTimer = Timer.createRepeating(spawnDelay, this::spawnCreepers);
 		this.creeperIncreaseTimer = Timer.createRepeating(stageLength, () -> {
 			if (currentStage < stages) {

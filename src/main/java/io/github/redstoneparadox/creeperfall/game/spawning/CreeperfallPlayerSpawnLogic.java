@@ -11,7 +11,7 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -45,7 +45,7 @@ public class CreeperfallPlayerSpawnLogic {
         if (gameMode != GameMode.SPECTATOR && !lobby) {
             ItemStack compassStack = new ItemStack(Items.COMPASS);
 
-            compassStack.setCustomName(new TranslatableText("shop.creeperfall.title", Formatting.AQUA, Formatting.ITALIC));
+            compassStack.setCustomName(Text.translatable("shop.creeperfall.title", Formatting.AQUA, Formatting.ITALIC));
             player.giveItemStack(compassStack);
 
             ItemStack bowStack = new ItemStack(Items.BOW);

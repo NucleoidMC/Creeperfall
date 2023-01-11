@@ -10,10 +10,8 @@ import io.github.redstoneparadox.creeperfall.game.participant.Upgrade;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import xyz.nucleoid.plasmid.shop.Cost;
 import xyz.nucleoid.plasmid.shop.ShopEntry;
@@ -34,29 +32,29 @@ public class CreeperfallShop {
                 participant,
                 shopConfig.armorUpgradePrices,
                 participant.armorUpgrade,
-                new TranslatableText(TRANSLATION_ROOT + "upgrade_armor"),
-                new TranslatableText(TRANSLATION_ROOT + "upgrade_armor_complete")
+                Text.translatable(TRANSLATION_ROOT + "upgrade_armor"),
+                Text.translatable(TRANSLATION_ROOT + "upgrade_armor_complete")
         ));
         shop.add(upgrade(
                 participant,
                 shopConfig.maxArrowUpgradePrices,
                 participant.maxArrowsUpgrade,
                 CreeperfallShop::getMaxArrowsText,
-                new TranslatableText(TRANSLATION_ROOT + "upgrade_arrows_complete")
+                Text.translatable(TRANSLATION_ROOT + "upgrade_arrows_complete")
         ));
         shop.add(summonSkeleton(game, shopConfig));
         shop.add(summonOcelot(game, shopConfig));
 			/*
 			shop.add(
 					ShopEntry.ofIcon(Items.FIREWORK_ROCKET)
-					.withName(new LiteralText("Crossbow and Fireworks"))
+					.withName(Text.literal("Crossbow and Fireworks"))
 					.withCost(Cost.ofEmeralds(1))
 					.onBuy(playerEntity -> participant.enableCrossbowAndFireworks())
 			);
 
 			 */
 
-        var gui = Guis.createSelectorGui(participant.getPlayerEntity(), new TranslatableText(TRANSLATION_ROOT + "title"), shop);
+        var gui = Guis.createSelectorGui(participant.getPlayerEntity(), Text.translatable(TRANSLATION_ROOT + "title"), shop);
         gui.open();
 
         return gui;
@@ -76,9 +74,9 @@ public class CreeperfallShop {
 
     private static ShopEntry ally(Item icon, String allyName, int despawnTime, int price, Consumer<ServerPlayerEntity> summon) {
         return ShopEntry.ofIcon(icon)
-                .withName(new TranslatableText(TRANSLATION_ROOT + allyName + "_ally"))
-                .addLore(new TranslatableText(TRANSLATION_ROOT + allyName + "_ally.desc"))
-                .addLore(new TranslatableText(TRANSLATION_ROOT + "despawn", despawnTime))
+                .withName(Text.translatable(TRANSLATION_ROOT + allyName + "_ally"))
+                .addLore(Text.translatable(TRANSLATION_ROOT + allyName + "_ally.desc"))
+                .addLore(Text.translatable(TRANSLATION_ROOT + "despawn", despawnTime))
                 .withCost(Cost.ofEmeralds(price))
                 .onBuy(summon);
 
@@ -90,10 +88,10 @@ public class CreeperfallShop {
             int currentArrows = ((StatUpgrade) upgrade).getValue(currentTier);
             int nextArrows = ((StatUpgrade) upgrade).getValue(currentTier + 1);
 
-            return new TranslatableText(TRANSLATION_ROOT + "upgrade_arrows", currentArrows, nextArrows);
+            return Text.translatable(TRANSLATION_ROOT + "upgrade_arrows", currentArrows, nextArrows);
         }
 
-        return new TranslatableText(TRANSLATION_ROOT + "error");
+        return Text.translatable(TRANSLATION_ROOT + "error");
     }
 
     private static <T> ShopEntry upgrade(CreeperfallParticipant participant, List<Integer> prices, Upgrade<T> upgrade, Text message, Text fullyUpgradedMessage) {
@@ -107,10 +105,10 @@ public class CreeperfallShop {
             var cost = e.getCost(p);
 
             var style = Style.EMPTY.withItalic(false).withColor(cost.canBuy(p) ? Formatting.BLUE : Formatting.RED);
-            var name = messageSupplier.apply(upgrade).shallowCopy().setStyle(style);
+            var name = messageSupplier.apply(upgrade).copy().setStyle(style);
 
             var costText = cost.getDisplay();
-            costText = new LiteralText(" (").append(costText).append(")").setStyle(costText.getStyle());
+            costText = Text.literal(" (").append(costText).append(")").setStyle(costText.getStyle());
             name.append(costText);
 
             icon.setCustomName(name);
