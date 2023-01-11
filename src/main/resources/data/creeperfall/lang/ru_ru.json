@@ -1,0 +1,24 @@
+{
+  "game.creeperfall.creeperfall": "Криперопад",
+  "game.creeperfall.waiting": "Ожидание начала игры...",
+  "game.creeperfall.go": "Начали!",
+  "game.creeperfall.time_left": "%d:%d осталось",
+  "game.creeperfall.stage": "Этап %d",
+  "game.creeperfall.end.fail": "Игра окончена! Никому не удалось пережить криперопад.",
+  "game.creeperfall.end.success.one": "Игра завершена! Только %d удалось пережить криперопад.",
+  "game.creeperfall.end.success.multiple": "Игра завершена! %d и %d удалось пережить криперопад.",
+
+  "shop.creeperfall.title": "Магазин",
+  "shop.creeperfall.upgrade_armor": "Улучшение брони",
+  "shop.creeperfall.upgrade_armor_complete": "Броня полностью улучшена",
+  "shop.creeperfall.upgrade_arrows": "Увеличение числа стрел: %d -> %d",
+  "shop.creeperfall.upgrade_arrows_complete": "Достигнут максимум стрел",
+  "shop.creeperfall.guardian_ally": "Союзный страж",
+  "shop.creeperfall.guardian_ally.desc": "Призывает стража, который атакует криперов.",
+  "shop.creeperfall.skeleton_ally": "Союзный скелет",
+  "shop.creeperfall.skeleton_ally.desc": "Призывает скелета, который стреляет по криперам.",
+  "shop.creeperfall.ocelot_ally": "Союзный оцелот",
+  "shop.creeperfall.ocelot_ally.desc": "Призывает оцелота, который отпугивает приземлившихся криперов.",
+  "shop.creeperfall.despawn": "Исчезает через %d секунд",
+  "shop.creeeperfall.error": "Произошла ошибка."
+}
