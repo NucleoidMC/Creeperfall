@@ -9,7 +9,7 @@ import java.util.List;
 public class StatUpgrade implements Upgrade<Integer> {
 	private final List<Integer> tiers;
 	private final ItemStack icon;
-	private Runnable onUpgrade;
+	private final Runnable onUpgrade;
 	private int currentTier = -1;
 
 	public StatUpgrade(List<Integer> tiers, ItemStack icon, Runnable onUpgrade) {

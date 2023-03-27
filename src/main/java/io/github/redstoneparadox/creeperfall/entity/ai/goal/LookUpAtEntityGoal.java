@@ -14,8 +14,8 @@ public class LookUpAtEntityGoal extends LookAtEntityGoal {
 		if (this.mob.getRandom().nextFloat() >= this.chance) {
 			return false;
 		} else {
-			if (this.mob.getTarget() != null) {
-				this.target = this.mob.getTarget();
+			if (this.mob.method_5968() != null) {
+				this.target = this.mob.method_5968();
 			}
 
 			if (this.targetType == PlayerEntity.class) {

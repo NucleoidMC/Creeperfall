@@ -103,6 +103,7 @@ public class CreeperfallShop {
             var icon = upgrade.getIcon();
 
             var cost = e.getCost(p);
+            assert cost != null;
 
             var style = Style.EMPTY.withItalic(false).withColor(cost.canBuy(p) ? Formatting.BLUE : Formatting.RED);
             var name = messageSupplier.apply(upgrade).copy().setStyle(style);
