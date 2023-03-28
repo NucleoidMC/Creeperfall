@@ -36,7 +36,7 @@ public class CreeperfallPlayerSpawnLogic {
 
         player.addStatusEffect(new StatusEffectInstance(
                 StatusEffects.NIGHT_VISION,
-                20 * 60 * 60,
+                StatusEffectInstance.INFINITE,
                 1,
                 true,
                 false

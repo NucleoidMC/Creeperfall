@@ -18,7 +18,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SkeletonEntity;
@@ -312,7 +311,7 @@ public class CreeperfallActive {
     }
 
     private ActionResult onEntityDeath(LivingEntity entity, DamageSource source) {
-        if (entity instanceof CreeperEntity && source instanceof EntityDamageSource) {
+        if (entity instanceof CreeperEntity) {
             @Nullable Entity sourceEntity = source.getSource();
             @Nullable ServerPlayerEntity player = null;
 

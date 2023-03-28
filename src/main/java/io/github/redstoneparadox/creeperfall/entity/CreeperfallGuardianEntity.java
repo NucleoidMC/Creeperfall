@@ -123,7 +123,7 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 				} else if (this.beamTicks >= this.guardian.getWarmupTime()) {
 					float f = 1.0F;
 
-					livingEntity.damage(DamageSource.magic(this.guardian, this.guardian), f);
+					livingEntity.damage(this.guardian.getDamageSources().indirectMagic(this.guardian, this.guardian), f);
 					this.guardian.setTarget(null);
 				}
 
