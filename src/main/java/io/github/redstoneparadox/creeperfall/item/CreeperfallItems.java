@@ -4,8 +4,6 @@ import io.github.redstoneparadox.creeperfall.Creeperfall;
 import net.fabricmc.fabric.impl.biome.modification.BuiltInRegistryKeys;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
 
 public class CreeperfallItems {
 	public static void init() {

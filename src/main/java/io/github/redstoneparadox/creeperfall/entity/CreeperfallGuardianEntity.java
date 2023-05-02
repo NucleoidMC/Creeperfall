@@ -86,18 +86,18 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 		}
 
 		public boolean canStart() {
-			LivingEntity livingEntity = this.guardian.method_5968();
+			LivingEntity livingEntity = this.guardian.getTarget();
 			return livingEntity != null && livingEntity.isAlive();
 		}
 
 		public boolean shouldContinue() {
-			return super.shouldContinue() && (this.guardian.method_5968().getY() <= 75);
+			return super.shouldContinue() && (this.guardian.getTarget().getY() <= 75);
 		}
 
 		public void start() {
 			this.beamTicks = -1;
 			this.guardian.getNavigation().stop();
-			this.guardian.getLookControl().lookAt(Objects.requireNonNull(this.guardian.method_5968()), 90.0F, 90.0F);
+			this.guardian.getLookControl().lookAt(Objects.requireNonNull(this.guardian.getTarget()), 90.0F, 90.0F);
 			this.guardian.velocityDirty = true;
 		}
 
@@ -108,7 +108,7 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 		}
 
 		public void tick() {
-			LivingEntity livingEntity = this.guardian.method_5968();
+			LivingEntity livingEntity = this.guardian.getTarget();
 			this.guardian.getNavigation().stop();
 			this.guardian.getLookControl().lookAt(livingEntity, 90.0F, 90.0F);
 			if (!this.guardian.canSee(livingEntity)) {
@@ -116,7 +116,7 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 			} else {
 				++this.beamTicks;
 				if (this.beamTicks == 0) {
-					((GuardianEntityAccessor)this.guardian).invokeSetBeamTarget(this.guardian.method_5968().getId());
+					((GuardianEntityAccessor)this.guardian).invokeSetBeamTarget(this.guardian.getTarget().getId());
 					if (!this.guardian.isSilent()) {
 						this.guardian.world.sendEntityStatus(this.guardian, (byte)21);
 					}

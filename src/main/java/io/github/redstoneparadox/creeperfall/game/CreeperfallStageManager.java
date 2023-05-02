@@ -109,10 +109,10 @@ public class CreeperfallStageManager {
 
             if (sec > 0) {
                 players.showTitle(Text.literal(Integer.toString(sec)).formatted(Formatting.BOLD), 80);
-                players.playSound(SoundEvents.field_15114.value(), SoundCategory.PLAYERS, 1.0F, 1.0F);
+                players.playSound(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), SoundCategory.PLAYERS, 1.0F, 1.0F);
             } else {
                 players.showTitle(Text.translatable("game.creeperfall.go").formatted(Formatting.BOLD), 80);
-                players.playSound(SoundEvents.field_15114.value(), SoundCategory.PLAYERS, 1.0F, 2.0F);
+                players.playSound(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), SoundCategory.PLAYERS, 1.0F, 2.0F);
             }
         }
     }
