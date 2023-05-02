@@ -319,7 +319,7 @@ public class CreeperfallActive {
                 player = (ServerPlayerEntity) sourceEntity;
             }
             else if (sourceEntity instanceof ArrowEntity) {
-                Entity owner = ((ArrowEntity)sourceEntity).getOwner();
+                Entity owner = ((ArrowEntity)sourceEntity).method_24921();
 
                 if (owner instanceof ServerPlayerEntity && this.world.getEntityById(sourceEntity.getId()) != null) {
                     player = (ServerPlayerEntity) owner;
