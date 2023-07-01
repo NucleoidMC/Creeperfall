@@ -170,7 +170,7 @@ public class CreeperfallActive {
 
     public void spawnEntity(Entity entity, double x, double y, double z, SpawnReason spawnReason) {
 
-        if (this.world != entity.world) {
+        if (this.world != entity.getWorld()) {
             Creeperfall.LOGGER.error("Attempted to add an entity to Creeperfall's gamespace that was not in the correct ServerWorld.");
             return;
         }
