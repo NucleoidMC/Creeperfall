@@ -79,10 +79,10 @@ public class CreeperfallActive {
     private final CreeperfallPlayerSpawnLogic playerSpawnLogic;
     private final CreeperfallCreeperSpawnLogic creeperSpawnLogic;
     private final CreeperfallStageManager stageManager;
-    private final boolean ignoreWinState;
     private final CreeperfallTimerBar timerBar;
     private final Timer arrowReplenishTimer;
     private final ServerWorld world;
+    private boolean hasPlayerDied = false;
 
     private CreeperfallActive(GameSpace gameSpace, ServerWorld world, CreeperfallMap map, GlobalWidgets widgets, CreeperfallConfig config, Set<PlayerRef> participants) {
         this.gameSpace = gameSpace;
@@ -99,7 +99,6 @@ public class CreeperfallActive {
         }
 
         this.stageManager = new CreeperfallStageManager();
-        this.ignoreWinState = this.participants.size() <= 1;
         this.timerBar = new CreeperfallTimerBar(widgets);
         int arrowReplenishTime = config.arrowReplenishTimeSeconds * 20;
         this.arrowReplenishTimer = Timer.createRepeating(arrowReplenishTime, this::onReplenishArrows);
@@ -239,6 +238,8 @@ public class CreeperfallActive {
         this.spawnSpectator(player);
 
         PlayerSet players = this.gameSpace.getPlayers();
+        hasPlayerDied = true;
+
         players.sendMessage(source.getDeathMessage(player));
 
         return ActionResult.FAIL;
@@ -289,7 +290,7 @@ public class CreeperfallActive {
                 }
                 return;
             case GAME_FINISHED:
-                this.broadcastResult(this.checkWinResult());
+                this.broadcastResult();
                 return;
             case GAME_CLOSED:
                 this.gameSpace.close(GameCloseReason.FINISHED);
@@ -297,10 +298,10 @@ public class CreeperfallActive {
         }
 
         if (finishedEarly) {
-            this.timerBar.update(0, this.config.timeLimitSecs * 20);
+            this.timerBar.update(0, this.config.timeLimitSecs * 20L);
         }
         else {
-            this.timerBar.update(this.stageManager.finishTime - time, this.config.timeLimitSecs * 20);
+            this.timerBar.update(this.stageManager.finishTime - time, this.config.timeLimitSecs * 20L);
             creeperSpawnLogic.tick();
             arrowReplenishTimer.tick();
         }
@@ -354,80 +355,49 @@ public class CreeperfallActive {
         return TypedActionResult.pass(stack);
     }
 
-    private void broadcastResult(GameResult result) {
-        boolean survivors = result.survivors;
+    private void broadcastResult() {
+        Text message = Text.translatable("game.creeperfall.end.success.all");
+        SoundEvent sound = SoundEvents.ENTITY_VILLAGER_CELEBRATE;
 
-        Text message;
-        SoundEvent sound;
-        if (survivors) {
-            List<CreeperfallParticipant> survivorsList = new ArrayList<>(participants.values());
+        if (hasPlayerDied) {
+            if (!participants.isEmpty()) {
+                List<CreeperfallParticipant> survivorsList = new ArrayList<>(participants.values());
 
-
-            if (survivorsList.size() == 1) {
-                ServerPlayerEntity playerEntity = survivorsList.get(0).getPlayer().getEntity(world);
-                assert playerEntity != null;
-                message = Text.translatable("game.creeperfall.end.success.one", playerEntity.getDisplayName().copy());
-            }
-            else if (survivorsList.size() == 2) {
-                ServerPlayerEntity playerEntityOne = survivorsList.get(0).getPlayer().getEntity(world);
-                ServerPlayerEntity playerEntityTwo = survivorsList.get(1).getPlayer().getEntity(world);
-                assert playerEntityOne != null;
-                assert playerEntityTwo != null;
-                message = Text.translatable("game.creeperfall.end.success.multiple", playerEntityOne.getDisplayName().copy(), playerEntityTwo.getDisplayName().copy());
-            }
-            else {
-                List<CreeperfallParticipant> firstSurvivorsList = survivorsList.subList(0, survivorsList.size() - 1);
-                MutableText survivorsText = Text.empty();
-
-                for (CreeperfallParticipant survivor: firstSurvivorsList) {
-                    ServerPlayerEntity playerEntity = survivor.getPlayer().getEntity(world);
+                if (survivorsList.size() == 1) {
+                    ServerPlayerEntity playerEntity = survivorsList.get(0).getPlayer().getEntity(world);
                     assert playerEntity != null;
-                    survivorsText.append(playerEntity.getDisplayName().copy());
-                    survivorsText.append(", ");
+                    message = Text.translatable("game.creeperfall.end.success.one", playerEntity.getDisplayName().copy());
                 }
+                else if (survivorsList.size() == 2) {
+                    ServerPlayerEntity playerEntityOne = survivorsList.get(0).getPlayer().getEntity(world);
+                    ServerPlayerEntity playerEntityTwo = survivorsList.get(1).getPlayer().getEntity(world);
+                    assert playerEntityOne != null;
+                    assert playerEntityTwo != null;
+                    message = Text.translatable("game.creeperfall.end.success.multiple", playerEntityOne.getDisplayName().copy(), playerEntityTwo.getDisplayName().copy());
+                }
+                else {
+                    List<CreeperfallParticipant> firstSurvivorsList = survivorsList.subList(0, survivorsList.size() - 1);
+                    MutableText survivorsText = Text.empty();
 
-                ServerPlayerEntity playerEntityLast = survivorsList.get(survivorsList.size() - 1).getPlayer().getEntity(world);
-                assert playerEntityLast != null;
-                message = Text.translatable("game.creeperfall.end.success.multiple", survivorsText, playerEntityLast.getDisplayName().copy());
+                    for (CreeperfallParticipant survivor: firstSurvivorsList) {
+                        ServerPlayerEntity playerEntity = survivor.getPlayer().getEntity(world);
+                        assert playerEntity != null;
+                        survivorsText.append(playerEntity.getDisplayName().copy());
+                        survivorsText.append(", ");
+                    }
+
+                    ServerPlayerEntity playerEntityLast = survivorsList.get(survivorsList.size() - 1).getPlayer().getEntity(world);
+                    assert playerEntityLast != null;
+                    message = Text.translatable("game.creeperfall.end.success.multiple", survivorsText, playerEntityLast.getDisplayName().copy());
+                }
+            } else {
+                message = Text.translatable("game.creeperfall.end.fail").formatted(Formatting.RED);
+                sound = SoundEvents.ENTITY_VILLAGER_NO;
             }
-
-            sound = SoundEvents.ENTITY_VILLAGER_CELEBRATE;
-
-        } else {
-            message = Text.translatable("game.creeperfall.end.fail").formatted(Formatting.RED);
-            sound = SoundEvents.ENTITY_VILLAGER_NO;
         }
 
         PlayerSet players = this.gameSpace.getPlayers();
         players.sendMessage(message);
         players.playSound(sound);
-    }
-
-    private GameResult checkWinResult() {
-        if (participants.isEmpty()) {
-            return GameResult.no();
-        }
-
-        return GameResult.survived();
-    }
-
-    static class GameResult {
-        private final boolean survivors;
-
-        private GameResult(boolean survivors) {
-            this.survivors = survivors;
-        }
-
-        static GameResult no() {
-            return new GameResult(false);
-        }
-
-        static GameResult survived() {
-            return new GameResult(true);
-        }
-
-        public boolean isSurvivors() {
-            return this.survivors;
-        }
     }
 }
