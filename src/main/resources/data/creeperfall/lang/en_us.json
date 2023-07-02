@@ -5,8 +5,11 @@
   "game.creeperfall.time_left": "%d:%d left",
   "game.creeperfall.stage": "Stage %d begins!",
   "game.creeperfall.end.fail": "Game over! No one survived the Creepers.",
+  "game.creeperfall.end.fail.singleplayer": "Game over! You did not survive the Creepers.",
   "game.creeperfall.end.success.one": "Game completed! Only %d survived the Creepers.",
   "game.creeperfall.end.success.multiple": "Game completed! %d and %d survived the Creepers.",
+  "game.creeperfall.end.success.all": "Game completed! Everyone survived the Creepers.",
+  "game.creeperfall.end.success.singleplayer": "Game completed! You survived the Creepers.",
 
   "shop.creeperfall.title": "Shop",
   "shop.creeperfall.upgrade_armor": "Upgrade Armor",
