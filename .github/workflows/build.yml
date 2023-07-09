@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ 'master', 'main', '1.16', '!*/*' ]
+    branches: [ 'master', 'main', '1.16', 'mc1_20', '!*/*' ]
 
 jobs:
   build:
