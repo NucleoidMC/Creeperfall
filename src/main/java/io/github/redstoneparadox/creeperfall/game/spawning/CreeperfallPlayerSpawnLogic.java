@@ -45,7 +45,7 @@ public class CreeperfallPlayerSpawnLogic {
         if (gameMode != GameMode.SPECTATOR && !lobby) {
             ItemStack compassStack = new ItemStack(Items.COMPASS);
 
-            compassStack.setCustomName(Text.translatable("shop.creeperfall.title", Formatting.AQUA, Formatting.ITALIC));
+            compassStack.setCustomName(Text.translatable("shop.creeperfall.title").formatted(Formatting.AQUA, Formatting.ITALIC));
             player.giveItemStack(compassStack);
 
             ItemStack bowStack = new ItemStack(Items.BOW);
@@ -65,14 +65,15 @@ public class CreeperfallPlayerSpawnLogic {
 
             pages.add(
                     NbtString.of(
-                            "[\"\",{\"text\":\"Creepers:\",\"bold\":true,\"italic\":true,\"color\":\"green\"},{\"text\":\"\\nCreepers periodically fall from the sky, shoot them down before they land or they will become invincible.\\n\\n\",\"color\":\"reset\"},{\"text\":\"Shop:\",\"bold\":true,\"italic\":true,\"color\":\"aqua\"},{\"text\":\"\\nKilling Creepers gives you emeralds to spend in the shop.\",\"color\":\"reset\"}]"
+                            "{\"text\":\"\",\"extra\":[\"\",{\"text\":\"Creepers:\",\"bold\":true,\"italic\":true,\"color\":\"green\"},{\"text\":\"\\nCreepers periodically fall from the sky, shoot them down before they land or they will become invincible.\\n\\n\"},{\"text\":\"Shop:\",\"bold\":true,\"italic\":true,\"color\":\"aqua\"},{\"text\":\"\\nKilling Creepers gives you emeralds to spend in the shop.\"}]}"
                     )
             );
             pages.add(
                     NbtString.of(
-                            "[\"\",{\"text\":\"Survive:\",\"bold\":true,\"italic\":true,\"color\":\"gold\"},{\"text\":\"\\nThe goal is to survive to the end of the game; your health does not regen so be careful!\",\"color\":\"reset\"}]"
+                            "{\"text\":\"\", \"extra\":[\"\",{\"text\":\"Survive:\",\"bold\":true,\"italic\":true,\"color\":\"gold\"},{\"text\":\"\\nThe goal is to survive to the end of the game; your health does not regen so be careful!\"}]}"
                     )
             );
+
             lore.add(NbtString.of("How to play Creeperfall"));
             display.put("Lore", lore);
             nbt.put("pages", pages);

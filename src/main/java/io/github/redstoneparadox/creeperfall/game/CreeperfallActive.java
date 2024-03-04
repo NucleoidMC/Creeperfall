@@ -328,8 +328,8 @@ public class CreeperfallActive {
             }
 
             if (player != null) {
-                int maxEmeralds = config.emeraldRewardCount.getMax();
-                int minEmeralds = config.emeraldRewardCount.getMin();
+                int maxEmeralds = config.emeraldRewardCount.max().orElse(1024);
+                int minEmeralds = config.emeraldRewardCount.min().orElse(0);
                 int emeralds = (random.nextInt(maxEmeralds - minEmeralds) + 1) + minEmeralds;
                 player.giveItemStack(new ItemStack(Items.EMERALD, emeralds));
                 player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f);
