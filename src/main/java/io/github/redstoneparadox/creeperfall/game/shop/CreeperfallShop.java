@@ -7,15 +7,16 @@ import io.github.redstoneparadox.creeperfall.game.config.CreeperfallShopConfig;
 import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallParticipant;
 import io.github.redstoneparadox.creeperfall.game.participant.StatUpgrade;
 import io.github.redstoneparadox.creeperfall.game.participant.Upgrade;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import xyz.nucleoid.plasmid.shop.Cost;
-import xyz.nucleoid.plasmid.shop.ShopEntry;
-import xyz.nucleoid.plasmid.util.Guis;
+import xyz.nucleoid.plasmid.api.shop.Cost;
+import xyz.nucleoid.plasmid.api.shop.ShopEntry;
+import xyz.nucleoid.plasmid.api.util.Guis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class CreeperfallShop {
 
 			 */
 
-        var gui = Guis.createSelectorGui(participant.getPlayerEntity(), Text.translatable(TRANSLATION_ROOT + "title"), shop);
+        var gui = Guis.createSelectorGui(participant.getPlayerEntity(), Text.translatable(TRANSLATION_ROOT + "title"), false, shop);
         gui.open();
 
         return gui;
@@ -112,7 +113,7 @@ public class CreeperfallShop {
             costText = Text.literal(" (").append(costText).append(")").setStyle(costText.getStyle());
             name.append(costText);
 
-            icon.setCustomName(name);
+            icon.set(DataComponentTypes.CUSTOM_NAME, name);
             return icon;
         })
                 .withCost((p, e) -> upgrade.canUpgrade() ? Cost.ofEmeralds(prices.get(upgrade.getTier())) : Cost.no())

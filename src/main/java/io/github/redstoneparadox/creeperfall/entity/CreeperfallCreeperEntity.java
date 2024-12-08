@@ -12,6 +12,7 @@ import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.passive.CatEntity;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -44,7 +45,7 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 						1,
 						true,
 						true,
-						livingEntity -> true
+						(livingEntity, world) -> true
 				)
 		);
 		this.targetSelector.add(2, new CreeperfallFollowTargetGoal<>(
@@ -53,7 +54,7 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 				1,
 				true,
 				true,
-				livingEntity -> true
+				(livingEntity, world) -> true
 				)
 		);
 	}
@@ -93,7 +94,7 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 		}
 
 		if (getY() <= 0) {
-			kill();
+			kill((ServerWorld) this.getWorld());
 		}
 		super.tick();
 	}

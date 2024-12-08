@@ -7,7 +7,7 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import xyz.nucleoid.plasmid.game.GameType;
+import xyz.nucleoid.plasmid.api.game.GameType;
 
 public class Creeperfall implements ModInitializer {
 
@@ -15,7 +15,7 @@ public class Creeperfall implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger(ID);
 
     public static final GameType<CreeperfallConfig> TYPE = GameType.register(
-            new Identifier(ID, "creeperfall"),
+            Identifier.of(ID, "creeperfall"),
             CreeperfallConfig.CODEC,
             CreeperfallWaiting::open
     );

@@ -2,6 +2,8 @@ package io.github.redstoneparadox.creeperfall.game.spawning;
 
 import io.github.redstoneparadox.creeperfall.Creeperfall;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.UnbreakableComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
@@ -13,10 +15,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Unit;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
+
+import java.util.Set;
 
 public class CreeperfallPlayerSpawnLogic {
     private final CreeperfallMap map;
@@ -45,19 +50,17 @@ public class CreeperfallPlayerSpawnLogic {
         if (gameMode != GameMode.SPECTATOR && !lobby) {
             ItemStack compassStack = new ItemStack(Items.COMPASS);
 
-            compassStack.setCustomName(Text.translatable("shop.creeperfall.title").formatted(Formatting.AQUA, Formatting.ITALIC));
+            compassStack.set(DataComponentTypes.ITEM_NAME, Text.translatable("shop.creeperfall.title").formatted(Formatting.AQUA, Formatting.ITALIC));
             player.giveItemStack(compassStack);
 
             ItemStack bowStack = new ItemStack(Items.BOW);
-            NbtCompound nbt = bowStack.getOrCreateNbt();
-
-            nbt.putBoolean("Unbreakable", true);
+            bowStack.set(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(true));
             player.giveItemStack(bowStack);
             //player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows.get(0)));
         }
 
         if (lobby) {
-            ItemStack bookStack = new ItemStack(Items.WRITTEN_BOOK);
+            /*ItemStack bookStack = new ItemStack(Items.WRITTEN_BOOK);
             NbtCompound nbt = bookStack.getOrCreateNbt();
             NbtList pages = new NbtList();
             NbtCompound display = new NbtCompound();
@@ -80,7 +83,7 @@ public class CreeperfallPlayerSpawnLogic {
             nbt.putString("title", "How to Play");
             nbt.putString("author", "RedstoneParadox");
 
-            player.giveItemStack(bookStack);
+            player.giveItemStack(bookStack);*/
         }
 
         if (gameMode == GameMode.SPECTATOR) {
@@ -99,6 +102,6 @@ public class CreeperfallPlayerSpawnLogic {
         float x = pos.getX() + MathHelper.nextFloat(player.getRandom(), -radius, radius);
         float z = pos.getZ() + MathHelper.nextFloat(player.getRandom(), -radius, radius);
 
-        player.teleport(this.world, x, pos.getY() + 0.5, z, 0.0F, 0.0F);
+        player.teleport(this.world, x, pos.getY() + 0.5, z, Set.of(), 0.0F, 0.0F, false);
     }
 }

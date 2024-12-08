@@ -1,6 +1,7 @@
 package io.github.redstoneparadox.creeperfall.entity.ai.goal;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.Box;
@@ -11,12 +12,12 @@ import java.util.function.Predicate;
 public class CreeperfallFollowTargetGoal<T extends LivingEntity> extends ActiveTargetGoal<T> {
 	private final boolean airborneTargetsOnly;
 
-	public CreeperfallFollowTargetGoal(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable Predicate<LivingEntity> targetPredicate) {
+	public CreeperfallFollowTargetGoal(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable TargetPredicate.EntityPredicate targetPredicate) {
 		super(mob, targetClass, reciprocalChance, checkVisibility, checkCanNavigate, targetPredicate);
 		this.airborneTargetsOnly = true;
 	}
 
-	public CreeperfallFollowTargetGoal(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable Predicate<LivingEntity> targetPredicate, boolean airborneTargetsOnly) {
+	public CreeperfallFollowTargetGoal(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable TargetPredicate.EntityPredicate targetPredicate, boolean airborneTargetsOnly) {
 		super(mob, targetClass, reciprocalChance, checkVisibility, checkCanNavigate, targetPredicate);
 		this.airborneTargetsOnly = airborneTargetsOnly;
 	}

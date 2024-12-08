@@ -5,7 +5,6 @@ import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMapGenerator;
 import io.github.redstoneparadox.creeperfall.game.spawning.CreeperfallPlayerSpawnLogic;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.WrittenBookItem;
 import net.minecraft.network.packet.s2c.play.OpenWrittenBookS2CPacket;
@@ -13,19 +12,19 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.GameRules;
 import xyz.nucleoid.fantasy.RuntimeWorldConfig;
-import xyz.nucleoid.plasmid.event.GameEvents;
-import xyz.nucleoid.plasmid.game.GameOpenContext;
-import xyz.nucleoid.plasmid.game.GameOpenProcedure;
-import xyz.nucleoid.plasmid.game.GameResult;
-import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.common.GameWaitingLobby;
-import xyz.nucleoid.plasmid.game.event.GameActivityEvents;
-import xyz.nucleoid.plasmid.game.event.GamePlayerEvents;
+import xyz.nucleoid.plasmid.api.game.GameOpenContext;
+import xyz.nucleoid.plasmid.api.game.GameOpenProcedure;
+import xyz.nucleoid.plasmid.api.game.GameResult;
+import xyz.nucleoid.plasmid.api.game.GameSpace;
+import xyz.nucleoid.plasmid.api.game.common.GameWaitingLobby;
+import xyz.nucleoid.plasmid.api.game.event.GameActivityEvents;
+import xyz.nucleoid.plasmid.api.game.event.GamePlayerEvents;
+import xyz.nucleoid.plasmid.api.game.player.JoinOffer;
+import xyz.nucleoid.stimuli.event.EventResult;
 import xyz.nucleoid.stimuli.event.item.ItemUseEvent;
 import xyz.nucleoid.stimuli.event.player.PlayerDeathEvent;
 
@@ -57,7 +56,8 @@ public class CreeperfallWaiting {
             CreeperfallWaiting waiting = new CreeperfallWaiting(game.getGameSpace(), world, map, context.config());
 
             GameWaitingLobby.addTo(game, config.playerConfig);
-            game.listen(GamePlayerEvents.OFFER, offer -> offer.accept(world, Vec3d.ZERO));
+            game.listen(GamePlayerEvents.OFFER, JoinOffer::accept);
+            game.listen(GamePlayerEvents.ACCEPT, offer -> offer.teleport(world, Vec3d.ZERO));
             game.listen(GameActivityEvents.REQUEST_START, waiting::requestStart);
             game.listen(GamePlayerEvents.ADD, waiting::addPlayer);
             game.listen(PlayerDeathEvent.EVENT, waiting::onPlayerDeath);
@@ -74,18 +74,18 @@ public class CreeperfallWaiting {
         this.spawnPlayer(player);
     }
 
-    private ActionResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
+    private EventResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
         player.setHealth(20.0f);
         this.spawnPlayer(player);
-        return ActionResult.FAIL;
+        return EventResult.DENY;
     }
 
     private void spawnPlayer(ServerPlayerEntity player) {
-        this.spawnLogic.resetPlayer(player, GameMode.ADVENTURE, true);
+        this.spawnLogic.resetPlayer(player, this.gameSpace.getPlayers().participants().contains(player) ? GameMode.ADVENTURE : GameMode.SPECTATOR, true);
         this.spawnLogic.spawnPlayer(player);
     }
 
-    private TypedActionResult<ItemStack> onItemUse(ServerPlayerEntity player, Hand hand) {
+    private ActionResult onItemUse(ServerPlayerEntity player, Hand hand) {
         var stack = player.getStackInHand(hand);
         if (stack.isOf(Items.WRITTEN_BOOK)) {
             if (WrittenBookItem.resolve(stack, player.getCommandSource(), player)) {
@@ -95,6 +95,6 @@ public class CreeperfallWaiting {
             player.networkHandler.sendPacket(new OpenWrittenBookS2CPacket(hand));
         }
 
-        return TypedActionResult.success(stack, true);
+        return ActionResult.SUCCESS_SERVER;
     }
 }

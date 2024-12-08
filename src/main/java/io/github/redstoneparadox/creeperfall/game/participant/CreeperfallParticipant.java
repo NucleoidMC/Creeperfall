@@ -7,12 +7,14 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.util.PlayerRef;
+import xyz.nucleoid.plasmid.api.game.GameSpace;
+import xyz.nucleoid.plasmid.api.util.PlayerRef;
 
 import java.util.Objects;
 
@@ -22,16 +24,17 @@ public class CreeperfallParticipant {
 	private boolean gameStarted = false;
     private boolean fireworks = false;
 
-    public final ArmorUpgrade armorUpgrade = new ArmorUpgrade.Builder()
-			.tier(ArmorUpgrade.ArmorType.NONE)
-			.tier(ArmorUpgrade.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 1)
-			.tier(ArmorUpgrade.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 2)
-			.tier(ArmorUpgrade.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 3)
-			.build();
+    public final ArmorUpgrade armorUpgrade;
 
     public final StatUpgrade maxArrowsUpgrade;
 
 	public CreeperfallParticipant(PlayerRef player, ServerWorld world, CreeperfallConfig config) {
+		this.armorUpgrade = new ArmorUpgrade.Builder(world.getRegistryManager())
+				.tier(ArmorUpgrade.ArmorType.NONE)
+				.tier(ArmorUpgrade.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 1)
+				.tier(ArmorUpgrade.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 2)
+				.tier(ArmorUpgrade.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 3)
+				.build();
 		this.player = player;
 		this.world = world;
 		armorUpgrade.upgrade(this);
@@ -110,7 +113,7 @@ public class CreeperfallParticipant {
 		}
 
 		ItemStack crossbowStack = new ItemStack(Items.CROSSBOW);
-		crossbowStack.addEnchantment(Enchantments.QUICK_CHARGE, 3);
+		crossbowStack.addEnchantment(this.world.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getOrThrow(Enchantments.QUICK_CHARGE), 3);
 
 		player.giveItemStack(crossbowStack);
 		replenishArrows();

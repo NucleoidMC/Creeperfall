@@ -42,7 +42,7 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 						10,
 						true,
 						false,
-						livingEntity -> livingEntity instanceof CreeperEntity
+						(livingEntity, world) -> livingEntity instanceof CreeperEntity
 				)
 		);
 	}

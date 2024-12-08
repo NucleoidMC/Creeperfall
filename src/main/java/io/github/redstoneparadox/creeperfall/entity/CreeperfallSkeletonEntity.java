@@ -43,13 +43,13 @@ public class CreeperfallSkeletonEntity extends SkeletonEntity {
 						10,
 						true,
 						false,
-						livingEntity -> livingEntity instanceof CreeperEntity && !livingEntity.isOnGround()
+						(livingEntity, world) -> livingEntity instanceof CreeperEntity && !livingEntity.isOnGround()
 				)
 		);
 	}
 
 	@Override
-	public void setOnFireFor(int seconds) {
+	public void setOnFireForTicks(int ticks) {
 
 	}
 

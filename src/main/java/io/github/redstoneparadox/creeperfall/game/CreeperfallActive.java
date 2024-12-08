@@ -35,7 +35,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -43,14 +42,17 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.plasmid.game.GameCloseReason;
-import xyz.nucleoid.plasmid.game.GameSpace;
-import xyz.nucleoid.plasmid.game.common.GlobalWidgets;
-import xyz.nucleoid.plasmid.game.event.GameActivityEvents;
-import xyz.nucleoid.plasmid.game.event.GamePlayerEvents;
-import xyz.nucleoid.plasmid.game.player.PlayerSet;
-import xyz.nucleoid.plasmid.game.rule.GameRuleType;
-import xyz.nucleoid.plasmid.util.PlayerRef;
+import xyz.nucleoid.plasmid.api.game.GameCloseReason;
+import xyz.nucleoid.plasmid.api.game.GameSpace;
+import xyz.nucleoid.plasmid.api.game.common.GlobalWidgets;
+import xyz.nucleoid.plasmid.api.game.event.GameActivityEvents;
+import xyz.nucleoid.plasmid.api.game.event.GamePlayerEvents;
+import xyz.nucleoid.plasmid.api.game.player.JoinOffer;
+import xyz.nucleoid.plasmid.api.game.player.PlayerSet;
+import xyz.nucleoid.plasmid.api.game.rule.GameRuleType;
+import xyz.nucleoid.plasmid.api.util.PlayerRef;
+import xyz.nucleoid.stimuli.event.DroppedItemsResult;
+import xyz.nucleoid.stimuli.event.EventResult;
 import xyz.nucleoid.stimuli.event.entity.EntityDeathEvent;
 import xyz.nucleoid.stimuli.event.entity.EntityDropItemsEvent;
 import xyz.nucleoid.stimuli.event.item.ItemUseEvent;
@@ -106,26 +108,28 @@ public class CreeperfallActive {
 
     public static void open(GameSpace gameSpace, ServerWorld world, CreeperfallMap map, CreeperfallConfig config) {
         gameSpace.setActivity(game -> {
-            Set<PlayerRef> participants = gameSpace.getPlayers().stream()
+            Set<PlayerRef> participants = gameSpace.getPlayers().participants().stream()
                     .map(PlayerRef::of)
                     .collect(Collectors.toSet());
             GlobalWidgets widgets = GlobalWidgets.addTo(game);
             CreeperfallActive active = new CreeperfallActive(gameSpace, world, map, widgets, config, participants);
 
-            game.setRule(GameRuleType.CRAFTING, ActionResult.FAIL);
-            game.setRule(GameRuleType.PORTALS, ActionResult.FAIL);
-            game.setRule(GameRuleType.PVP, ActionResult.FAIL);
-            game.setRule(GameRuleType.HUNGER, ActionResult.FAIL);
-            game.setRule(GameRuleType.FALL_DAMAGE, ActionResult.FAIL);
-            game.setRule(GameRuleType.BLOCK_DROPS, ActionResult.FAIL);
-            game.setRule(GameRuleType.THROW_ITEMS, ActionResult.FAIL);
-            game.setRule(GameRuleType.UNSTABLE_TNT, ActionResult.FAIL);
-            game.setRule(GameRuleType.BREAK_BLOCKS, ActionResult.FAIL);
+            game.setRule(GameRuleType.CRAFTING, EventResult.DENY);
+            game.setRule(GameRuleType.PORTALS, EventResult.DENY);
+            game.setRule(GameRuleType.PVP, EventResult.DENY);
+            game.setRule(GameRuleType.HUNGER, EventResult.DENY);
+            game.setRule(GameRuleType.FALL_DAMAGE, EventResult.DENY);
+            game.setRule(GameRuleType.BLOCK_DROPS, EventResult.DENY);
+            game.setRule(GameRuleType.THROW_ITEMS, EventResult.DENY);
+            game.setRule(GameRuleType.UNSTABLE_TNT, EventResult.DENY);
+            game.setRule(GameRuleType.BREAK_BLOCKS, EventResult.DENY);
 
             game.listen(GameActivityEvents.ENABLE, active::onOpen);
             game.listen(GameActivityEvents.DISABLE, active::onClose);
+            game.listen(GameActivityEvents.STATE_UPDATE, state -> state.canPlay(false));
 
-            game.listen(GamePlayerEvents.OFFER, offer -> offer.accept(world, Vec3d.ZERO));
+            game.listen(GamePlayerEvents.OFFER, JoinOffer::acceptSpectators);
+            game.listen(GamePlayerEvents.ACCEPT, offer -> offer.teleport(world, Vec3d.ZERO));
             game.listen(GamePlayerEvents.ADD, active::addPlayer);
             game.listen(GamePlayerEvents.REMOVE, active::removePlayer);
 
@@ -151,20 +155,20 @@ public class CreeperfallActive {
         CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(this.world);
 
         entity.setInvulnerable(true);
-        spawnEntity(entity, 0.5, 68, 0.5, SpawnReason.SPAWN_EGG);
+        spawnEntity(entity, 0.5, 68, 0.5, SpawnReason.SPAWN_ITEM_USE);
     }
 
     public void spawnOcelot() {
         CreeperfallOcelotEntity entity = new CreeperfallOcelotEntity(tracker, this.world);
 
         entity.setInvulnerable(true);
-        spawnEntity(entity, 0.5, 65, 0.5, SpawnReason.SPAWN_EGG);
+        spawnEntity(entity, 0.5, 65, 0.5, SpawnReason.SPAWN_ITEM_USE);
     }
 
     public void spawnSkeleton() {
         CreeperfallSkeletonEntity entity = new CreeperfallSkeletonEntity(this.world);
 
-        spawnEntity(entity, 0.5, 65, 0.5, SpawnReason.SPAWN_EGG);
+        spawnEntity(entity, 0.5, 65, 0.5, SpawnReason.SPAWN_ITEM_USE);
     }
 
     public void spawnEntity(Entity entity, double x, double y, double z, SpawnReason spawnReason) {
@@ -183,7 +187,7 @@ public class CreeperfallActive {
         entity.prevZ = z;
 
         if (entity instanceof MobEntity) {
-            ((MobEntity) entity).initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), spawnReason, null, null);
+            ((MobEntity) entity).initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), spawnReason, null);
         }
 
         world.spawnEntity(entity);
@@ -217,23 +221,23 @@ public class CreeperfallActive {
         this.participants.remove(PlayerRef.of(player));
     }
 
-    private ActionResult onPlayerDamage(ServerPlayerEntity player, DamageSource source, float amount) {
+    private EventResult onPlayerDamage(ServerPlayerEntity player, DamageSource source, float amount) {
         Entity sourceEntity = source.getSource();
 
         if (sourceEntity instanceof ArrowEntity) {
             Entity owner = ((ArrowEntity) sourceEntity).getOwner();
 
             if (owner instanceof SkeletonEntity) {
-                return ActionResult.FAIL;
+                return EventResult.DENY;
             }
         }
 
         // TODO handle damage
         //this.spawnParticipant(player);
-        return ActionResult.PASS;
+        return EventResult.PASS;
     }
 
-    private ActionResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
+    private EventResult onPlayerDeath(ServerPlayerEntity player, DamageSource source) {
         this.removePlayer(player);
         this.spawnSpectator(player);
 
@@ -242,17 +246,17 @@ public class CreeperfallActive {
 
         players.sendMessage(source.getDeathMessage(player));
 
-        return ActionResult.FAIL;
+        return EventResult.DENY;
     }
 
-    private ActionResult onAttackEntity(ServerPlayerEntity attacker, Hand hand, Entity attacked, EntityHitResult hitResult) {
-        if (!(attacked instanceof CreeperEntity)) return ActionResult.FAIL;
-        return ActionResult.PASS;
+    private EventResult onAttackEntity(ServerPlayerEntity attacker, Hand hand, Entity attacked, EntityHitResult hitResult) {
+        if (!(attacked instanceof CreeperEntity)) return EventResult.DENY;
+        return EventResult.PASS;
     }
 
-    private ActionResult onEntityHit(ProjectileEntity entity, EntityHitResult hitResult) {
-        if (!(hitResult.getEntity() instanceof CreeperEntity)) return ActionResult.FAIL;
-        return ActionResult.PASS;
+    private EventResult onEntityHit(ProjectileEntity entity, EntityHitResult hitResult) {
+        if (!(hitResult.getEntity() instanceof CreeperEntity)) return EventResult.DENY;
+        return EventResult.PASS;
     }
 
     private void spawnParticipant(ServerPlayerEntity player) {
@@ -307,11 +311,15 @@ public class CreeperfallActive {
         }
     }
 
-    private void onExplosion(Explosion explosion, boolean bool) {
-        explosion.clearAffectedBlocks();
+
+
+    private EventResult onExplosion(Explosion explosion, List<BlockPos> blockPos) {
+        blockPos.clear();
+
+        return EventResult.PASS;
     }
 
-    private ActionResult onEntityDeath(LivingEntity entity, DamageSource source) {
+    private EventResult onEntityDeath(LivingEntity entity, DamageSource source) {
         if (entity instanceof CreeperEntity) {
             @Nullable Entity sourceEntity = source.getSource();
             @Nullable ServerPlayerEntity player = null;
@@ -332,27 +340,27 @@ public class CreeperfallActive {
                 int minEmeralds = config.emeraldRewardCount.min().orElse(0);
                 int emeralds = (random.nextInt(maxEmeralds - minEmeralds) + 1) + minEmeralds;
                 player.giveItemStack(new ItemStack(Items.EMERALD, emeralds));
-                player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f);
+                player.playSoundToPlayer(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.MASTER, 1.0f, 1.0f);
             }
         }
 
-        return ActionResult.PASS;
+        return EventResult.PASS;
     }
 
-    private TypedActionResult<List<ItemStack>> onDropLoot(LivingEntity dropper, List<ItemStack> loot) {
+    private DroppedItemsResult onDropLoot(LivingEntity dropper, List<ItemStack> loot) {
         loot.clear();
-        return TypedActionResult.consume(loot);
+        return DroppedItemsResult.pass(loot);
     }
 
-    private TypedActionResult<ItemStack> onUseItem(ServerPlayerEntity player, Hand hand) {
+    private ActionResult onUseItem(ServerPlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
 
         if (stack.getItem() == Items.COMPASS) {
             CreeperfallShop.create(participants.get(PlayerRef.of(player)), this, config.shopConfig);
-            return TypedActionResult.success(stack);
+            return ActionResult.SUCCESS_SERVER;
         }
 
-        return TypedActionResult.pass(stack);
+        return ActionResult.PASS;
     }
 
     private void broadcastResult() {

@@ -7,6 +7,9 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Pair;
@@ -138,25 +141,24 @@ public class ArmorUpgrade implements Upgrade<List<ItemStack>> {
 
 	public static class Builder {
 		private final List<Pair<ArmorType, Consumer<List<ItemStack>>>> tiers = new ArrayList<>();
+		private final RegistryWrapper.Impl<Enchantment> enchantment;
+
+		public Builder(RegistryWrapper.WrapperLookup lookup) {
+			this.enchantment = lookup.getOrThrow(RegistryKeys.ENCHANTMENT);
+		}
 
 		public Builder tier(ArmorType type) {
 			tiers.add(new Pair<>(type, itemStacks -> {}));
 			return this;
 		}
 
-		public Builder tier(ArmorType type, Enchantment enchantment, int level) {
+		public Builder tier(ArmorType type, RegistryKey<Enchantment> enchantment, int level) {
 			tiers.add(new Pair<>(type, itemStacks -> {
 				for (ItemStack stack : itemStacks) {
-					EnchantmentHelper.set(map(enchantment, level), stack);
+					stack.addEnchantment(this.enchantment.getOrThrow(enchantment), level);
 				}
 			}));
 			return this;
-		}
-
-		private <K, V> Map<K, V> map(K k, V v) {
-			Map<K, V> map = new HashMap<>();
-			map.put(k, v);
-			return map;
 		}
 
 		public ArmorUpgrade build() {

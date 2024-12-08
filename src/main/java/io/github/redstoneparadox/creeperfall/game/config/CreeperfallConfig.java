@@ -1,16 +1,17 @@
 package io.github.redstoneparadox.creeperfall.game.config;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.redstoneparadox.creeperfall.game.util.Codecs;
 import net.minecraft.predicate.NumberRange;
-import xyz.nucleoid.plasmid.game.common.config.PlayerConfig;
+import xyz.nucleoid.plasmid.api.game.common.config.WaitingLobbyConfig;
 
 import java.util.List;
 
 public class CreeperfallConfig {
-    public static final Codec<CreeperfallConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            PlayerConfig.CODEC.fieldOf("players").forGetter(config -> config.playerConfig),
+    public static final MapCodec<CreeperfallConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            WaitingLobbyConfig.CODEC.fieldOf("players").forGetter(config -> config.playerConfig),
             CreeperfallMapConfig.CODEC.fieldOf("map").forGetter(config -> config.mapConfig),
             CreeperfallShopConfig.CODEC.fieldOf("shop").forGetter(config -> config.shopConfig),
             CreeperfallCreeperConfig.CODEC.fieldOf("creepers").forGetter(config -> config.creeperConfig),
@@ -20,7 +21,7 @@ public class CreeperfallConfig {
             Codecs.INT_RANGE.fieldOf("emerald_reward_count").forGetter(config -> config.emeraldRewardCount)
     ).apply(instance, CreeperfallConfig::new));
 
-    public final PlayerConfig playerConfig;
+    public final WaitingLobbyConfig playerConfig;
     public final CreeperfallMapConfig mapConfig;
     public final CreeperfallShopConfig shopConfig;
     public final CreeperfallCreeperConfig creeperConfig;
@@ -30,7 +31,7 @@ public class CreeperfallConfig {
     public final NumberRange.IntRange emeraldRewardCount;
 
     public CreeperfallConfig(
-            PlayerConfig playerConfig,
+            WaitingLobbyConfig playerConfig,
             CreeperfallMapConfig mapConfig,
             CreeperfallShopConfig shopConfig,
             CreeperfallCreeperConfig creeperConfig,
