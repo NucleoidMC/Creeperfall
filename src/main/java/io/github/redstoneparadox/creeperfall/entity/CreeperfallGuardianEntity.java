@@ -66,8 +66,8 @@ public class CreeperfallGuardianEntity extends GuardianEntity {
 		setPos(x, getY(), z);
 		updatePosition(x, getY(), z);
 
-		prevX = x;
-		prevZ = z;
+		lastX = x;
+		lastZ = z;
 
 		timeToDespawn -= 1;
 

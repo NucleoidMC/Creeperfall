@@ -100,7 +100,7 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 	}
 
 	@Override
-	public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
+	public boolean handleFallDamage(double fallDistance, float damagePerDistance, DamageSource damageSource) {
 		return false;
 	}
 }

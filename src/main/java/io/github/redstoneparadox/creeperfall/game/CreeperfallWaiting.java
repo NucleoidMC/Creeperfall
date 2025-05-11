@@ -88,10 +88,7 @@ public class CreeperfallWaiting {
     private ActionResult onItemUse(ServerPlayerEntity player, Hand hand) {
         var stack = player.getStackInHand(hand);
         if (stack.isOf(Items.WRITTEN_BOOK)) {
-            if (WrittenBookItem.resolve(stack, player.getCommandSource(), player)) {
-                player.currentScreenHandler.sendContentUpdates();
-            }
-
+            //player.currentScreenHandler.sendContentUpdates();
             player.networkHandler.sendPacket(new OpenWrittenBookS2CPacket(hand));
         }
 

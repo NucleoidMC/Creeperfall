@@ -182,9 +182,9 @@ public class CreeperfallActive {
         entity.updatePosition(x, y, z);
         entity.setVelocity(Vec3d.ZERO);
 
-        entity.prevX = x;
-        entity.prevY = y;
-        entity.prevZ = z;
+        entity.lastX = x;
+        entity.lastY = y;
+        entity.lastZ = z;
 
         if (entity instanceof MobEntity) {
             ((MobEntity) entity).initialize(world, world.getLocalDifficulty(new BlockPos(0, 0, 0)), spawnReason, null);

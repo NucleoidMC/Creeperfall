@@ -3,7 +3,6 @@ package io.github.redstoneparadox.creeperfall.game.spawning;
 import io.github.redstoneparadox.creeperfall.Creeperfall;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.UnbreakableComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
@@ -54,7 +53,7 @@ public class CreeperfallPlayerSpawnLogic {
             player.giveItemStack(compassStack);
 
             ItemStack bowStack = new ItemStack(Items.BOW);
-            bowStack.set(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(true));
+            bowStack.set(DataComponentTypes.UNBREAKABLE, Unit.INSTANCE);
             player.giveItemStack(bowStack);
             //player.giveItemStack(new ItemStack(Items.ARROW, config.maxArrows.get(0)));
         }
