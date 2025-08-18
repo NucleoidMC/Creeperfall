@@ -129,7 +129,7 @@ public class CreeperfallActive {
             game.listen(GameActivityEvents.STATE_UPDATE, state -> state.canPlay(false));
 
             game.listen(GamePlayerEvents.OFFER, JoinOffer::acceptSpectators);
-            game.listen(GamePlayerEvents.ACCEPT, offer -> offer.teleport(world, Vec3d.ZERO));
+            game.listen(GamePlayerEvents.ACCEPT, offer -> offer.teleport(world, map.spawn.toBottomCenterPos()));
             game.listen(GamePlayerEvents.ADD, active::addPlayer);
             game.listen(GamePlayerEvents.REMOVE, active::removePlayer);
 

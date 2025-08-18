@@ -57,7 +57,7 @@ public class CreeperfallWaiting {
 
             GameWaitingLobby.addTo(game, config.playerConfig);
             game.listen(GamePlayerEvents.OFFER, JoinOffer::accept);
-            game.listen(GamePlayerEvents.ACCEPT, offer -> offer.teleport(world, Vec3d.ZERO));
+            game.listen(GamePlayerEvents.ACCEPT, offer -> offer.teleport(world, map.spawn.toBottomCenterPos()));
             game.listen(GameActivityEvents.REQUEST_START, waiting::requestStart);
             game.listen(GamePlayerEvents.ADD, waiting::addPlayer);
             game.listen(PlayerDeathEvent.EVENT, waiting::onPlayerDeath);
