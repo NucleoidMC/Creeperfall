@@ -6,12 +6,12 @@ import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.util.EntityTracker;
 import io.github.redstoneparadox.creeperfall.game.util.Timer;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
 
 public class CreeperfallCreeperSpawnLogic {
@@ -21,16 +21,16 @@ public class CreeperfallCreeperSpawnLogic {
 	private final CreeperfallConfig config;
 	private final EntityTracker tracker;
 	private final int stages;
-	private final Random random;
+	private final RandomSource random;
 	private final Timer spawnTimer;
 	private final Timer creeperIncreaseTimer;
-	private final ServerWorld world;
+	private final ServerLevel level;
 	private int currentStage = 1;
 	private boolean spawnedFirstWave = false;
 
-	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, ServerWorld world, CreeperfallActive game, CreeperfallMap map, CreeperfallConfig config, EntityTracker tracker) {
+	public CreeperfallCreeperSpawnLogic(GameSpace gameSpace, ServerLevel level, CreeperfallActive game, CreeperfallMap map, CreeperfallConfig config, EntityTracker tracker) {
 		this.gameSpace = gameSpace;
-		this.world = world;
+		this.level = level;
 		this.game = game;
 		this.map = map;
 		this.config = config;
@@ -38,7 +38,7 @@ public class CreeperfallCreeperSpawnLogic {
 		this.stages = config.creeperConfig.stages;
 		int stageLength = config.creeperConfig.stageLengthSeconds * 20;
 		int spawnDelay = config.creeperConfig.spawnDelaySeconds * 20;
-		this.random = Random.create();
+		this.random = RandomSource.create();
 		this.spawnTimer = Timer.createRepeating(spawnDelay, this::spawnCreepers);
 		this.creeperIncreaseTimer = Timer.createRepeating(stageLength, () -> {
 			if (currentStage < stages) {
@@ -61,16 +61,16 @@ public class CreeperfallCreeperSpawnLogic {
 	private void spawnCreepers() {
 		int playersRemaining = 0;
 
-		for (ServerPlayerEntity playerEntity : gameSpace.getPlayers()) {
+		for (ServerPlayer playerEntity : gameSpace.getPlayers()) {
 			if (!playerEntity.isSpectator()) {
 				playersRemaining += 1;
 			}
 		}
 
 		int minCreepers = playersRemaining;
-		int maxCreepers = MathHelper.floor(currentStage * config.creeperConfig.spawnCountIncrement * playersRemaining);
+		int maxCreepers = Mth.floor(currentStage * config.creeperConfig.spawnCountIncrement * playersRemaining);
 
-		int count = MathHelper.nextInt(random, minCreepers, maxCreepers);
+		int count = Mth.nextInt(random, minCreepers, maxCreepers);
 
 		for (int i = 0; i < count; i++) {
 			spawnCreeper();
@@ -90,10 +90,10 @@ public class CreeperfallCreeperSpawnLogic {
 		int y = map.spawn.getY() + config.creeperConfig.spawnHeight;
 		double z = random.nextInt(size - 2) + negativeBound + 1;
 
-		CreeperEntity entity = new CreeperfallCreeperEntity(this.world, config.creeperConfig.fallSpeedMultiplier, 0.02, 0.02);
+		Creeper entity = new CreeperfallCreeperEntity(this.level, config.creeperConfig.fallSpeedMultiplier, 0.02, 0.02);
 
 		entity.setHealth(0.5f);
-		game.spawnEntity(entity, x, y, z, SpawnReason.NATURAL);
+		game.spawnEntity(entity, x, y, z, EntitySpawnReason.NATURAL);
 	}
 
 }

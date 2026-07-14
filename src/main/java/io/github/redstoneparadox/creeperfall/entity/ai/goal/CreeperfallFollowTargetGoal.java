@@ -1,49 +1,49 @@
 package io.github.redstoneparadox.creeperfall.entity.ai.goal;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.util.math.Box;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public class CreeperfallFollowTargetGoal<T extends LivingEntity> extends ActiveTargetGoal<T> {
+public class CreeperfallFollowTargetGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
 	private final boolean airborneTargetsOnly;
 
-	public CreeperfallFollowTargetGoal(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable TargetPredicate.EntityPredicate targetPredicate) {
+	public CreeperfallFollowTargetGoal(Mob mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable TargetingConditions.Selector targetPredicate) {
 		super(mob, targetClass, reciprocalChance, checkVisibility, checkCanNavigate, targetPredicate);
 		this.airborneTargetsOnly = true;
 	}
 
-	public CreeperfallFollowTargetGoal(MobEntity mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable TargetPredicate.EntityPredicate targetPredicate, boolean airborneTargetsOnly) {
+	public CreeperfallFollowTargetGoal(Mob mob, Class<T> targetClass, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable TargetingConditions.Selector targetPredicate, boolean airborneTargetsOnly) {
 		super(mob, targetClass, reciprocalChance, checkVisibility, checkCanNavigate, targetPredicate);
 		this.airborneTargetsOnly = airborneTargetsOnly;
 	}
 
 	@Override
-	protected Box getSearchBox(double distance) {
-		return this.mob.getBoundingBox().expand(distance, distance, distance);
+	protected AABB getTargetSearchArea(double distance) {
+		return this.mob.getBoundingBox().inflate(distance, distance, distance);
 	}
 
 	@Override
-	protected double getFollowRange() {
-		return super.getFollowRange() * 16.0;
+	protected double getFollowDistance() {
+		return super.getFollowDistance() * 16.0;
 	}
 
 	@Override
-	public boolean canStart() {
-		this.findClosestTarget();
-		return this.targetEntity != null && canTarget();
+	public boolean canUse() {
+		this.findTarget();
+		return this.target != null && canTarget();
 	}
 
 	@Override
-	public boolean shouldContinue() {
-		return super.shouldContinue() && canTarget();
+	public boolean canContinueToUse() {
+		return super.canContinueToUse() && canTarget();
 	}
 
 	private boolean canTarget() {
-		return !targetEntity.isOnGround() || !airborneTargetsOnly;
+		return !target.onGround() || !airborneTargetsOnly;
 	}
 }

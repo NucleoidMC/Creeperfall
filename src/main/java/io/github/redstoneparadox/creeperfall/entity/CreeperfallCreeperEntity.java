@@ -1,56 +1,57 @@
 package io.github.redstoneparadox.creeperfall.entity;
 
 import io.github.redstoneparadox.creeperfall.entity.ai.goal.CreeperfallFollowTargetGoal;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.CreeperIgniteGoal;
-import net.minecraft.entity.ai.goal.FleeEntityGoal;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.SkeletonEntity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.OcelotEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.ai.goal.SwellGoal;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.skeleton.Skeleton;
+import net.minecraft.world.entity.animal.feline.Cat;
+import net.minecraft.world.entity.animal.feline.Ocelot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
-public class CreeperfallCreeperEntity extends CreeperEntity {
+public class CreeperfallCreeperEntity extends Creeper {
 	private final double multX;
 	private final double multZ;
 	private double fallSpeedMultiplier;
 	private int ticksUntilAutoIgnite = 3 * 20;
 
-	public CreeperfallCreeperEntity(World world, double fallSpeedMultiplier, double multX, double multZ) {
-		super(EntityType.CREEPER, world);
+	public CreeperfallCreeperEntity(Level level, double fallSpeedMultiplier, double multX, double multZ) {
+		super(EntityTypes.CREEPER, level);
 		this.fallSpeedMultiplier = fallSpeedMultiplier;
-		this.experiencePoints = 0;
+		this.xpReward = 0;
 		this.multX = multX;
 		this.multZ = multZ;
 	}
 
 	@Override
-	protected void initGoals() {
-		super.initGoals();
-		this.goalSelector.add(1, new SwimGoal(this));
-		this.goalSelector.add(2, new CreeperIgniteGoal(this));
-		this.goalSelector.add(3, new FleeEntityGoal<>(this, OcelotEntity.class, 6.0F, 1.0D, 1.2D));
-		this.goalSelector.add(3, new FleeEntityGoal<>(this, CatEntity.class, 6.0F, 1.0D, 1.2D));
-		this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 128.0F, 1.0f));
-		this.goalSelector.add(6, new LookAtEntityGoal(this, SkeletonEntity.class, 128.0f, 1.0f));
-		this.targetSelector.add(1, new CreeperfallFollowTargetGoal<>(
+	protected void registerGoals() {
+		super.registerGoals();
+		this.goalSelector.addGoal(1, new FloatGoal(this));
+		this.goalSelector.addGoal(2, new SwellGoal(this));
+		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Ocelot.class, 6.0F, 1.0D, 1.2D));
+		this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Cat.class, 6.0F, 1.0D, 1.2D));
+		this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 128.0F, 1.0f));
+		this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Skeleton.class, 128.0f, 1.0f));
+		this.targetSelector.addGoal(1, new CreeperfallFollowTargetGoal<>(
 						this,
-						PlayerEntity.class,
+						Player.class,
 						1,
 						true,
 						true,
 						(livingEntity, world) -> true
 				)
 		);
-		this.targetSelector.add(2, new CreeperfallFollowTargetGoal<>(
+		this.targetSelector.addGoal(2, new CreeperfallFollowTargetGoal<>(
 				this,
-				SkeletonEntity.class,
+				Skeleton.class,
 				1,
 				true,
 				true,
@@ -60,13 +61,13 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 	}
 
 	@Override
-	public void setMovementSpeed(float movementSpeed) {
-		super.setMovementSpeed(movementSpeed * 1.15f);
+	public void setSpeed(float movementSpeed) {
+		super.setSpeed(movementSpeed * 1.15f);
 	}
 
 	@Override
 	public void tick() {
-		if (isOnGround()) {
+		if (onGround()) {
 			setInvulnerable(true);
 
 			if (ticksUntilAutoIgnite > 0 && !this.isIgnited()) {
@@ -77,30 +78,30 @@ public class CreeperfallCreeperEntity extends CreeperEntity {
 			}
 		}
 		else {
-			Vec3d velocity = getVelocity();
+			Vec3 velocity = getDeltaMovement();
 
 			// double value = ((double) this.age) / 10 + this.getId();
 
 			// velocity = new Vec3d(velocity.x + Math.sin(value) * this.multX, velocity.y, velocity.z + Math.cos(value) * this.multZ);
 
-			velocity = new Vec3d(0, velocity.y, 0);
+			velocity = new Vec3(0, velocity.y, 0);
 
-			setVelocity(velocity);
+			setDeltaMovement(velocity);
 		}
 
 		if (!isInvulnerable()) {
-			Vec3d velocity = getVelocity();
-			setVelocity(velocity.multiply(0, fallSpeedMultiplier, 0));
+			Vec3 velocity = getDeltaMovement();
+			setDeltaMovement(velocity.multiply(0, fallSpeedMultiplier, 0));
 		}
 
 		if (getY() <= 0) {
-			kill((ServerWorld) this.getWorld());
+			kill((ServerLevel) this.level());
 		}
 		super.tick();
 	}
 
 	@Override
-	public boolean handleFallDamage(double fallDistance, float damagePerDistance, DamageSource damageSource) {
+	public boolean causeFallDamage(double fallDistance, float damagePerDistance, DamageSource damageSource) {
 		return false;
 	}
 }

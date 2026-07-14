@@ -3,13 +3,13 @@ package io.github.redstoneparadox.creeperfall.game;
 import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameMode;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.GameType;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
 import xyz.nucleoid.plasmid.api.game.player.PlayerSet;
 
@@ -19,7 +19,7 @@ public class CreeperfallStageManager {
     private long closeTime = -1;
     public long finishTime = -1;
     private long startTime = -1;
-    private final Object2ObjectMap<ServerPlayerEntity, FrozenPlayer> frozen;
+    private final Object2ObjectMap<ServerPlayer, FrozenPlayer> frozen;
     private boolean setSpectator = false;
     private boolean finishEarly = false;
     private long addedTime = 0;
@@ -65,8 +65,8 @@ public class CreeperfallStageManager {
         if (time > this.finishTime || space.getPlayers().isEmpty()) {
             if (!this.setSpectator) {
                 this.setSpectator = true;
-                for (ServerPlayerEntity player : space.getPlayers()) {
-                    player.changeGameMode(GameMode.SPECTATOR);
+                for (ServerPlayer player : space.getPlayers()) {
+                    player.setGameMode(GameType.SPECTATOR);
                 }
             }
 
@@ -82,7 +82,7 @@ public class CreeperfallStageManager {
         float sec_f = (this.startTime - time) / 20.0f;
 
         if (sec_f > 1) {
-            for (ServerPlayerEntity player : space.getPlayers()) {
+            for (ServerPlayer player : space.getPlayers()) {
                 if (player.isSpectator()) {
                     continue;
                 }
@@ -90,7 +90,7 @@ public class CreeperfallStageManager {
                 FrozenPlayer state = this.frozen.computeIfAbsent(player, p -> new FrozenPlayer());
 
                 if (state.lastPos == null) {
-                    state.lastPos = player.getPos();
+                    state.lastPos = player.position();
                 }
 
                 double destX = state.lastPos.x;
@@ -98,7 +98,7 @@ public class CreeperfallStageManager {
                 double destZ = state.lastPos.z;
 
                 // Teleport without changing the pitch and yaw
-                player.requestTeleport(destX, destY, destZ);
+                player.teleportTo(destX, destY, destZ);
             }
         }
 
@@ -108,17 +108,17 @@ public class CreeperfallStageManager {
             PlayerSet players = space.getPlayers();
 
             if (sec > 0) {
-                players.showTitle(Text.literal(Integer.toString(sec)).formatted(Formatting.BOLD), 80);
-                players.playSound(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), SoundCategory.PLAYERS, 1.0F, 1.0F);
+                players.showTitle(Component.literal(Integer.toString(sec)).withStyle(ChatFormatting.BOLD), 80);
+                players.playSound(SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
             } else {
-                players.showTitle(Text.translatable("game.creeperfall.go").formatted(Formatting.BOLD), 80);
-                players.playSound(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), SoundCategory.PLAYERS, 1.0F, 2.0F);
+                players.showTitle(Component.translatable("game.creeperfall.go").withStyle(ChatFormatting.BOLD), 80);
+                players.playSound(SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.PLAYERS, 1.0F, 2.0F);
             }
         }
     }
 
     public static class FrozenPlayer {
-        public Vec3d lastPos;
+        public Vec3 lastPos;
     }
 
     public enum IdleTickResult {

@@ -1,16 +1,16 @@
 package io.github.redstoneparadox.creeperfall.game.util;
 
-import net.minecraft.text.CharacterVisitor;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.util.FormattedCharSink;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
 
-public class OrderedTextReader implements CharacterVisitor {
-	private MutableText text = Text.empty();
+public class OrderedTextReader implements FormattedCharSink {
+	private MutableComponent text = Component.empty();
 
-	public Text read(OrderedText orderedText) {
-		text = Text.empty();
+	public Component read(FormattedCharSequence orderedText) {
+		text = Component.empty();
 		orderedText.accept(this);
 		return text;
 	}
@@ -19,7 +19,7 @@ public class OrderedTextReader implements CharacterVisitor {
 	public boolean accept(int index, Style style, int codePoint) {
 		String string = new String(Character.toChars(codePoint));
 
-		text.append(Text.literal(string).setStyle(style));
+		text.append(Component.literal(string).setStyle(style));
 
 		return true;
 	}

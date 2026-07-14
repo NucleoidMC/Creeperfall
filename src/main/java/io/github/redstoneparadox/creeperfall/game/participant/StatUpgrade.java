@@ -1,7 +1,7 @@
 package io.github.redstoneparadox.creeperfall.game.participant;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;

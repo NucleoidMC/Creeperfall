@@ -1,6 +1,6 @@
 package io.github.redstoneparadox.creeperfall.game.participant;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface Upgrade<T> {
 	boolean canUpgrade();

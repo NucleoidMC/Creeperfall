@@ -2,21 +2,23 @@ package io.github.redstoneparadox.creeperfall.entity;
 
 import io.github.redstoneparadox.creeperfall.entity.ai.goal.CreeperfallFollowTargetGoal;
 import io.github.redstoneparadox.creeperfall.entity.ai.goal.LookUpAtEntityGoal;
-import io.github.redstoneparadox.creeperfall.mixin.AbstractSkeletonEntityAccessor;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.BowAttackGoal;
-import net.minecraft.entity.mob.AbstractSkeletonEntity;
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.SkeletonEntity;
-import net.minecraft.world.World;
+import io.github.redstoneparadox.creeperfall.mixin.AbstractSkeletonAccessor;
+import net.minecraft.world.entity.Entity.RemovalReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
+import net.minecraft.world.entity.monster.skeleton.AbstractSkeleton;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.skeleton.Skeleton;
+import net.minecraft.world.level.Level;
 
-public class CreeperfallSkeletonEntity extends SkeletonEntity {
+public class CreeperfallSkeletonEntity extends Skeleton {
 	private int timeToDespawn = 30 * 20;
 
-	public CreeperfallSkeletonEntity(World world) {
-		super(EntityType.SKELETON, world);
-		((AbstractSkeletonEntityAccessor)this).setBowAttackGoal(
+	public CreeperfallSkeletonEntity(Level level) {
+		super(EntityTypes.SKELETON, level);
+		((AbstractSkeletonAccessor)this).setBowGoal(
 				new CreeperfallBowAttackGoal(this, 1.5D, 1, 64.0F)
 		);
 	}
@@ -33,9 +35,9 @@ public class CreeperfallSkeletonEntity extends SkeletonEntity {
 	}
 
 	@Override
-	protected void initGoals() {
-		this.goalSelector.add(6, new LookUpAtEntityGoal(this, CreeperEntity.class, 64.0F));
-		this.targetSelector.add(
+	protected void registerGoals() {
+		this.goalSelector.addGoal(6, new LookUpAtEntityGoal(this, Creeper.class, 64.0F));
+		this.targetSelector.addGoal(
 				1,
 				new CreeperfallFollowTargetGoal<>(
 						this,
@@ -43,24 +45,24 @@ public class CreeperfallSkeletonEntity extends SkeletonEntity {
 						10,
 						true,
 						false,
-						(livingEntity, world) -> livingEntity instanceof CreeperEntity && !livingEntity.isOnGround()
+						(livingEntity, world) -> livingEntity instanceof Creeper && !livingEntity.onGround()
 				)
 		);
 	}
 
 	@Override
-	public void setOnFireForTicks(int ticks) {
+	public void igniteForTicks(int ticks) {
 
 	}
 
-	static class CreeperfallBowAttackGoal extends BowAttackGoal<AbstractSkeletonEntity> {
-		public CreeperfallBowAttackGoal(AbstractSkeletonEntity actor, double speed, int attackInterval, float range) {
+	static class CreeperfallBowAttackGoal extends RangedBowAttackGoal<AbstractSkeleton> {
+		public CreeperfallBowAttackGoal(AbstractSkeleton actor, double speed, int attackInterval, float range) {
 			super(actor, speed, attackInterval, range);
 		}
 
 		@Override
-		public boolean shouldContinue() {
-			return this.canStart() && isHoldingBow();
+		public boolean canContinueToUse() {
+			return this.canUse() && isHoldingBow();
 		}
 	}
 }

@@ -1,21 +1,21 @@
 package io.github.redstoneparadox.creeperfall.game.util;
 
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TextHelper {
-	public static List<Text> wrapText(StringVisitable text, int charsPerLine) {
+	public static List<Component> wrapText(FormattedText text, int charsPerLine) {
 		String s = text.getString();
 
 		String[] strings = WordUtils.wrap(s, charsPerLine).split("\n");
-		List<Text> texts = new ArrayList<>();
+		List<Component> texts = new ArrayList<>();
 
 		for (String string: strings) {
-			texts.add(Text.literal(string.substring(0, string.length() - 1)));
+			texts.add(Component.literal(string.substring(0, string.length() - 1)));
 		}
 
 		return texts;

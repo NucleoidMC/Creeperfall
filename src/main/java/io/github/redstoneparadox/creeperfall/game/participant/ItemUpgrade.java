@@ -1,9 +1,9 @@
 package io.github.redstoneparadox.creeperfall.game.participant;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,21 +35,21 @@ public class ItemUpgrade implements Upgrade<ItemStack> {
 
 	@Override
 	public boolean upgrade(CreeperfallParticipant participant) {
-		ServerWorld world = participant.getWorld();
-		ServerPlayerEntity player = participant.getPlayer().getEntity(world);
-		PlayerInventory inventory = Objects.requireNonNull(player).getInventory();
+		ServerLevel world = participant.getLevel();
+		ServerPlayer player = participant.getPlayer().getEntity(world);
+		Inventory inventory = Objects.requireNonNull(player).getInventory();
 
 		if (currentTier + 1 >= tiers.size()) return false;
 
 		currentTier += 1;
 
 		if (currentTier == 0) {
-			player.giveItemStack(tiers.get(0).copy());
+			player.addItem(tiers.get(0).copy());
 		}
 
-		for (int slot = 0; slot < inventory.size(); slot++) {
-			if (ItemStack.areEqual(inventory.getStack(slot), tiers.get(currentTier - 1))) {
-				inventory.setStack(slot, tiers.get(currentTier));
+		for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
+			if (ItemStack.matches(inventory.getItem(slot), tiers.get(currentTier - 1))) {
+				inventory.setItem(slot, tiers.get(currentTier));
 				return true;
 			}
 		}

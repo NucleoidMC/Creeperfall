@@ -1,7 +1,7 @@
 package io.github.redstoneparadox.creeperfall.game;
 
-import net.minecraft.entity.boss.BossBar;
-import net.minecraft.text.Text;
+import net.minecraft.world.BossEvent;
+import net.minecraft.network.chat.Component;
 import xyz.nucleoid.plasmid.api.game.common.GlobalWidgets;
 import xyz.nucleoid.plasmid.api.game.common.widget.BossBarWidget;
 
@@ -9,8 +9,8 @@ public final class CreeperfallTimerBar {
     private final BossBarWidget widget;
 
     public CreeperfallTimerBar(GlobalWidgets widgets) {
-        Text title = Text.translatable("game.creeperfall.waiting");
-        this.widget = widgets.addBossBar(title, BossBar.Color.GREEN, BossBar.Style.NOTCHED_10);
+        Component title = Component.translatable("game.creeperfall.waiting");
+        this.widget = widgets.addBossBar(title, BossEvent.BossBarColor.GREEN, BossEvent.BossBarOverlay.NOTCHED_10);
     }
 
     public void update(long ticksUntilEnd, long totalTicksUntilEnd) {
@@ -20,13 +20,13 @@ public final class CreeperfallTimerBar {
         }
     }
 
-    private Text getText(long ticksUntilEnd) {
+    private Component getText(long ticksUntilEnd) {
         long secondsUntilEnd = ticksUntilEnd / 20;
 
         long minutes = secondsUntilEnd / 60;
         long seconds = secondsUntilEnd % 60;
 
-        return Text.translatable("game.creeperfall.time_left", minutes, formatSeconds(seconds));
+        return Component.translatable("game.creeperfall.time_left", minutes, formatSeconds(seconds));
     }
 
     private String formatSeconds(long seconds) {

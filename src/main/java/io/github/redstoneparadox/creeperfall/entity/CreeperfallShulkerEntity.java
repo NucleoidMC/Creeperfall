@@ -1,22 +1,23 @@
 package io.github.redstoneparadox.creeperfall.entity;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.LookAroundGoal;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.ai.goal.RevengeGoal;
-import net.minecraft.entity.mob.ShulkerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.monster.Shulker;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
-public class CreeperfallShulkerEntity extends ShulkerEntity {
-	public CreeperfallShulkerEntity(EntityType<? extends ShulkerEntity> entityType, World world) {
+public class CreeperfallShulkerEntity extends Shulker {
+	public CreeperfallShulkerEntity(EntityType<? extends Shulker> entityType, Level world) {
 		super(entityType, world);
 	}
 
-	public CreeperfallShulkerEntity(World world) {
-		this(EntityType.SHULKER, world);
+	public CreeperfallShulkerEntity(Level level) {
+		this(EntityTypes.SHULKER, level);
 	}
 
-	protected void initGoals() {
+	protected void registerGoals() {
 	}
 }

@@ -1,24 +1,24 @@
 package io.github.redstoneparadox.creeperfall.entity.ai.goal;
 
 import io.github.redstoneparadox.creeperfall.game.util.EntityTracker;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.TrackTargetGoal;
-import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.Mob;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class FindTrackedTargetGoal<T extends LivingEntity> extends TrackTargetGoal {
+public class FindTrackedTargetGoal<T extends LivingEntity> extends TargetGoal {
 	private final EntityType<T> trackedType;
 	private final Supplier<EntityTracker> tracker;
 	private final Predicate<T> filter;
 	private @Nullable T target = null;
 
-	public FindTrackedTargetGoal(MobEntity mob, EntityType<T> trackedType, Supplier<EntityTracker> tracker, Predicate<T> filter) {
+	public FindTrackedTargetGoal(Mob mob, EntityType<T> trackedType, Supplier<EntityTracker> tracker, Predicate<T> filter) {
 		super(mob, false);
 		this.trackedType = trackedType;
 		this.tracker = tracker;
@@ -26,7 +26,7 @@ public class FindTrackedTargetGoal<T extends LivingEntity> extends TrackTargetGo
 	}
 
 	@Override
-	public boolean canStart() {
+	public boolean canUse() {
 		findTarget();
 		return target != null;
 	}
@@ -38,7 +38,7 @@ public class FindTrackedTargetGoal<T extends LivingEntity> extends TrackTargetGo
 	}
 
 	@Override
-	public boolean shouldContinue() {
+	public boolean canContinueToUse() {
 		if (target == null || target.isRemoved()) {
 			return false;
 		}
