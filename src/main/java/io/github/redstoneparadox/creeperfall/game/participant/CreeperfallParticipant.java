@@ -1,26 +1,24 @@
 package io.github.redstoneparadox.creeperfall.game.participant;
 
 import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Hand;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.plasmid.api.game.GameSpace;
 import xyz.nucleoid.plasmid.api.util.PlayerRef;
 
 import java.util.Objects;
 
 public class CreeperfallParticipant {
     private final PlayerRef player;
-	private final ServerWorld world;
+	private final ServerLevel world;
 	private boolean gameStarted = false;
     private boolean fireworks = false;
 
@@ -28,8 +26,8 @@ public class CreeperfallParticipant {
 
     public final StatUpgrade maxArrowsUpgrade;
 
-	public CreeperfallParticipant(PlayerRef player, ServerWorld world, CreeperfallConfig config) {
-		this.armorUpgrade = new ArmorUpgrade.Builder(world.getRegistryManager())
+	public CreeperfallParticipant(PlayerRef player, ServerLevel world, CreeperfallConfig config) {
+		this.armorUpgrade = new ArmorUpgrade.Builder(world.registryAccess())
 				.tier(ArmorUpgrade.ArmorType.NONE)
 				.tier(ArmorUpgrade.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 1)
 				.tier(ArmorUpgrade.ArmorType.CHAIN, Enchantments.BLAST_PROTECTION, 2)
@@ -57,38 +55,38 @@ public class CreeperfallParticipant {
 	}
 
 	@Nullable
-	public ServerPlayerEntity getPlayerEntity() {
+	public ServerPlayer getPlayerEntity() {
 		return getPlayer().getEntity(this.world);
 	}
 
-	public ServerWorld getWorld() {
+	public ServerLevel getLevel() {
 		return this.world;
 	}
 
 	public void replenishArrows() {
 		if (!gameStarted) return;
 
-		PlayerEntity player = getPlayer().getEntity(this.world);
-		PlayerInventory inventory = Objects.requireNonNull(player).getInventory();
+		Player player = getPlayer().getEntity(this.world);
+		Inventory inventory = Objects.requireNonNull(player).getInventory();
 
 		int maxArrowsTier = maxArrowsUpgrade.getTier();
 
-		for (int i = 0; i < inventory.size(); i++) {
-			Item item = inventory.getStack(i).getItem();
+		for (int i = 0; i < inventory.getContainerSize(); i++) {
+			Item item = inventory.getItem(i).getItem();
 			if (item == Items.ARROW || item == Items.FIREWORK_ROCKET) {
-				inventory.setStack(i, ItemStack.EMPTY);
+				inventory.setItem(i, ItemStack.EMPTY);
 			}
 		}
 
-		Item cursorItem = player.currentScreenHandler.getCursorStack().getItem();
+		Item cursorItem = player.containerMenu.getCarried().getItem();
 		if (cursorItem == Items.ARROW || cursorItem == Items.FIREWORK_ROCKET) {
-			player.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
+			player.containerMenu.setCarried(ItemStack.EMPTY);
 		}
 
 		if (fireworks) {
-			player.setStackInHand(Hand.OFF_HAND, new ItemStack(Items.FIREWORK_ROCKET, maxArrowsUpgrade.getValue(maxArrowsTier)));
+			player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.FIREWORK_ROCKET, maxArrowsUpgrade.getValue(maxArrowsTier)));
 		} else {
-			player.giveItemStack(new ItemStack(Items.ARROW, maxArrowsUpgrade.getValue(maxArrowsTier)));
+			player.addItem(new ItemStack(Items.ARROW, maxArrowsUpgrade.getValue(maxArrowsTier)));
 		}
 	}
 
@@ -99,23 +97,23 @@ public class CreeperfallParticipant {
 	public void enableCrossbowAndFireworks() {
 		fireworks = true;
 
-		PlayerEntity player = getPlayer().getEntity(this.world);
-		PlayerInventory inventory = Objects.requireNonNull(player).getInventory();
+		Player player = getPlayer().getEntity(this.world);
+		Inventory inventory = Objects.requireNonNull(player).getInventory();
 
-		for (int i = 0; i < inventory.size(); i++) {
-			if (inventory.getStack(i).getItem() == Items.BOW) {
-				inventory.setStack(i, ItemStack.EMPTY);
+		for (int i = 0; i < inventory.getContainerSize(); i++) {
+			if (inventory.getItem(i).getItem() == Items.BOW) {
+				inventory.setItem(i, ItemStack.EMPTY);
 			}
 		}
 
-		if (player.currentScreenHandler.getCursorStack().getItem() == Items.BOW) {
-			player.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
+		if (player.containerMenu.getCarried().getItem() == Items.BOW) {
+			player.containerMenu.setCarried(ItemStack.EMPTY);
 		}
 
 		ItemStack crossbowStack = new ItemStack(Items.CROSSBOW);
-		crossbowStack.addEnchantment(this.world.getRegistryManager().getOrThrow(RegistryKeys.ENCHANTMENT).getOrThrow(Enchantments.QUICK_CHARGE), 3);
+		crossbowStack.enchant(this.world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.QUICK_CHARGE), 3);
 
-		player.giveItemStack(crossbowStack);
+		player.addItem(crossbowStack);
 		replenishArrows();
 	}
 }

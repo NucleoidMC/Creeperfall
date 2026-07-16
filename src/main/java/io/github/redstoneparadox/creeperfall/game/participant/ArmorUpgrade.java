@@ -1,33 +1,30 @@
 package io.github.redstoneparadox.creeperfall.game.participant;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Pair;
+import io.github.redstoneparadox.creeperfall.game.util.Tuple;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ArmorUpgrade implements Upgrade<List<ItemStack>> {
-	private final List<Pair<ArmorType, Consumer<List<ItemStack>>>> tiers;
+	private final List<Tuple<ArmorType, Consumer<List<ItemStack>>>> tiers;
 
 	private int currentTier = -1;
 
-	public ArmorUpgrade(List<Pair<ArmorType, Consumer<List<ItemStack>>>> tiers) {
+	public ArmorUpgrade(List<Tuple<ArmorType, Consumer<List<ItemStack>>>> tiers) {
 		this.tiers = tiers;
 	}
 
@@ -43,9 +40,9 @@ public class ArmorUpgrade implements Upgrade<List<ItemStack>> {
 
 	@Override
 	public List<ItemStack> getValue(int tier) {
-		Pair<ArmorType, Consumer<List<ItemStack>>> pair = tiers.get(tier);
-		ArmorType type = pair.getLeft();
-		Consumer<List<ItemStack>> consumer = pair.getRight();
+		Tuple<ArmorType, Consumer<List<ItemStack>>> pair = tiers.get(tier);
+		ArmorType type = pair.getA();
+		Consumer<List<ItemStack>> consumer = pair.getB();
 		List<ItemStack> stacks = Arrays.asList(
 				new ItemStack(type.helmet),
 				new ItemStack(type.chestplate),
@@ -63,17 +60,17 @@ public class ArmorUpgrade implements Upgrade<List<ItemStack>> {
 
 	@Override
 	public boolean upgrade(CreeperfallParticipant participant) {
-		ServerWorld world = participant.getWorld();
-		ServerPlayerEntity player = participant.getPlayer().getEntity(world);
-		PlayerInventory inventory = Objects.requireNonNull(player).getInventory();
+		ServerLevel level = participant.getLevel();
+		ServerPlayer player = participant.getPlayer().getEntity(level);
+		Inventory inventory = Objects.requireNonNull(player).getInventory();
 
 		if (currentTier + 1 >= tiers.size()) return false;
 
 		currentTier += 1;
 
-		Pair<ArmorType, Consumer<List<ItemStack>>> tier = tiers.get(currentTier);
-		ArmorType type = tier.getLeft();
-		Consumer<List<ItemStack>> consumer = tier.getRight();
+		Tuple<ArmorType, Consumer<List<ItemStack>>> tier = tiers.get(currentTier);
+		ArmorType type = tier.getA();
+		Consumer<List<ItemStack>> consumer = tier.getB();
 		List<ItemStack> stacks = Arrays.asList(
 				new ItemStack(type.helmet),
 				new ItemStack(type.chestplate),
@@ -86,10 +83,10 @@ public class ArmorUpgrade implements Upgrade<List<ItemStack>> {
 		};
 
 		consumer.accept(stacks);
-		player.equipStack(EquipmentSlot.HEAD, stacks.get(0));
-		player.equipStack(EquipmentSlot.CHEST, stacks.get(1));
-		player.equipStack(EquipmentSlot.LEGS, stacks.get(2));
-		player.equipStack(EquipmentSlot.FEET, stacks.get(3));
+		player.setItemSlot(EquipmentSlot.HEAD, stacks.get(0));
+		player.setItemSlot(EquipmentSlot.CHEST, stacks.get(1));
+		player.setItemSlot(EquipmentSlot.LEGS, stacks.get(2));
+		player.setItemSlot(EquipmentSlot.FEET, stacks.get(3));
 
 		return true;
 	}
@@ -100,9 +97,9 @@ public class ArmorUpgrade implements Upgrade<List<ItemStack>> {
 			return new ItemStack(Items.BARRIER);
 		}
 
-		Pair<ArmorType, Consumer<List<ItemStack>>> tier = tiers.get(currentTier + 1);
-		ArmorType type = tier.getLeft();
-		Consumer<List<ItemStack>> consumer = tier.getRight();
+		Tuple<ArmorType, Consumer<List<ItemStack>>> tier = tiers.get(currentTier + 1);
+		ArmorType type = tier.getA();
+		Consumer<List<ItemStack>> consumer = tier.getB();
 		List<ItemStack> stacks = Arrays.asList(
 				new ItemStack(type.helmet),
 				new ItemStack(type.chestplate),
@@ -140,22 +137,22 @@ public class ArmorUpgrade implements Upgrade<List<ItemStack>> {
 	}
 
 	public static class Builder {
-		private final List<Pair<ArmorType, Consumer<List<ItemStack>>>> tiers = new ArrayList<>();
-		private final RegistryWrapper.Impl<Enchantment> enchantment;
+		private final List<Tuple<ArmorType, Consumer<List<ItemStack>>>> tiers = new ArrayList<>();
+		private final HolderLookup.RegistryLookup<Enchantment> enchantment;
 
-		public Builder(RegistryWrapper.WrapperLookup lookup) {
-			this.enchantment = lookup.getOrThrow(RegistryKeys.ENCHANTMENT);
+		public Builder(HolderLookup.Provider lookup) {
+			this.enchantment = lookup.lookupOrThrow(Registries.ENCHANTMENT);
 		}
 
 		public Builder tier(ArmorType type) {
-			tiers.add(new Pair<>(type, itemStacks -> {}));
+			tiers.add(new Tuple<>(type, itemStacks -> {}));
 			return this;
 		}
 
-		public Builder tier(ArmorType type, RegistryKey<Enchantment> enchantment, int level) {
-			tiers.add(new Pair<>(type, itemStacks -> {
+		public Builder tier(ArmorType type, ResourceKey<Enchantment> enchantment, int level) {
+			tiers.add(new Tuple<>(type, itemStacks -> {
 				for (ItemStack stack : itemStacks) {
-					stack.addEnchantment(this.enchantment.getOrThrow(enchantment), level);
+					stack.enchant(this.enchantment.getOrThrow(enchantment), level);
 				}
 			}));
 			return this;

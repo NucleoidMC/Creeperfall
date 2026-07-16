@@ -1,9 +1,8 @@
 package io.github.redstoneparadox.creeperfall.item;
 
 import io.github.redstoneparadox.creeperfall.Creeperfall;
-import net.fabricmc.fabric.impl.biome.modification.BuiltInRegistryKeys;
-import net.minecraft.item.Item;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.resources.Identifier;
 
 public class CreeperfallItems {
 	public static void init() {

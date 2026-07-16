@@ -2,7 +2,7 @@ package io.github.redstoneparadox.creeperfall.game.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class CreeperfallMapConfig {
     public static final Codec<CreeperfallMapConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(

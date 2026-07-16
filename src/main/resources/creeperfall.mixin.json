@@ -3,8 +3,8 @@
   "package": "io.github.redstoneparadox.creeperfall.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "AbstractSkeletonEntityAccessor",
-    "GuardianEntityAccessor"
+    "AbstractSkeletonAccessor",
+    "GuardianAccessor"
   ],
   "client": [
   ],

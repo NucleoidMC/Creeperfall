@@ -1,8 +1,8 @@
 package io.github.redstoneparadox.creeperfall.game.map;
 
 import io.github.redstoneparadox.creeperfall.game.config.CreeperfallMapConfig;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
 import xyz.nucleoid.map_templates.MapTemplate;
 
 import java.util.ArrayList;
@@ -38,15 +38,15 @@ public class CreeperfallMapGenerator {
         BlockPos min = new BlockPos(negativeBound, 64, negativeBound);
         BlockPos max = new BlockPos(positiveBound, 64, positiveBound);
 
-        for (BlockPos pos: BlockPos.iterate(min, max)) {
+        for (BlockPos pos: BlockPos.betweenClosed(min, max)) {
             int remainderX = Math.abs(pos.getX()) % 2;
             int remainderZ = Math.abs(pos.getZ()) % 2;
 
             if ((remainderX == 0 && remainderZ == 0) || (remainderX == 1 && remainderZ == 1)) {
-                builder.setBlockState(pos, Blocks.BLACK_STAINED_GLASS.getDefaultState());
+                builder.setBlockState(pos, Blocks.STAINED_GLASS.black().defaultBlockState());
             }
             else {
-                builder.setBlockState(pos, Blocks.LIGHT_GRAY_STAINED_GLASS.getDefaultState());
+                builder.setBlockState(pos, Blocks.STAINED_GLASS.lightGray().defaultBlockState());
             }
         }
     }
@@ -75,18 +75,18 @@ public class CreeperfallMapGenerator {
 
         List<Iterable<BlockPos>> iterables = new ArrayList<>();
 
-        iterables.add(BlockPos.iterate(northMin, northMax));
-        iterables.add(BlockPos.iterate(southMin, southMax));
-        iterables.add(BlockPos.iterate(eastMin, eastMax));
-        iterables.add(BlockPos.iterate(westMin, westMax));
+        iterables.add(BlockPos.betweenClosed(northMin, northMax));
+        iterables.add(BlockPos.betweenClosed(southMin, southMax));
+        iterables.add(BlockPos.betweenClosed(eastMin, eastMax));
+        iterables.add(BlockPos.betweenClosed(westMin, westMax));
 
         for (Iterable<BlockPos> iterable: iterables) {
             for (BlockPos pos: iterable) {
                 switch (pos.getY()) {
-                    case 64 -> builder.setBlockState(pos, Blocks.BLACKSTONE.getDefaultState());
-                    case 65, 66, 67 -> builder.setBlockState(pos, Blocks.BRICK_WALL.getDefaultState());
-                    case 68 -> builder.setBlockState(pos, Blocks.MOSSY_STONE_BRICK_SLAB.getDefaultState());
-                    default -> { builder.setBlockState(pos, Blocks.BARRIER.getDefaultState());}
+                    case 64 -> builder.setBlockState(pos, Blocks.BLACKSTONE.defaultBlockState());
+                    case 65, 66, 67 -> builder.setBlockState(pos, Blocks.BRICK_WALL.defaultBlockState());
+                    case 68 -> builder.setBlockState(pos, Blocks.MOSSY_STONE_BRICK_SLAB.defaultBlockState());
+                    default -> { builder.setBlockState(pos, Blocks.BARRIER.defaultBlockState());}
                 }
             }
         }

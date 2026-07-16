@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.redstoneparadox.creeperfall.game.util.Codecs;
-import net.minecraft.predicate.NumberRange;
+import net.minecraft.advancements.predicates.MinMaxBounds;
 import xyz.nucleoid.plasmid.api.game.common.config.WaitingLobbyConfig;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class CreeperfallConfig {
     public final int timeLimitSecs;
     public final List<Integer> maxArrows;
     public final int arrowReplenishTimeSeconds;
-    public final NumberRange.IntRange emeraldRewardCount;
+    public final MinMaxBounds.Ints emeraldRewardCount;
 
     public CreeperfallConfig(
             WaitingLobbyConfig playerConfig,
@@ -38,7 +38,7 @@ public class CreeperfallConfig {
             int timeLimitSecs,
             List<Integer>  maxArrows,
             int arrowReplenishTimeSeconds,
-            NumberRange.IntRange emeraldRewardCount
+            MinMaxBounds.Ints emeraldRewardCount
     ) {
         this.playerConfig = playerConfig;
         this.mapConfig = mapConfig;

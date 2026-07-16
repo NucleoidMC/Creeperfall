@@ -1,31 +1,31 @@
 package io.github.redstoneparadox.creeperfall.entity.ai.goal;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerLevel;
 
-public class LookUpAtEntityGoal extends LookAtEntityGoal {
-	public LookUpAtEntityGoal(MobEntity mob, Class<? extends LivingEntity> targetType, float range) {
+public class LookUpAtEntityGoal extends LookAtPlayerGoal {
+	public LookUpAtEntityGoal(Mob mob, Class<? extends LivingEntity> targetType, float range) {
 		super(mob, targetType, range, 1.0f);
 	}
 
-	public boolean canStart() {
-		if (this.mob.getRandom().nextFloat() >= this.chance) {
+	public boolean canUse() {
+		if (this.mob.getRandom().nextFloat() >= this.probability) {
 			return false;
 		} else {
 			if (this.mob.getTarget() != null) {
-				this.target = this.mob.getTarget();
+				this.lookAt = this.mob.getTarget();
 			}
 
-			if (this.targetType == PlayerEntity.class) {
-				this.target = ((ServerWorld) mob.getWorld()).getClosestPlayer(targetPredicate, mob, mob.getX(), mob.getEyeY(), mob.getZ());
+			if (this.lookAtType == Player.class) {
+				this.lookAt = ((ServerLevel) mob.level()).getNearestPlayer(lookAtContext, mob, mob.getX(), mob.getEyeY(), mob.getZ());
 			} else {
-				this.target = ((ServerWorld) mob.getWorld()).getClosestEntity(targetType, targetPredicate, mob, mob.getX(), mob.getEyeY(), mob.getZ(), mob.getBoundingBox().expand(range, range, range));
+				this.lookAt = ((ServerLevel) mob.level()).getNearestEntity(lookAtType, lookAtContext, mob, mob.getX(), mob.getEyeY(), mob.getZ(), mob.getBoundingBox().inflate(lookDistance, lookDistance, lookDistance));
 			}
 
-			return this.target != null;
+			return this.lookAt != null;
 		}
 	}
 }
