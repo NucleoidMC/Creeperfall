@@ -52,7 +52,7 @@ processResources {
 // if it is present.
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
+        rename { "${it}_${project.archives_base_name}"}
     }
 }
 
