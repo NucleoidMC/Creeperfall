@@ -98,6 +98,6 @@ public class CreeperfallPlayerSpawnLogic {
         float x = pos.getX() + Mth.nextFloat(player.getRandom(), -radius, radius);
         float z = pos.getZ() + Mth.nextFloat(player.getRandom(), -radius, radius);
 
-        player.teleportTo(this.level, x, pos.getY() + 0.5, z, Set.of(), 0.0F, 0.0F, false);
+        player.teleportTo(this.level, x, pos.getY(), z, Set.of(), 0.0F, 0.0F, false);
     }
 }
