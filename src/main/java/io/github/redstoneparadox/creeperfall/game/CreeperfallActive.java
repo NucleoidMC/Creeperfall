@@ -155,14 +155,14 @@ public class CreeperfallActive {
     public void spawnGuardian() {
         CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(this.level);
 
-        entity.setInvulnerable(true);
+        entity.setPermanentlyInvulnerable(true);
         spawnEntity(entity, 0.5, 68, 0.5, EntitySpawnReason.SPAWN_ITEM_USE);
     }
 
     public void spawnOcelot() {
         CreeperfallOcelotEntity entity = new CreeperfallOcelotEntity(tracker, this.level);
 
-        entity.setInvulnerable(true);
+        entity.setPermanentlyInvulnerable(true);
         spawnEntity(entity, 0.5, 65, 0.5, EntitySpawnReason.SPAWN_ITEM_USE);
     }
 
