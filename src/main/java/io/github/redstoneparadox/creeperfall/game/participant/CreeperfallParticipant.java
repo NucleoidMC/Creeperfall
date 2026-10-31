@@ -19,7 +19,7 @@ import java.util.Objects;
 public class CreeperfallParticipant {
     private final PlayerRef player;
 	private final ServerLevel world;
-	private boolean gameStarted = false;
+	public boolean gameStarted = false;
     private boolean fireworks = false;
 
     public final ArmorUpgrade armorUpgrade;

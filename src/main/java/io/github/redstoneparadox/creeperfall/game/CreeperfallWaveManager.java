@@ -55,7 +55,7 @@ public final class CreeperfallWaveManager {
 			this.creepersRemaining = totalCreepers;
 			this.unspawnedCreepers = totalCreepers;
 			countdownToNextSpawn = 20;
-		} else if (unspawnedCreepers > 0) {
+		} else if (unspawnedCreepers > 0 && countdownToNextSpawn <= 0) {
 			spawnCreeper();
 			unspawnedCreepers -= 1;
 			countdownToNextSpawn = 20;

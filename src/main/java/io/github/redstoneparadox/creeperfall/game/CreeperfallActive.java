@@ -296,6 +296,14 @@ public class CreeperfallActive {
 
     private void tick() {
         tracker.clean();
+
+        for (CreeperfallParticipant participant: participants.values()) {
+            if (!participant.gameStarted) {
+                participant.notifyOfStart();
+                participant.replenishArrows();
+            }
+        }
+
         boolean participantsEmpty = participants.isEmpty();
         boolean finished = participantsEmpty;
 
