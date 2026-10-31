@@ -4,7 +4,8 @@
   "icon": "creeper_head",
   "map": {
     "spawn_block": {
-      "id": "minecraft:gray_stained_glass"
+      "Name": "minecraft:gray_stained_glass",
+      "Properties": {}
     },
     "size": 16
   },

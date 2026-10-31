@@ -1,9 +1,9 @@
 package io.github.redstoneparadox.creeperfall.game;
 
 import io.github.redstoneparadox.creeperfall.Creeperfall;
-import io.github.redstoneparadox.creeperfall.entity.CreeperfallGuardianEntity;
-import io.github.redstoneparadox.creeperfall.entity.CreeperfallOcelotEntity;
-import io.github.redstoneparadox.creeperfall.entity.CreeperfallSkeletonEntity;
+import io.github.redstoneparadox.creeperfall.entity.CreeperfallGuardian;
+import io.github.redstoneparadox.creeperfall.entity.CreeperfallOcelot;
+import io.github.redstoneparadox.creeperfall.entity.CreeperfallSkeleton;
 import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
 import io.github.redstoneparadox.creeperfall.game.participant.CreeperfallParticipant;
@@ -153,21 +153,21 @@ public class CreeperfallActive {
     }
 
     public void spawnGuardian() {
-        CreeperfallGuardianEntity entity = new CreeperfallGuardianEntity(this.level);
+        CreeperfallGuardian entity = new CreeperfallGuardian(this.level);
 
-        entity.setPermanentlyInvulnerable(true);
+        entity.setInvulnerable(true);
         spawnEntity(entity, 0.5, 68, 0.5, EntitySpawnReason.SPAWN_ITEM_USE);
     }
 
     public void spawnOcelot() {
-        CreeperfallOcelotEntity entity = new CreeperfallOcelotEntity(tracker, this.level);
+        CreeperfallOcelot entity = new CreeperfallOcelot(tracker, this.level);
 
-        entity.setPermanentlyInvulnerable(true);
+        entity.setInvulnerable(true);
         spawnEntity(entity, 0.5, 65, 0.5, EntitySpawnReason.SPAWN_ITEM_USE);
     }
 
     public void spawnSkeleton() {
-        CreeperfallSkeletonEntity entity = new CreeperfallSkeletonEntity(this.level);
+        CreeperfallSkeleton entity = new CreeperfallSkeleton(this.level);
 
         spawnEntity(entity, 0.5, 65, 0.5, EntitySpawnReason.SPAWN_ITEM_USE);
     }

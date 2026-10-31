@@ -1,6 +1,6 @@
 package io.github.redstoneparadox.creeperfall.game.spawning;
 
-import io.github.redstoneparadox.creeperfall.entity.CreeperfallCreeperEntity;
+import io.github.redstoneparadox.creeperfall.entity.CreeperfallCreeper;
 import io.github.redstoneparadox.creeperfall.game.CreeperfallActive;
 import io.github.redstoneparadox.creeperfall.game.config.CreeperfallConfig;
 import io.github.redstoneparadox.creeperfall.game.map.CreeperfallMap;
@@ -90,7 +90,7 @@ public class CreeperfallCreeperSpawnLogic {
 		int y = map.spawn.getY() + config.creeperConfig.spawnHeight;
 		double z = random.nextInt(size - 2) + negativeBound + 1;
 
-		Creeper entity = new CreeperfallCreeperEntity(this.level, config.creeperConfig.fallSpeedMultiplier, 0.02, 0.02);
+		Creeper entity = new CreeperfallCreeper(this.level, config.creeperConfig.fallSpeedMultiplier, 0.02, 0.02);
 
 		entity.setHealth(0.5f);
 		game.spawnEntity(entity, x, y, z, EntitySpawnReason.NATURAL);
