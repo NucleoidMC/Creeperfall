@@ -67,7 +67,7 @@ public class CreeperfallCreeper extends Creeper {
 	@Override
 	public void tick() {
 		if (onGround()) {
-			setInvulnerable(true);
+			setPermanentlyInvulnerable(true);
 
 			if (ticksUntilAutoIgnite > 0 && !this.isIgnited()) {
 				ticksUntilAutoIgnite -= 1;
