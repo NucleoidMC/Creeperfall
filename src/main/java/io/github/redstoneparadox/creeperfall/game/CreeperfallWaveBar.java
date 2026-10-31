@@ -14,7 +14,7 @@ public final class CreeperfallWaveBar {
 	}
 
 	public void update(int wave, int totalWaves, int creepersRemaining, int totalCreepers) {
-		Component text = Component.translatable("game.creeperfall.wave_bar", wave, totalWaves, creepersRemaining);
+		Component text = Component.translatable("game.creeperfall.wave_bar", wave, totalWaves, creepersRemaining, totalCreepers);
 		float progress = (float) creepersRemaining /totalCreepers;
 
 		this.widget.setTitle(text);

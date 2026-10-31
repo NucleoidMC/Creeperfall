@@ -1,6 +1,7 @@
 package io.github.redstoneparadox.creeperfall.game;
 
 import io.github.redstoneparadox.creeperfall.Creeperfall;
+import io.github.redstoneparadox.creeperfall.entity.CreeperfallCreeper;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallGuardian;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallOcelot;
 import io.github.redstoneparadox.creeperfall.entity.CreeperfallSkeleton;
@@ -386,6 +387,8 @@ public class CreeperfallActive {
                 player.addItem(new ItemStack(Items.EMERALD, emeralds));
                 PlayerUtil.playSoundToPlayer(player, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.MASTER, 1.0f, 1.0f);
             }
+
+            waveManager.onCreeperDeath();
         }
 
         return EventResult.PASS;
