@@ -42,6 +42,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Explosion;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.map_templates.BlockBounds;
 import xyz.nucleoid.plasmid.api.game.GameCloseReason;
 import xyz.nucleoid.plasmid.api.game.GameSpace;
 import xyz.nucleoid.plasmid.api.game.common.GlobalWidgets;
@@ -80,9 +81,9 @@ public class CreeperfallActive {
     private final EntityTracker tracker;
     private final Object2ObjectMap<PlayerRef, CreeperfallParticipant> participants;
     private final CreeperfallPlayerSpawnLogic playerSpawnLogic;
-    private final CreeperfallCreeperSpawnLogic creeperSpawnLogic;
     private final CreeperfallStageManager stageManager;
-    private final CreeperfallTimerBar timerBar;
+    private final CreeperfallWaveManager waveManager;
+    private final CreeperfallWaveBar waveBar;
     private final Timer arrowReplenishTimer;
     private final ServerLevel level;
     private boolean hasPlayerDied = false;
@@ -94,15 +95,38 @@ public class CreeperfallActive {
         this.gameMap = map;
         this.tracker = new EntityTracker();
         this.playerSpawnLogic = new CreeperfallPlayerSpawnLogic(level, map);
-        this.creeperSpawnLogic = new CreeperfallCreeperSpawnLogic(gameSpace, level,this, map, config, tracker);
         this.participants = new Object2ObjectOpenHashMap<>();
 
         for (PlayerRef player : participants) {
             this.participants.put(player, new CreeperfallParticipant(player, level, config));
         }
 
+        // TODO: Grab block bounds from map region
+        // TODO: Clean this up and get rid of the old logic, maybe even get rid of this class altogether
+        int size = config.mapConfig.size;
+        double radius = size / 2.0 - 0.5;
+        int adjustmentConst = 0;
+
+        if (size % 2 == 1) adjustmentConst = 1;
+
+        double negativeBound = -radius - adjustmentConst;
+        double positiveBound = radius + adjustmentConst;
+        int y = map.spawn.getY() + config.creeperConfig.spawnHeight;
+        BlockBounds bounds = new BlockBounds(
+                new BlockPos((int) negativeBound, y, (int) negativeBound),
+                new BlockPos((int) positiveBound, y, (int) positiveBound)
+        );
+
         this.stageManager = new CreeperfallStageManager();
-        this.timerBar = new CreeperfallTimerBar(widgets);
+        this.waveManager = new CreeperfallWaveManager(
+                gameSpace,
+                this,
+                level,
+                6,
+                bounds,
+                random
+                );
+        this.waveBar = new CreeperfallWaveBar(widgets);
         int arrowReplenishTime = config.arrowReplenishTimeSeconds * 20;
         this.arrowReplenishTimer = Timer.createRepeating(arrowReplenishTime, this::onReplenishArrows);
     }
@@ -272,44 +296,54 @@ public class CreeperfallActive {
 
     private void tick() {
         tracker.clean();
-        boolean finishedEarly = participants.isEmpty();
+        boolean participantsEmpty = participants.isEmpty();
+        boolean finished = participantsEmpty;
 
-        long time = level.getGameTime();
-
-        if (finishedEarly) {
-            long remainingTime = this.stageManager.finishTime - level.getGameTime();
-            if (remainingTime >= 0) this.stageManager.finishEarly(remainingTime);
+        if (!participantsEmpty) {
+            finished = waveManager.tick();
+            waveManager.updateWaveBar(waveBar);
         }
 
-        CreeperfallStageManager.IdleTickResult result = this.stageManager.tick(time, gameSpace);
-
-        switch (result) {
-            case CONTINUE_TICK:
-                break;
-            case TICK_FINISHED:
-                return;
-            case GAME_STARTED:
-                for (CreeperfallParticipant participant: participants.values()) {
-                    participant.notifyOfStart();
-                    participant.replenishArrows();
-                }
-                return;
-            case GAME_FINISHED:
-                this.broadcastResult();
-                return;
-            case GAME_CLOSED:
-                this.gameSpace.close(GameCloseReason.FINISHED);
-                return;
-        }
-
-        if (finishedEarly) {
-            this.timerBar.update(0, this.config.timeLimitSecs * 20L);
-        }
-        else {
-            this.timerBar.update(this.stageManager.finishTime - time, this.config.timeLimitSecs * 20L);
-            creeperSpawnLogic.tick();
+        if (!finished) {
             arrowReplenishTimer.tick();
         }
+
+//        long time = level.getGameTime();
+//
+//        if (finishedEarly) {
+//            long remainingTime = this.stageManager.finishTime - level.getGameTime();
+//            if (remainingTime >= 0) this.stageManager.finishEarly(remainingTime);
+//        }
+
+//        CreeperfallStageManager.IdleTickResult result = this.stageManager.tick(time, gameSpace);
+
+//        switch (result) {
+//            case CONTINUE_TICK:
+//                break;
+//            case TICK_FINISHED:
+//                return;
+//            case GAME_STARTED:
+//                for (CreeperfallParticipant participant: participants.values()) {
+//                    participant.notifyOfStart();
+//                    participant.replenishArrows();
+//                }
+//                return;
+//            case GAME_FINISHED:
+//                this.broadcastResult();
+//                return;
+//            case GAME_CLOSED:
+//                this.gameSpace.close(GameCloseReason.FINISHED);
+//                return;
+//        }
+
+//        if (finishedEarly) {
+//            this.timerBar.update(0, this.config.timeLimitSecs * 20L);
+//        }
+//        else {
+//            this.timerBar.update(this.stageManager.finishTime - time, this.config.timeLimitSecs * 20L);
+//            creeperSpawnLogic.tick();
+//            arrowReplenishTimer.tick();
+//        }
     }
 
 

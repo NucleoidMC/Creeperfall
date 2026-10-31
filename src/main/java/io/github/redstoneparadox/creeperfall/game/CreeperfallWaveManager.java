@@ -16,9 +16,11 @@ public final class CreeperfallWaveManager {
 	private final ServerLevel level;
 	private int totalCreepers = 10;
 	private int creepersRemaining = 0;
+	private int unspawnedCreepers = totalCreepers;
 	private int livingCreepers = 0;
 	private final int totalWaves;
 	private int currentWave = 1;
+	private int countdownToNextSpawn = 0;
 	private final BlockBounds spawningBounds;
 	private final RandomSource random;
 
@@ -34,6 +36,7 @@ public final class CreeperfallWaveManager {
 			if (entity instanceof CreeperfallCreeper) {
 				if (livingCreepers > 0) {
 					livingCreepers -= 1;
+					creepersRemaining -= 1;
 				} else {
 					// TODO: Log because this shouldn't happen.
 				}
@@ -43,20 +46,26 @@ public final class CreeperfallWaveManager {
 
 	public boolean tick() {
 		// All creepers have been spawned and killed
+		if (unspawnedCreepers > 0) countdownToNextSpawn -= 1;
+
 		if (creepersRemaining == 0 && livingCreepers == 0) {
 			if (currentWave >= totalWaves) return true;
 
 			this.totalCreepers += 10;
 			this.creepersRemaining = totalCreepers;
-		} else if (creepersRemaining > 0) {
+			this.unspawnedCreepers = totalCreepers;
+			countdownToNextSpawn = 20;
+		} else if (unspawnedCreepers > 0) {
 			spawnCreeper();
+			unspawnedCreepers -= 1;
+			countdownToNextSpawn = 20;
 		}
 
 		return false;
 	}
 
-	public void onCreeperDeath() {
-		livingCreepers -= 1;
+	public void updateWaveBar(CreeperfallWaveBar waveBar) {
+		waveBar.update(currentWave, totalWaves, creepersRemaining, totalCreepers);
 	}
 
 	private void spawnCreeper() {
