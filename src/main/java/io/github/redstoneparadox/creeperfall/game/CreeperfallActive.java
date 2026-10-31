@@ -123,6 +123,7 @@ public class CreeperfallActive {
                 this,
                 level,
                 6,
+                config.creeperConfig.spawnDelaySeconds * 20,
                 bounds,
                 random
                 );

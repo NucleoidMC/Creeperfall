@@ -21,14 +21,16 @@ public final class CreeperfallWaveManager {
 	private final int totalWaves;
 	private int currentWave = 1;
 	private int countdownToNextSpawn = 0;
+	private final int spawnDelay;
 	private final BlockBounds spawningBounds;
 	private final RandomSource random;
 
-	public CreeperfallWaveManager(GameSpace gameSpace, CreeperfallActive game, ServerLevel level, int totalWaves, BlockBounds spawningBounds, RandomSource random) {
+	public CreeperfallWaveManager(GameSpace gameSpace, CreeperfallActive game, ServerLevel level, int totalWaves, int spawnDelay, BlockBounds spawningBounds, RandomSource random) {
 		this.gameSpace = gameSpace;
 		this.game = game;
 		this.level = level;
 		this.totalWaves = totalWaves;
+		this.spawnDelay = spawnDelay;
 		this.spawningBounds = spawningBounds;
 		this.random = random;
 
@@ -54,11 +56,11 @@ public final class CreeperfallWaveManager {
 			this.totalCreepers += 10;
 			this.creepersRemaining = totalCreepers;
 			this.unspawnedCreepers = totalCreepers;
-			countdownToNextSpawn = 20;
+			countdownToNextSpawn = spawnDelay;
 		} else if (unspawnedCreepers > 0 && countdownToNextSpawn <= 0 && livingCreepers < 5) {
 			spawnCreeper();
 			unspawnedCreepers -= 1;
-			countdownToNextSpawn = 20;
+			countdownToNextSpawn = spawnDelay;
 		}
 
 		return false;
